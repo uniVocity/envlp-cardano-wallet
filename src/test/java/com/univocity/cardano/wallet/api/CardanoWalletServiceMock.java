@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.api;
 
+import com.github.tomakehurst.wiremock.*;
 import com.github.tomakehurst.wiremock.client.*;
 import com.univocity.cardano.wallet.api.generated.*;
 import org.apache.commons.lang3.*;
@@ -16,7 +17,7 @@ public class CardanoWalletServiceMock extends Mock {
 	}
 
 	@Override
-	protected void setup() {
+	protected void setup(WireMockServer wireMockServer) {
 		Class<?> c = InternalWalletApiService.class;
 		Method[] methods = c.getDeclaredMethods();
 		for (Method method : methods) {
@@ -46,7 +47,7 @@ public class CardanoWalletServiceMock extends Mock {
 				throw new IllegalStateException("Cannot initialize unit tests using mocks for cardano-wallet. No URL defined in method " + methodName + " of " + c);
 			}
 
-			WireMock.stubFor(any(urlEqualTo(url))
+			wireMockServer.stubFor(any(urlEqualTo(url))
 					.willReturn(aResponse()
 							.withStatus(200)
 							.withBodyFile("api_responses/" + methodName + "/200.json")));

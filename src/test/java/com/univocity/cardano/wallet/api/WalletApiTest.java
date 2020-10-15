@@ -1,12 +1,10 @@
 package com.univocity.cardano.wallet.api;
 
 import com.github.tomakehurst.wiremock.*;
+import com.github.tomakehurst.wiremock.core.*;
 import com.univocity.cardano.wallet.api.generated.network.*;
 import org.testng.annotations.*;
 
-import javax.security.auth.login.*;
-
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.*;
 import static org.testng.Assert.*;
 
 public class WalletApiTest {
@@ -20,11 +18,11 @@ public class WalletApiTest {
 	@BeforeClass
 	public void setUp() {
 		final int port = configuration.getWalletServicePort();
-		wireMockServer = new WireMockServer(wireMockConfig().port(port));
+		wireMockServer = new WireMockServer(new WireMockConfiguration().port(port));
 		wireMockServer.start();
 
 		cardanoWallet = new CardanoWalletServiceMock(port);
-		cardanoWallet.setup();
+		cardanoWallet.setup(wireMockServer);
 	}
 
 	@AfterClass

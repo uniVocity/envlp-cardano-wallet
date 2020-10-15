@@ -1,5 +1,8 @@
 package com.univocity.cardano.wallet.api.generated;
 
+import static com.univocity.cardano.wallet.api.service.InternalWalletApiServiceGenerator.*;
+import okhttp3.*;
+
 import com.univocity.cardano.wallet.api.generated.addresses.*;
 import com.univocity.cardano.wallet.api.generated.byronaddresses.*;
 import com.univocity.cardano.wallet.api.generated.byroncoinselections.*;
@@ -14,8 +17,7 @@ import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
 import com.univocity.cardano.wallet.api.generated.utils.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
-import com.univocity.cardano.wallet.api.service.*;
-import okhttp3.*;
+
 
 /**
  * Synchronous methods automatically generated for all endpoints available from the
@@ -41,7 +43,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link PostWalletResponse}
 	 */
 	public PostWalletResponse postWallet(RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.postWallet(requestBody));
+		return executeSync(api.postWallet(requestBody));
 	}
 
 	/**
@@ -52,7 +54,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link ListWalletsResponse}
 	 */
 	public ListWalletsResponse listWallets(){
-		return InternalWalletApiServiceGenerator.executeSync(api.listWallets());
+		return executeSync(api.listWallets());
 	}
 
 	/**
@@ -80,7 +82,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetUTxOsStatisticsResponse}
 	 */
 	public GetUTxOsStatisticsResponse getUTxOsStatistics(String walletId){
-		return InternalWalletApiServiceGenerator.executeSync(api.getUTxOsStatistics(walletId));
+		return executeSync(api.getUTxOsStatistics(walletId));
 	}
 
 	/**
@@ -91,7 +93,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetWalletResponse}
 	 */
 	public GetWalletResponse getWallet(String walletId){
-		return InternalWalletApiServiceGenerator.executeSync(api.getWallet(walletId));
+		return executeSync(api.getWallet(walletId));
 	}
 
 	/**
@@ -101,7 +103,7 @@ public class SynchronousWalletApi {
 	 * - Length must be exactly {@code 40}.
 	 */
 	public void deleteWallet(String walletId){
-		InternalWalletApiServiceGenerator.executeSync(api.deleteWallet(walletId));
+		executeSync(api.deleteWallet(walletId));
 	}
 
 	/**
@@ -113,7 +115,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link PutWalletResponse}
 	 */
 	public PutWalletResponse putWallet(String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.putWallet(walletId, requestBody));
+		return executeSync(api.putWallet(walletId, requestBody));
 	}
 
 	/**
@@ -124,7 +126,7 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PutWalletPassphraseRequest}
 	 */
 	public void putWalletPassphrase(String walletId, RequestBody requestBody){
-		InternalWalletApiServiceGenerator.executeSync(api.putWalletPassphrase(walletId, requestBody));
+		executeSync(api.putWalletPassphrase(walletId, requestBody));
 	}
 
 	/**
@@ -143,7 +145,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link PostTransactionFeeResponse}
 	 */
 	public PostTransactionFeeResponse postTransactionFee(String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.postTransactionFee(walletId, requestBody));
+		return executeSync(api.postTransactionFee(walletId, requestBody));
 	}
 
 	/**
@@ -158,7 +160,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link PostTransactionResponse}
 	 */
 	public PostTransactionResponse postTransaction(String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.postTransaction(walletId, requestBody));
+		return executeSync(api.postTransaction(walletId, requestBody));
 	}
 
 	/**
@@ -181,7 +183,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link ListTransactionsResponse}
 	 */
 	public ListTransactionsResponse listTransactions(String walletId, String start, String end, String order, Integer minWithdrawal){
-		return InternalWalletApiServiceGenerator.executeSync(api.listTransactions(walletId, start, end, order, minWithdrawal));
+		return executeSync(api.listTransactions(walletId, start, end, order, minWithdrawal));
 	}
 
 	/**
@@ -198,7 +200,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetTransactionResponse}
 	 */
 	public GetTransactionResponse getTransaction(String walletId, String transactionId){
-		return InternalWalletApiServiceGenerator.executeSync(api.getTransaction(walletId, transactionId));
+		return executeSync(api.getTransaction(walletId, transactionId));
 	}
 
 	/**
@@ -218,7 +220,7 @@ public class SynchronousWalletApi {
 	 * - Length must be exactly {@code 64}.
 	 */
 	public void deleteTransaction(String walletId, String transactionId){
-		InternalWalletApiServiceGenerator.executeSync(api.deleteTransaction(walletId, transactionId));
+		executeSync(api.deleteTransaction(walletId, transactionId));
 	}
 
 	/**
@@ -234,7 +236,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link ListAddressesResponse}
 	 */
 	public ListAddressesResponse listAddresses(String walletId, String state){
-		return InternalWalletApiServiceGenerator.executeSync(api.listAddresses(walletId, state));
+		return executeSync(api.listAddresses(walletId, state));
 	}
 
 	/**
@@ -252,7 +254,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link ListStakePoolsResponse}
 	 */
 	public ListStakePoolsResponse listStakePools(Integer stake){
-		return InternalWalletApiServiceGenerator.executeSync(api.listStakePools(stake));
+		return executeSync(api.listStakePools(stake));
 	}
 
 	/**
@@ -269,7 +271,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetDelegationFeeResponse}
 	 */
 	public GetDelegationFeeResponse getDelegationFee(String walletId){
-		return InternalWalletApiServiceGenerator.executeSync(api.getDelegationFee(walletId));
+		return executeSync(api.getDelegationFee(walletId));
 	}
 
 	/**
@@ -290,7 +292,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link QuitStakePoolResponse}
 	 */
 	public QuitStakePoolResponse quitStakePool(String walletId){
-		return InternalWalletApiServiceGenerator.executeSync(api.quitStakePool(walletId));
+		return executeSync(api.quitStakePool(walletId));
 	}
 
 	/**
@@ -308,7 +310,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link JoinStakePoolResponse}
 	 */
 	public JoinStakePoolResponse joinStakePool(String stakePoolId, String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.joinStakePool(stakePoolId, walletId, requestBody));
+		return executeSync(api.joinStakePool(stakePoolId, walletId, requestBody));
 	}
 
 	/**
@@ -325,7 +327,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link SelectCoinsResponse}
 	 */
 	public SelectCoinsResponse selectCoins(String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.selectCoins(walletId, requestBody));
+		return executeSync(api.selectCoins(walletId, requestBody));
 	}
 
 	/**
@@ -346,7 +348,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link MigrateShelleyWalletResponse}
 	 */
 	public MigrateShelleyWalletResponse migrateShelleyWallet(String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.migrateShelleyWallet(walletId, requestBody));
+		return executeSync(api.migrateShelleyWallet(walletId, requestBody));
 	}
 
 	/**
@@ -361,7 +363,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetShelleyWalletMigrationInfoResponse}
 	 */
 	public GetShelleyWalletMigrationInfoResponse getShelleyWalletMigrationInfo(String walletId){
-		return InternalWalletApiServiceGenerator.executeSync(api.getShelleyWalletMigrationInfo(walletId));
+		return executeSync(api.getShelleyWalletMigrationInfo(walletId));
 	}
 
 	/**
@@ -373,7 +375,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link PostByronWalletResponse}
 	 */
 	public PostByronWalletResponse postByronWallet(RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.postByronWallet(requestBody));
+		return executeSync(api.postByronWallet(requestBody));
 	}
 
 	/**
@@ -384,7 +386,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link ListByronWalletsResponse}
 	 */
 	public ListByronWalletsResponse listByronWallets(){
-		return InternalWalletApiServiceGenerator.executeSync(api.listByronWallets());
+		return executeSync(api.listByronWallets());
 	}
 
 	/**
@@ -412,7 +414,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetByronUTxOsStatisticsResponse}
 	 */
 	public GetByronUTxOsStatisticsResponse getByronUTxOsStatistics(String walletId){
-		return InternalWalletApiServiceGenerator.executeSync(api.getByronUTxOsStatistics(walletId));
+		return executeSync(api.getByronUTxOsStatistics(walletId));
 	}
 
 	/**
@@ -426,7 +428,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetByronWalletResponse}
 	 */
 	public GetByronWalletResponse getByronWallet(String walletId){
-		return InternalWalletApiServiceGenerator.executeSync(api.getByronWallet(walletId));
+		return executeSync(api.getByronWallet(walletId));
 	}
 
 	/**
@@ -439,7 +441,7 @@ public class SynchronousWalletApi {
 	 * - Length must be exactly {@code 40}.
 	 */
 	public void deleteByronWallet(String walletId){
-		InternalWalletApiServiceGenerator.executeSync(api.deleteByronWallet(walletId));
+		executeSync(api.deleteByronWallet(walletId));
 	}
 
 	/**
@@ -451,7 +453,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link PutByronWalletResponse}
 	 */
 	public PutByronWalletResponse putByronWallet(String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.putByronWallet(walletId, requestBody));
+		return executeSync(api.putByronWallet(walletId, requestBody));
 	}
 
 	/**
@@ -462,7 +464,7 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PutByronWalletPassphraseRequest}
 	 */
 	public void putByronWalletPassphrase(String walletId, RequestBody requestBody){
-		InternalWalletApiServiceGenerator.executeSync(api.putByronWalletPassphrase(walletId, requestBody));
+		executeSync(api.putByronWalletPassphrase(walletId, requestBody));
 	}
 
 	/**
@@ -479,7 +481,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link CreateAddressResponse}
 	 */
 	public CreateAddressResponse createAddress(String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.createAddress(walletId, requestBody));
+		return executeSync(api.createAddress(walletId, requestBody));
 	}
 
 	/**
@@ -496,7 +498,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link ListByronAddressesResponse}
 	 */
 	public ListByronAddressesResponse listByronAddresses(String walletId, String state){
-		return InternalWalletApiServiceGenerator.executeSync(api.listByronAddresses(walletId, state));
+		return executeSync(api.listByronAddresses(walletId, state));
 	}
 
 	/**
@@ -512,7 +514,7 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link ImportAddressesRequest}
 	 */
 	public void importAddresses(String walletId, RequestBody requestBody){
-		InternalWalletApiServiceGenerator.executeSync(api.importAddresses(walletId, requestBody));
+		executeSync(api.importAddresses(walletId, requestBody));
 	}
 
 	/**
@@ -532,7 +534,7 @@ public class SynchronousWalletApi {
 	 *   <pre>{@code DdzFFzCqrhtCNjPk5Lei7E1FxnoqMoAYtJ8VjAWbFmDb614nNBWBwv3kt6QHJa59cGezzf6piMWsbK7sWRB5sv325QqWdRuusMqqLdMt}</pre>
 	 */
 	public void importAddress(String walletId, String addressId){
-		InternalWalletApiServiceGenerator.executeSync(api.importAddress(walletId, addressId));
+		executeSync(api.importAddress(walletId, addressId));
 	}
 
 	/**
@@ -547,7 +549,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link PostByronTransactionFeeResponse}
 	 */
 	public PostByronTransactionFeeResponse postByronTransactionFee(String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.postByronTransactionFee(walletId, requestBody));
+		return executeSync(api.postByronTransactionFee(walletId, requestBody));
 	}
 
 	/**
@@ -562,7 +564,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link PostByronTransactionResponse}
 	 */
 	public PostByronTransactionResponse postByronTransaction(String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.postByronTransaction(walletId, requestBody));
+		return executeSync(api.postByronTransaction(walletId, requestBody));
 	}
 
 	/**
@@ -583,7 +585,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link ListByronTransactionsResponse}
 	 */
 	public ListByronTransactionsResponse listByronTransactions(String walletId, String start, String end, String order){
-		return InternalWalletApiServiceGenerator.executeSync(api.listByronTransactions(walletId, start, end, order));
+		return executeSync(api.listByronTransactions(walletId, start, end, order));
 	}
 
 	/**
@@ -600,7 +602,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetByronTransactionResponse}
 	 */
 	public GetByronTransactionResponse getByronTransaction(String walletId, String transactionId){
-		return InternalWalletApiServiceGenerator.executeSync(api.getByronTransaction(walletId, transactionId));
+		return executeSync(api.getByronTransaction(walletId, transactionId));
 	}
 
 	/**
@@ -620,7 +622,7 @@ public class SynchronousWalletApi {
 	 * - Length must be exactly {@code 64}.
 	 */
 	public void deleteByronTransaction(String walletId, String transactionId){
-		InternalWalletApiServiceGenerator.executeSync(api.deleteByronTransaction(walletId, transactionId));
+		executeSync(api.deleteByronTransaction(walletId, transactionId));
 	}
 
 	/**
@@ -637,7 +639,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link ByronSelectCoinsResponse}
 	 */
 	public ByronSelectCoinsResponse byronSelectCoins(String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.byronSelectCoins(walletId, requestBody));
+		return executeSync(api.byronSelectCoins(walletId, requestBody));
 	}
 
 	/**
@@ -658,7 +660,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link MigrateByronWalletResponse}
 	 */
 	public MigrateByronWalletResponse migrateByronWallet(String walletId, RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.migrateByronWallet(walletId, requestBody));
+		return executeSync(api.migrateByronWallet(walletId, requestBody));
 	}
 
 	/**
@@ -673,7 +675,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetByronWalletMigrationInfoResponse}
 	 */
 	public GetByronWalletMigrationInfoResponse getByronWalletMigrationInfo(String walletId){
-		return InternalWalletApiServiceGenerator.executeSync(api.getByronWalletMigrationInfo(walletId));
+		return executeSync(api.getByronWalletMigrationInfo(walletId));
 	}
 
 	/**
@@ -681,7 +683,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetNetworkInformationResponse}
 	 */
 	public GetNetworkInformationResponse getNetworkInformation(){
-		return InternalWalletApiServiceGenerator.executeSync(api.getNetworkInformation());
+		return executeSync(api.getNetworkInformation());
 	}
 
 	/**
@@ -690,7 +692,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetNetworkClockResponse}
 	 */
 	public GetNetworkClockResponse getNetworkClock(Boolean forceNtpCheck){
-		return InternalWalletApiServiceGenerator.executeSync(api.getNetworkClock(forceNtpCheck));
+		return executeSync(api.getNetworkClock(forceNtpCheck));
 	}
 
 	/**
@@ -701,7 +703,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link GetNetworkParametersResponse}
 	 */
 	public GetNetworkParametersResponse getNetworkParameters(){
-		return InternalWalletApiServiceGenerator.executeSync(api.getNetworkParameters());
+		return executeSync(api.getNetworkParameters());
 	}
 
 	/**
@@ -713,7 +715,7 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link PostExternalTransactionResponse}
 	 */
 	public PostExternalTransactionResponse postExternalTransaction(RequestBody requestBody){
-		return InternalWalletApiServiceGenerator.executeSync(api.postExternalTransaction(requestBody));
+		return executeSync(api.postExternalTransaction(requestBody));
 	}
 
 	/**
@@ -729,6 +731,6 @@ public class SynchronousWalletApi {
 	 * @return the server response as an instance of {@link InspectAddressResponse}
 	 */
 	public InspectAddressResponse inspectAddress(String addressId){
-		return InternalWalletApiServiceGenerator.executeSync(api.inspectAddress(addressId));
+		return executeSync(api.inspectAddress(addressId));
 	}
 }

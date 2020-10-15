@@ -1,0 +1,22 @@
+package com.univocity.cardano.wallet.api.generated;
+
+import com.univocity.cardano.wallet.api.service.*;
+import okhttp3.*;
+
+{IMPORTS}
+
+/**
+ * Asynchronous methods automatically generated for all endpoints available from the
+ * Cardano Wallet Backend API:
+ *
+ * https://input-output-hk.github.io/cardano-wallet/api/edge/
+ */
+public class AsynchronousWalletApi {
+
+	private final InternalWalletApiService api;
+
+	public AsynchronousWalletApi(InternalWalletApiService api) {
+		this.api = api;
+	}
+
+{API_METHODS}}

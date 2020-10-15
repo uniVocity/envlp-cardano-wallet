@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.api;
 
+import com.github.tomakehurst.wiremock.*;
 import com.github.tomakehurst.wiremock.client.*;
 
 /**
@@ -39,6 +40,7 @@ public abstract class Mock {
 
 	/**
 	 * Configures the mock endpoints. Subclasses will typically map URLs to files stored locally.
+	 * @param wireMockServer the wiremock server instance to which endpoint stubs are to be setup
 	 */
-	protected abstract void setup();
+	protected abstract void setup(WireMockServer wireMockServer);
 }

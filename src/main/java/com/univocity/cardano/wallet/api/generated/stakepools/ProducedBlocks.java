@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.api.generated.stakepools;
 
+import com.univocity.cardano.wallet.api.generated.common.*;
 import com.fasterxml.jackson.annotation.*;
 
 

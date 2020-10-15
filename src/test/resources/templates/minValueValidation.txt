@@ -1,0 +1,3 @@
+		if ({NAME} < {MIN}) {
+			throw new IllegalArgumentException("Value of {NAME} cannot be less than {MIN}");
+		}

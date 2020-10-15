@@ -1,9 +1,8 @@
 package com.univocity.cardano.wallet.api.generated.common;
 
 
-import com.fasterxml.jackson.annotation.*;
-
 import java.util.regex.*;
+import com.fasterxml.jackson.annotation.*;
 
 
 /**

@@ -1,0 +1,4 @@
+		if ({NAME} == null) {
+			this.{NAME} = {NAME};
+			return;
+		}

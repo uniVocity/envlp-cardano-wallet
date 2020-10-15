@@ -1,0 +1,5 @@
+	    if(!Pattern.compile("\\p{XDigit}+").matcher({NAME}).matches()){
+    		throw new IllegalArgumentException("Value provided for {NAME} does not represent a hexadecimal");
+    	}
+
+

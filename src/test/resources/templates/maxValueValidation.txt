@@ -1,0 +1,3 @@
+		if ({NAME} > {MAX}L) {
+			throw new IllegalArgumentException("Value of {NAME} cannot be greater than {MAX}");
+		}

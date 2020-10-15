@@ -1,5 +1,8 @@
 package com.univocity.cardano.wallet.api.generated;
 
+import com.univocity.cardano.wallet.api.service.*;
+import okhttp3.*;
+
 import com.univocity.cardano.wallet.api.generated.addresses.*;
 import com.univocity.cardano.wallet.api.generated.byronaddresses.*;
 import com.univocity.cardano.wallet.api.generated.byroncoinselections.*;
@@ -14,8 +17,6 @@ import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
 import com.univocity.cardano.wallet.api.generated.utils.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
-import com.univocity.cardano.wallet.api.service.*;
-import okhttp3.*;
 
 
 /**

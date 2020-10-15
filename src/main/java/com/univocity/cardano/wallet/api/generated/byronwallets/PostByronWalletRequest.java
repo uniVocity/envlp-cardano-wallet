@@ -1,9 +1,9 @@
 package com.univocity.cardano.wallet.api.generated.byronwallets;
 
-import com.fasterxml.jackson.annotation.*;
-import com.univocity.cardano.wallet.api.generated.*;
-
+import com.univocity.cardano.wallet.api.generated.common.*;
 import java.util.*;
+import com.univocity.cardano.wallet.api.generated.*;
+import com.fasterxml.jackson.annotation.*;
 
 
 /**

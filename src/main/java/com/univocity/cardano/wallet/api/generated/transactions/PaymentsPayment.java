@@ -1,7 +1,7 @@
 package com.univocity.cardano.wallet.api.generated.transactions;
 
-import com.fasterxml.jackson.annotation.*;
 import com.univocity.cardano.wallet.api.generated.common.*;
+import com.fasterxml.jackson.annotation.*;
 
 
 /**

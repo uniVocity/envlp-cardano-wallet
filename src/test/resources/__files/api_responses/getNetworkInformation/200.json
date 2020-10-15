@@ -1,0 +1,27 @@
+{
+  "sync_progress": {
+    "status": "ready",
+    "progress": {
+      "quantity": 44,
+      "unit": "percent"
+    }
+  },
+  "node_tip": {
+    "slot_number": 1337,
+    "epoch_number": 14,
+    "height": {
+      "quantity": 1337,
+      "unit": "block"
+    },
+    "absolute_slot_number": 8086
+  },
+  "network_tip": {
+    "slot_number": 1337,
+    "epoch_number": 14,
+    "absolute_slot_number": 8086
+  },
+  "next_epoch": {
+    "epoch_number": 14,
+    "epoch_start_time": "2019-02-27T14:46:45.000Z"
+  }
+}
