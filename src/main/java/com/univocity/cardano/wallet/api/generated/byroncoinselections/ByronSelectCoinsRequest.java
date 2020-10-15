@@ -1,0 +1,45 @@
+package com.univocity.cardano.wallet.api.generated.byroncoinselections;
+
+import com.fasterxml.jackson.annotation.*;
+import com.univocity.cardano.wallet.api.generated.*;
+import com.univocity.cardano.wallet.api.generated.common.*;
+
+import java.util.*;
+
+
+/**
+ * 
+ * Request body definition for 
+ * {@link InternalWalletApiService#byronSelectCoins(String, okhttp3.RequestBody)}.
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public final class ByronSelectCoinsRequest {
+
+
+	@JsonProperty("payments")
+	private ArrayList<Payment> payments;
+
+	/**
+	 * Returns the list of target outputs.
+	 * - Minimum number of elements: {@code 1}.
+	 * 
+	 * @return the list of target outputs
+	 */
+	public ArrayList<Payment> getPayments(){
+		return payments;
+	}
+
+	/**
+	 * Defines a list of target outputs.
+	 * - Minimum number of elements: {@code 1}.
+	 * 
+	 * @param payments a list of target outputs
+	 */
+	public void setPayments(ArrayList<Payment> payments){
+		if (payments == null) {
+			throw new IllegalArgumentException("Value of payments cannot be null");
+		}
+
+		this.payments = payments;
+	}
+}
