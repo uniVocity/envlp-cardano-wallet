@@ -1,6 +1,6 @@
 package com.univocity.cardano.wallet.embedded.services;
 
-import com.univocity.cardano.wallet.*;
+import com.univocity.cardano.wallet.common.*;
 import com.univocity.cardano.wallet.embedded.*;
 import org.slf4j.*;
 
@@ -17,7 +17,7 @@ public abstract class ProcessManager extends CardanoToolWrapper {
 	private InputStreamer inputStreamer;
 	private final Object lock = new Object();
 	private long startTime;
-	private final ParameterizedString command;
+	private ParameterizedString command;
 
 	public ProcessManager(String toolDirPath, String toolName) {
 		this(toolDirPath, toolName, null);
@@ -27,8 +27,11 @@ public abstract class ProcessManager extends CardanoToolWrapper {
 		super(toolDirPath, toolName);
 		this.outputConsumer = outputConsumer;
 		Runtime.getRuntime().addShutdownHook(new Thread(this::stopProcess));
+	}
 
-		command = new ParameterizedString(getStartupCommand());
+	public ProcessManager setStartupCommand(String command) {
+		this.command = new ParameterizedString(command);
+		return this;
 	}
 
 	public void stopProcess() {
@@ -62,7 +65,12 @@ public abstract class ProcessManager extends CardanoToolWrapper {
 		}
 	}
 
-	protected abstract String getStartupCommand();
+	public final String getStartupCommand() {
+		if (this.command == null) {
+			throw new IllegalStateException("No startup command provided for " + toolName);
+		}
+		return command.toString();
+	}
 
 	public final void restartProcess() {
 		stopProcess();
@@ -74,6 +82,9 @@ public abstract class ProcessManager extends CardanoToolWrapper {
 		if (process == null && !stopped) {
 			log.info("Starting {} process", toolName);
 
+			if(command == null){
+				throw new IllegalStateException("No startup command defined for " + toolName);
+			}
 			this.command.getParameterValues().forEach((k, v) -> Utils.notNull(v, k));
 			String command = this.command.applyParameterValues();
 

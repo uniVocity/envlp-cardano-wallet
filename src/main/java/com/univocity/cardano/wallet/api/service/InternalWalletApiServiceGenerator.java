@@ -3,19 +3,15 @@ package com.univocity.cardano.wallet.api.service;
 
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.*;
-import okhttp3.Dispatcher;
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 import retrofit2.Call;
-import retrofit2.Converter;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
+import retrofit2.*;
+import retrofit2.converter.jackson.*;
 
-import javax.security.auth.login.*;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.util.concurrent.TimeUnit;
+import java.io.*;
+import java.lang.annotation.*;
+import java.util.concurrent.*;
 
 /**
  * Generates a Wallet API implementation based on @see {@link InternalWalletApiService}.

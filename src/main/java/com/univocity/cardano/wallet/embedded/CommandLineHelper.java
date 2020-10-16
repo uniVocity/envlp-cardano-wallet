@@ -111,6 +111,7 @@ public class CommandLineHelper {
 		}
 
 		String[] args = new CsvParser(settings).parseLine(command);
+		args = ArrayUtils.removeAllOccurences(args, null);
 		return args;
 	}
 

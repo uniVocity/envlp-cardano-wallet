@@ -1,6 +1,6 @@
 package com.univocity.cardano.wallet.api.generator;
 
-import com.univocity.cardano.wallet.*;
+import com.univocity.cardano.wallet.common.*;
 import org.apache.commons.lang3.*;
 
 import java.io.*;

@@ -1,4 +1,4 @@
-package com.univocity.cardano.wallet;
+package com.univocity.cardano.wallet.common;
 
 import org.apache.commons.io.*;
 

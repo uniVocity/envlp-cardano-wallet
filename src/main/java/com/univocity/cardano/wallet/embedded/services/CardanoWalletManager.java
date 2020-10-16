@@ -12,15 +12,6 @@ public class CardanoWalletManager extends ProcessManager {
 		super(walletDirPath, "cardano-wallet", outputConsumer);
 	}
 
-	@Override
-	protected String getStartupCommand() {
-		return "serve" +
-				" --mainnet" +
-				" --database {blockchain.dir}" +
-				" --node-socket {blockchain.dir}/node.socket" +
-				" --port {cardano.wallet.port}";
-	}
-
 	public static void main(String... args) throws Exception {
 		new CardanoWalletManager("/tmp/", System.out::println).startProcess();
 
