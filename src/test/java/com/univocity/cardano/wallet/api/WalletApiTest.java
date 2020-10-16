@@ -12,7 +12,7 @@ public class WalletApiTest {
 	private WireMockServer wireMockServer;
 	private CardanoWalletServiceMock cardanoWallet;
 
-	WalletApiConfiguration configuration = new WalletApiConfiguration();
+	ApiConfiguration configuration = new ApiConfiguration();
 	private final WalletApi walletApi = new WalletApi(configuration);
 
 	@BeforeClass

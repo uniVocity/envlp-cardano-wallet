@@ -35,7 +35,7 @@ public class InternalWalletApiServiceGenerator {
 				.build();
 	}
 
-	public static <S> S createService(WalletApiConfiguration configuration, Class<S> serviceClass) {
+	public static <S> S createService(ApiConfiguration configuration, Class<S> serviceClass) {
 		String walletServiceUrl = configuration.getWalletServiceBaseUrl();
 		Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
 				.baseUrl(walletServiceUrl)

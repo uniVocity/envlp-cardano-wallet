@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.client.*;
 
 /**
  * Base wiremock mock configuration for local testing. All responses to be returned by the
- * mock server must be configured on the {@link #setup()} method.
+ * mock server must be configured on the {@link #setup(WireMockServer)} method.
  */
 public abstract class Mock {
 

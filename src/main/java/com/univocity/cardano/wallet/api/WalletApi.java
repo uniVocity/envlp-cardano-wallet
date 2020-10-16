@@ -8,7 +8,7 @@ public class WalletApi {
 	private final AsynchronousWalletApi async;
 	private final SynchronousWalletApi sync;
 
-	public WalletApi(WalletApiConfiguration configuration) {
+	public WalletApi(ApiConfiguration configuration) {
 		InternalWalletApiService api = InternalWalletApiServiceGenerator.createService(configuration, InternalWalletApiService.class);
 		async = new AsynchronousWalletApi(api);
 		sync = new SynchronousWalletApi(api);

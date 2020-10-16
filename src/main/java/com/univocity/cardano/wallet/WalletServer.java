@@ -6,21 +6,15 @@ import java.io.*;
 
 public class WalletServer {
 
-	private final WalletServerConfig config;
-
-	private WalletServer(WalletServerConfig config) {
-		this.config = config;
-	}
-
 	public static EmbeddedWallet embedded() {
-		return new WalletServerConfig(null);
+		return new WalletServerConfig("http://localhost");
 	}
 
 	public static RemoteWallet remote(String host) {
 		return new WalletServerConfig(host);
 	}
 
-	private static class WalletServerConfig implements EmbeddedWallet, RemoteWallet, BlockchainConfig, NodeConfig, TopologyConfig, PortConfig, WalletPort, Node, Wallet {
+	static class WalletServerConfig implements EmbeddedWallet, RemoteWallet, BlockchainConfig, NodeConfig, TopologyConfig, PortConfig, WalletPort, Node, Wallet {
 
 		final String walletHost;
 		int walletPort;
@@ -36,15 +30,15 @@ public class WalletServer {
 		}
 
 		@Override
-		public WalletServer startAtPort(int walletPort) {
+		public EmbeddedWalletServer startAtPort(int walletPort) {
 			this.walletPort = walletPort;
-			return new WalletServer(this);
+			return new EmbeddedWalletServer(this);
 		}
 
 		@Override
-		public WalletServer connectToPort(int walletPort) {
+		public RemoteWalletServer connectToPort(int walletPort) {
 			this.walletPort = walletPort;
-			return new WalletServer(this);
+			return new RemoteWalletServer(this);
 		}
 
 		@Override
@@ -103,12 +97,20 @@ public class WalletServer {
 
 
 	public static void main(String... args) {
-		WalletServer server = WalletServer.embedded()
-				.toolsIn("/path/to/cardano/tools")
-				.node().configuration("/path/to/node/config").topology("/path/to/topology").blockchain("/path/to/blockchain").port(3333)
-				.wallet().startAtPort(4444);
+		String home = System.getProperty("user.home");
+		String configRoot = home + "/dev/repository/free-commerce/src/main/resources/";
 
-		server = WalletServer.remote("http://blah").connectToPort(1111);
+		EmbeddedWalletServer server = WalletServer.embedded()
+				.toolsIn("/home/jbax/dev/repository/free-commerce/src/main/resources/cli/lin")
+				.node()
+					.configuration(configRoot + "mainnet-config.json")
+					.topology(configRoot + "mainnet-topology.json")
+					.blockchain(home + "/Downloads/blockchain")
+					.port(3333)
+				.wallet()
+					.startAtPort(4444);
+
+		//RemoteWalletServer remoteServer = WalletServer.remote("http://blah").connectToPort(1111);
 
 	}
 
