@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet;
 
+import com.univocity.cardano.wallet.api.generated.wallets.*;
 import com.univocity.cardano.wallet.builders.*;
 
 import java.io.*;
@@ -140,27 +141,56 @@ public class WalletServer {
 				.port(4444)
 				.consumeOutput(System.out::println);
 
-		RemoteWalletServer remoteServer = WalletServer.remote("http://localhost").connectToPort(4444);
+		RemoteWalletServer remoteServer = server;//WalletServer.remote("http://localhost").connectToPort(4444);
+
+//		remoteServer.stakePools().list();
+//
+//		remoteServer.wallets().list();
+//		remoteServer.wallets().create("wallet name").shelley().fromSeed("seed abc a").password("qwerty").addressPoolGap(10).secondFactor("");
+//		remoteServer.wallets().create("wallet name").shelley().fromPublicKey("hex xpub").addressPoolGap(10);
+//
+//		remoteServer.wallets().create("wallet name").byron().fromSeed("seed abc a").password("qwerty");
+//		remoteServer.wallets().create("wallet name").byron().fromPrivateKey("rootprivatekey HEX").password("qwerty");
+//		remoteServer.wallets().create("wallet name").icarus().fromSeed("seed abc a").password("qwerty");
+//		remoteServer.wallets().create("wallet name").ledger().fromSeed("seed abc a").password("qwerty");
+//		remoteServer.wallets().create("wallet name").trezor().fromSeed("seed abc a").password("qwerty");
+//		remoteServer.wallets().create("wallet name").icarus().fromPublicKey("hex xpub").addressPoolGap(10);
+//		remoteServer.wallets().create("wallet name").ledger().fromPublicKey("hex xpub").addressPoolGap(10);
+//		remoteServer.wallets().create("wallet name").trezor().fromPublicKey("hex xpub").addressPoolGap(10);
+//
+//
+//		Wallet wallet = remoteServer.wallets().getById("hex xpub");
+//		wallet.getUTxoStatistics();
+//		wallet.delete();
+//		wallet.rename("new wallet name");
+//		wallet.updatePassword("old", "new");
+//
+//		wallet.addresses().list().unused();
+//		wallet.addresses().list().used();
+//		wallet.addresses().list().all();
+//
+//		wallet.stakePool().quit();
+//		wallet.stakePool().join(stakePool);
+//
+//		wallet.transfer().to("address", 50000L).andTo("address 2", 25000L).withMetadata("cardano", 1, "object[]").authorize("password");
+
+
+
 
 		while (true) {
 			Thread.sleep(10000);
-			try {
-				remoteServer.api().async().getNetworkInformation(System.out::println);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 
+
+		//	remoteServer.api().sync().postWallet();
+
+			remoteServer.api().async().getNetworkInformation(System.out::println);
 			try {
 				System.out.println(remoteServer.api().sync().getNetworkParameters());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
-			try {
-				System.out.println(remoteServer.api().sync().listByronWallets());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			remoteServer.api().async().listByronWallets(System.out::println);
 
 			try {
 				System.out.println(remoteServer.api().sync().listWallets());
@@ -169,6 +199,4 @@ public class WalletServer {
 			}
 		}
 	}
-
-
 }
