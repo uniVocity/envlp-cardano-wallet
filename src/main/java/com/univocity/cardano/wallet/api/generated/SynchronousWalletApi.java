@@ -17,6 +17,7 @@ import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
 import com.univocity.cardano.wallet.api.generated.utils.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
+import java.util.*;
 
 
 /**
@@ -51,9 +52,9 @@ public class SynchronousWalletApi {
 	 * Return a list of known wallets, ordered from oldest to newest.
 	 * {@code status: stable}
 	 * 
-	 * @return the server response as an instance of {@link ListWalletsResponse}
+	 * @return the server response as a list of {@link ListWalletsResponseItem}
 	 */
-	public ListWalletsResponse listWallets(){
+	public List<ListWalletsResponseItem> listWallets(){
 		return executeSync(api.listWallets());
 	}
 
@@ -180,9 +181,9 @@ public class SynchronousWalletApi {
 	 * - Defaults to: {@code descending}.
 	 * @param minWithdrawal the minWithdrawal.
 	 * - Minimum value: {@code 1}.
-	 * @return the server response as an instance of {@link ListTransactionsResponse}
+	 * @return the server response as a list of {@link ListTransactionsResponseItem}
 	 */
-	public ListTransactionsResponse listTransactions(String walletId, String start, String end, String order, Integer minWithdrawal){
+	public List<ListTransactionsResponseItem> listTransactions(String walletId, String start, String end, String order, Integer minWithdrawal){
 		return executeSync(api.listTransactions(walletId, start, end, order, minWithdrawal));
 	}
 
@@ -233,9 +234,9 @@ public class SynchronousWalletApi {
 	 * - Length must be exactly {@code 40}.
 	 * @param state the state.
 	 * - Accepted values: {@code [used, unused]}.
-	 * @return the server response as an instance of {@link ListAddressesResponse}
+	 * @return the server response as a list of {@link ListAddressesResponseItem}
 	 */
-	public ListAddressesResponse listAddresses(String walletId, String state){
+	public List<ListAddressesResponseItem> listAddresses(String walletId, String state){
 		return executeSync(api.listAddresses(walletId, state));
 	}
 
@@ -251,9 +252,9 @@ public class SynchronousWalletApi {
 	 * 
 	 * @param stake the stake (optional).
 	 * - Value range from {@code 0} to {@code 45000000000000000}.
-	 * @return the server response as an instance of {@link ListStakePoolsResponse}
+	 * @return the server response as a list of {@link ListStakePoolsResponseItem}
 	 */
-	public ListStakePoolsResponse listStakePools(Integer stake){
+	public List<ListStakePoolsResponseItem> listStakePools(Integer stake){
 		return executeSync(api.listStakePools(stake));
 	}
 
@@ -345,9 +346,9 @@ public class SynchronousWalletApi {
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
 	 * @param requestBody a request body containing the json representation of {@link MigrateShelleyWalletRequest}
-	 * @return the server response as an instance of {@link MigrateShelleyWalletResponse}
+	 * @return the server response as a list of {@link MigrateShelleyWalletResponseItem}
 	 */
-	public MigrateShelleyWalletResponse migrateShelleyWallet(String walletId, RequestBody requestBody){
+	public List<MigrateShelleyWalletResponseItem> migrateShelleyWallet(String walletId, RequestBody requestBody){
 		return executeSync(api.migrateShelleyWallet(walletId, requestBody));
 	}
 
@@ -383,9 +384,9 @@ public class SynchronousWalletApi {
 	 * Return a list of known Byron wallets, ordered from oldest to newest.
 	 * {@code status: stable}
 	 * 
-	 * @return the server response as an instance of {@link ListByronWalletsResponse}
+	 * @return the server response as a list of {@link ListByronWalletsResponseItem}
 	 */
-	public ListByronWalletsResponse listByronWallets(){
+	public List<ListByronWalletsResponseItem> listByronWallets(){
 		return executeSync(api.listByronWallets());
 	}
 
@@ -495,9 +496,9 @@ public class SynchronousWalletApi {
 	 * - Length must be exactly {@code 40}.
 	 * @param state the state.
 	 * - Accepted values: {@code [used, unused]}.
-	 * @return the server response as an instance of {@link ListByronAddressesResponse}
+	 * @return the server response as a list of {@link ListByronAddressesResponseItem}
 	 */
-	public ListByronAddressesResponse listByronAddresses(String walletId, String state){
+	public List<ListByronAddressesResponseItem> listByronAddresses(String walletId, String state){
 		return executeSync(api.listByronAddresses(walletId, state));
 	}
 
@@ -582,9 +583,9 @@ public class SynchronousWalletApi {
 	 * @param order the order.
 	 * - Accepted values: {@code [ascending, descending]}.
 	 * - Defaults to: {@code descending}.
-	 * @return the server response as an instance of {@link ListByronTransactionsResponse}
+	 * @return the server response as a list of {@link ListByronTransactionsResponseItem}
 	 */
-	public ListByronTransactionsResponse listByronTransactions(String walletId, String start, String end, String order){
+	public List<ListByronTransactionsResponseItem> listByronTransactions(String walletId, String start, String end, String order){
 		return executeSync(api.listByronTransactions(walletId, start, end, order));
 	}
 
@@ -657,9 +658,9 @@ public class SynchronousWalletApi {
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
 	 * @param requestBody a request body containing the json representation of {@link MigrateByronWalletRequest}
-	 * @return the server response as an instance of {@link MigrateByronWalletResponse}
+	 * @return the server response as a list of {@link MigrateByronWalletResponseItem}
 	 */
-	public MigrateByronWalletResponse migrateByronWallet(String walletId, RequestBody requestBody){
+	public List<MigrateByronWalletResponseItem> migrateByronWallet(String walletId, RequestBody requestBody){
 		return executeSync(api.migrateByronWallet(walletId, requestBody));
 	}
 

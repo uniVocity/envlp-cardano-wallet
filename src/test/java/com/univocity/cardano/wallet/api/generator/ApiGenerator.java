@@ -25,7 +25,7 @@ public class ApiGenerator {
 		Yaml yaml = new Yaml(new Constructor(), new Representer(), new DumperOptions(), loaderOptions, new Resolver());
 
 		String home = System.getProperty("user.home");
-		Map globals = yaml.load(new FileReader(new File(home + "/dev/repository/cardano-wallet/specifications/api/swagger.yaml")));
+		Map globals = yaml.load(new FileReader(new File(home + "/dev/repository/iog-cardano-wallet/specifications/api/swagger.yaml")));
 		globals = (Map) deepCopy(globals);
 		Map paths = (Map) globals.get("paths");
 
@@ -38,6 +38,8 @@ public class ApiGenerator {
 
 
 		Set<String> packagesToImport = new TreeSet<>();
+		packagesToImport.add("java.util");
+
 		Map<String, ClassRef> classes = new TreeMap<>();
 		endpoints.forEach(e -> e.generateClasses(baseDir, packagesToImport, classes));
 		Collection<ClassRef> classesToGenerate = mergeClasses(classes.values());

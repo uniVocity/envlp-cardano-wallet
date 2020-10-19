@@ -17,6 +17,7 @@ import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
 import com.univocity.cardano.wallet.api.generated.utils.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
+import java.util.*;
 
 
 /**
@@ -51,9 +52,9 @@ public class AsynchronousWalletApi {
 	 * Return a list of known wallets, ordered from oldest to newest.
 	 * {@code status: stable}
 	 * 
-	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListWalletsResponse}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListWalletsResponseItem}
 	 */
-	public void listWallets(WalletApiCallback<ListWalletsResponse> callback){
+	public void listWallets(WalletApiCallback<List<ListWalletsResponseItem>> callback){
 		api.listWallets().enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -182,9 +183,9 @@ public class AsynchronousWalletApi {
 	 * - Defaults to: {@code descending}.
 	 * @param minWithdrawal the minWithdrawal.
 	 * - Minimum value: {@code 1}.
-	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListTransactionsResponse}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListTransactionsResponseItem}
 	 */
-	public void listTransactions(String walletId, String start, String end, String order, Integer minWithdrawal, WalletApiCallback<ListTransactionsResponse> callback){
+	public void listTransactions(String walletId, String start, String end, String order, Integer minWithdrawal, WalletApiCallback<List<ListTransactionsResponseItem>> callback){
 		api.listTransactions(walletId, start, end, order, minWithdrawal).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -236,9 +237,9 @@ public class AsynchronousWalletApi {
 	 * - Length must be exactly {@code 40}.
 	 * @param state the state.
 	 * - Accepted values: {@code [used, unused]}.
-	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListAddressesResponse}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListAddressesResponseItem}
 	 */
-	public void listAddresses(String walletId, String state, WalletApiCallback<ListAddressesResponse> callback){
+	public void listAddresses(String walletId, String state, WalletApiCallback<List<ListAddressesResponseItem>> callback){
 		api.listAddresses(walletId, state).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -254,9 +255,9 @@ public class AsynchronousWalletApi {
 	 * 
 	 * @param stake the stake (optional).
 	 * - Value range from {@code 0} to {@code 45000000000000000}.
-	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListStakePoolsResponse}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListStakePoolsResponseItem}
 	 */
-	public void listStakePools(Integer stake, WalletApiCallback<ListStakePoolsResponse> callback){
+	public void listStakePools(Integer stake, WalletApiCallback<List<ListStakePoolsResponseItem>> callback){
 		api.listStakePools(stake).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -348,9 +349,9 @@ public class AsynchronousWalletApi {
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
 	 * @param requestBody a request body containing the json representation of {@link MigrateShelleyWalletRequest}
-	 * @param callback code to be executed once a response is available. The response will be an instance of {@link MigrateShelleyWalletResponse}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link MigrateShelleyWalletResponseItem}
 	 */
-	public void migrateShelleyWallet(String walletId, RequestBody requestBody, WalletApiCallback<MigrateShelleyWalletResponse> callback){
+	public void migrateShelleyWallet(String walletId, RequestBody requestBody, WalletApiCallback<List<MigrateShelleyWalletResponseItem>> callback){
 		api.migrateShelleyWallet(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -386,9 +387,9 @@ public class AsynchronousWalletApi {
 	 * Return a list of known Byron wallets, ordered from oldest to newest.
 	 * {@code status: stable}
 	 * 
-	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListByronWalletsResponse}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListByronWalletsResponseItem}
 	 */
-	public void listByronWallets(WalletApiCallback<ListByronWalletsResponse> callback){
+	public void listByronWallets(WalletApiCallback<List<ListByronWalletsResponseItem>> callback){
 		api.listByronWallets().enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -500,9 +501,9 @@ public class AsynchronousWalletApi {
 	 * - Length must be exactly {@code 40}.
 	 * @param state the state.
 	 * - Accepted values: {@code [used, unused]}.
-	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListByronAddressesResponse}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListByronAddressesResponseItem}
 	 */
-	public void listByronAddresses(String walletId, String state, WalletApiCallback<ListByronAddressesResponse> callback){
+	public void listByronAddresses(String walletId, String state, WalletApiCallback<List<ListByronAddressesResponseItem>> callback){
 		api.listByronAddresses(walletId, state).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -589,9 +590,9 @@ public class AsynchronousWalletApi {
 	 * @param order the order.
 	 * - Accepted values: {@code [ascending, descending]}.
 	 * - Defaults to: {@code descending}.
-	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListByronTransactionsResponse}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListByronTransactionsResponseItem}
 	 */
-	public void listByronTransactions(String walletId, String start, String end, String order, WalletApiCallback<ListByronTransactionsResponse> callback){
+	public void listByronTransactions(String walletId, String start, String end, String order, WalletApiCallback<List<ListByronTransactionsResponseItem>> callback){
 		api.listByronTransactions(walletId, start, end, order).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -665,9 +666,9 @@ public class AsynchronousWalletApi {
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
 	 * @param requestBody a request body containing the json representation of {@link MigrateByronWalletRequest}
-	 * @param callback code to be executed once a response is available. The response will be an instance of {@link MigrateByronWalletResponse}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link MigrateByronWalletResponseItem}
 	 */
-	public void migrateByronWallet(String walletId, RequestBody requestBody, WalletApiCallback<MigrateByronWalletResponse> callback){
+	public void migrateByronWallet(String walletId, RequestBody requestBody, WalletApiCallback<List<MigrateByronWalletResponseItem>> callback){
 		api.migrateByronWallet(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 

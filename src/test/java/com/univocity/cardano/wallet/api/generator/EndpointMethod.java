@@ -82,7 +82,7 @@ public class EndpointMethod {
 		if (contentType != null && contentType.equals("application/octet-stream")) {
 			requestBodyClass = "byte[]";
 		}
-		returnType = response == null || response.isEmpty() ? "Void" : StringUtils.capitalize(methodName) + "Response";
+		returnType = response == null || response.isEmpty() ? "Void" : StringUtils.capitalize(methodName) + (response.isArray ? "ResponseItem" : "Response");
 		allowsBody = !"delete".equalsIgnoreCase(method);
 
 		generateMethodSignatureAndInvocation();
@@ -155,11 +155,13 @@ public class EndpointMethod {
 		} else {
 			throw new IllegalStateException("Unsupported HTTP method: " + method);
 		}
-		out.append(endpoint).append("\")\n");
+
+		out.append("/v2" + endpoint).append("\")\n");
 		out.append('\t');
 
-
-		out.append("Call<").append(returnType).append("> ").append(methodName).append('(');
+		out.append("Call<");
+		appendReturnType(out);
+		out.append("> ").append(methodName).append('(');
 
 		appendParameters(out, true);
 		appendBody(out, true);
@@ -255,9 +257,19 @@ public class EndpointMethod {
 		if (out.charAt(out.length() - 1) != '(') {
 			out.append(", ");
 		}
-		out.append("WalletApiCallback<").append(returnType).append("> callback){\n");
+		out.append("WalletApiCallback<");
+		appendReturnType(out);
+		out.append("> callback){\n");
 		out.append("\t\tapi.").append(methodInvocation).append(".enqueue(new WalletApiCallbackAdapter<>(callback));\n");
 		out.append("\t}\n");
+	}
+
+	private void appendReturnType(StringBuilder out) {
+		if (response.isArray) {
+			out.append("List<").append(returnType).append(">");
+		} else {
+			out.append(returnType);
+		}
 	}
 
 	public void generateSynchronousApi(StringBuilder out, String endpoint) {
@@ -272,10 +284,20 @@ public class EndpointMethod {
 		boolean isVoid = returnType.equals("Void");
 
 		if (!isVoid) {
-			out.append("\n\t * @return the server response as an instance of {@link ").append(returnType).append("}");
+			if (response.isArray) {
+				out.append("\n\t * @return the server response as a list of {@link ").append(returnType).append("}");
+			} else {
+				out.append("\n\t * @return the server response as an instance of {@link ").append(returnType).append("}");
+			}
 		}
 		out.append("\n\t */\n");
-		out.append("\tpublic ").append(isVoid ? "void" : returnType).append(' ').append(methodName).append('(');
+		out.append("\tpublic ");
+		if (isVoid) {
+			out.append("void");
+		} else {
+			appendReturnType(out);
+		}
+		out.append(' ').append(methodName).append('(');
 
 		appendParameters(out, false);
 		appendBody(out, false);

@@ -1,4 +1,4 @@
-package com.univocity.cardano.wallet.api.generated.byronmigrations;
+package com.univocity.cardano.wallet.api.generated.transactions;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
 import java.util.regex.*;
@@ -10,11 +10,9 @@ import com.univocity.cardano.wallet.api.generated.*;
 
 /**
  * 
- * Response body produced by 
- * {@link InternalWalletApiService#migrateByronWallet(String, okhttp3.RequestBody)}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class MigrateByronWalletResponse {
+public final class ListTransactionsResponseItem {
 
 
 	@JsonProperty("id")

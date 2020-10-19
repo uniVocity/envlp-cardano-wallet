@@ -7,14 +7,14 @@ import org.apache.commons.lang3.builder.*;
  */
 public class WalletApiError {
 
-	private int code;
+	private String code;
 	private String message;
 
-	public int getCode() {
+	public String getCode() {
 		return code;
 	}
 
-	public void setCode(int code) {
+	public void setCode(String code) {
 		this.code = code;
 	}
 

@@ -10,11 +10,9 @@ import com.univocity.cardano.wallet.api.generated.*;
 
 /**
  * 
- * Response body produced by 
- * {@link InternalWalletApiService#migrateShelleyWallet(String, okhttp3.RequestBody)}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class MigrateShelleyWalletResponse {
+public final class MigrateShelleyWalletResponseItem {
 
 
 	@JsonProperty("id")

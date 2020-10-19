@@ -9,11 +9,9 @@ import com.univocity.cardano.wallet.api.generated.*;
 
 /**
  * 
- * Response body produced by 
- * {@link InternalWalletApiService#listWallets()}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class ListWalletsResponse {
+public final class ListWalletsResponseItem {
 
 
 	@JsonProperty("id")

@@ -70,7 +70,7 @@ public class WalletServer {
 			}
 		}
 
-		public class WalletServerBuilder implements PortConfig<EmbeddedWalletServer>, ProcessOutput<EmbeddedWalletServer>{
+		public class WalletServerBuilder implements PortConfig<EmbeddedWalletServer>, ProcessOutput<EmbeddedWalletServer> {
 			@Override
 			public ProcessOutput<EmbeddedWalletServer> port(int port) {
 				walletPort = port;
@@ -131,21 +131,43 @@ public class WalletServer {
 		EmbeddedWalletServer server = WalletServer.embedded()
 				.toolsIn(HOME + "/dev/repository/free-commerce/src/main/resources/cli/lin")
 				.node()
-					.configuration(CONFIGS + "mainnet-config.json")
-					.topology(CONFIGS + "mainnet-topology.json")
-					.storeBlockchainIn(HOME + "/Downloads/blockchain")
-					.port(3333)
-					.consumeOutput(System.out::println)
+				.configuration(CONFIGS + "mainnet-config.json")
+				.topology(CONFIGS + "mainnet-topology.json")
+				.storeBlockchainIn(HOME + "/Downloads/blockchain")
+				.port(3333)
+				.consumeOutput(System.out::println)
 				.wallet()
-					.port(4444)
-					.consumeOutput(System.out::println);
+				.port(4444)
+				.consumeOutput(System.out::println);
 
-//		RemoteWalletServer remoteServer = WalletServer.remote("http://localhost").connectToPort(4444);
-//		Thread.sleep(10000);
-//		System.out.println(remoteServer.api().sync().getNetworkInformation());
+		RemoteWalletServer remoteServer = WalletServer.remote("http://localhost").connectToPort(4444);
 
-		server.getNodeManager().waitForProcess();
+		while (true) {
+			Thread.sleep(10000);
+			try {
+				remoteServer.api().async().getNetworkInformation(System.out::println);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
+			try {
+				System.out.println(remoteServer.api().sync().getNetworkParameters());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			try {
+				System.out.println(remoteServer.api().sync().listByronWallets());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			try {
+				System.out.println(remoteServer.api().sync().listWallets());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 

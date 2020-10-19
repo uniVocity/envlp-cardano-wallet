@@ -8,7 +8,7 @@ public class Response {
 	private String description;
 	private String contentType;
 	private List<JsonSchema> jsonSchemas = new ArrayList<>();
-	private boolean isArray;
+	boolean isArray;
 
 	private Map<String, String> headers = new LinkedHashMap<>();
 

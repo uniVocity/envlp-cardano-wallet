@@ -19,6 +19,7 @@ import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
 import com.univocity.cardano.wallet.api.generated.utils.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
+import java.util.*;
 
 
 /**
@@ -39,7 +40,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PostWalletResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("/wallets")
+	@POST("/v2/wallets")
 	Call<PostWalletResponse> postWallet(@Body RequestBody requestBody);
 
 
@@ -48,10 +49,10 @@ public interface InternalWalletApiService {
 	 * Return a list of known wallets, ordered from oldest to newest.
 	 * {@code status: stable}
 	 * 
-	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListWalletsResponse}
+	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListWalletsResponseItem}
 	 */
-	@GET("/wallets")
-	Call<ListWalletsResponse> listWallets();
+	@GET("/v2/wallets")
+	Call<List<ListWalletsResponseItem>> listWallets();
 
 
 	/**
@@ -78,7 +79,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 40}.
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetUTxOsStatisticsResponse}
 	 */
-	@GET("/wallets/{walletId}/statistics/utxos")
+	@GET("/v2/wallets/{walletId}/statistics/utxos")
 	Call<GetUTxOsStatisticsResponse> getUTxOsStatistics(@Path("walletId") String walletId);
 
 
@@ -89,7 +90,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 40}.
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetWalletResponse}
 	 */
-	@GET("/wallets/{walletId}")
+	@GET("/v2/wallets/{walletId}")
 	Call<GetWalletResponse> getWallet(@Path("walletId") String walletId);
 
 
@@ -100,7 +101,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 40}.
 	 * @return a Retrofit {@link Call} which is used as a handle for this HTTP request. No response body is expected.
 	 */
-	@DELETE("/wallets/{walletId}")
+	@DELETE("/v2/wallets/{walletId}")
 	Call<Void> deleteWallet(@Path("walletId") String walletId);
 
 
@@ -113,7 +114,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PutWalletResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@PUT("/wallets/{walletId}")
+	@PUT("/v2/wallets/{walletId}")
 	Call<PutWalletResponse> putWallet(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -126,7 +127,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} which is used as a handle for this HTTP request. No response body is expected.
 	 */
 	@Headers("Content-Type: application/json")
-	@PUT("/wallets/{walletId}/passphrase")
+	@PUT("/v2/wallets/{walletId}/passphrase")
 	Call<Void> putWalletPassphrase(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -146,7 +147,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PostTransactionFeeResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("/wallets/{walletId}/payment-fees")
+	@POST("/v2/wallets/{walletId}/payment-fees")
 	Call<PostTransactionFeeResponse> postTransactionFee(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -162,7 +163,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PostTransactionResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("/wallets/{walletId}/transactions")
+	@POST("/v2/wallets/{walletId}/transactions")
 	Call<PostTransactionResponse> postTransaction(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -183,10 +184,10 @@ public interface InternalWalletApiService {
 	 * - Defaults to: {@code descending}.
 	 * @param minWithdrawal the minWithdrawal.
 	 * - Minimum value: {@code 1}.
-	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListTransactionsResponse}
+	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListTransactionsResponseItem}
 	 */
-	@GET("/wallets/{walletId}/transactions")
-	Call<ListTransactionsResponse> listTransactions(@Path("walletId") String walletId, @Query("start") String start, @Query("end") String end, @Query("order") String order, @Query("minWithdrawal") Integer minWithdrawal);
+	@GET("/v2/wallets/{walletId}/transactions")
+	Call<List<ListTransactionsResponseItem>> listTransactions(@Path("walletId") String walletId, @Query("start") String start, @Query("end") String end, @Query("order") String order, @Query("minWithdrawal") Integer minWithdrawal);
 
 
 	/**
@@ -202,7 +203,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 64}.
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetTransactionResponse}
 	 */
-	@GET("/wallets/{walletId}/transactions/{transactionId}")
+	@GET("/v2/wallets/{walletId}/transactions/{transactionId}")
 	Call<GetTransactionResponse> getTransaction(@Path("walletId") String walletId, @Path("transactionId") String transactionId);
 
 
@@ -223,7 +224,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 64}.
 	 * @return a Retrofit {@link Call} which is used as a handle for this HTTP request. No response body is expected.
 	 */
-	@DELETE("/wallets/{walletId}/transactions/{transactionId}")
+	@DELETE("/v2/wallets/{walletId}/transactions/{transactionId}")
 	Call<Void> deleteTransaction(@Path("walletId") String walletId, @Path("transactionId") String transactionId);
 
 
@@ -237,10 +238,10 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 40}.
 	 * @param state the state.
 	 * - Accepted values: {@code [used, unused]}.
-	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListAddressesResponse}
+	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListAddressesResponseItem}
 	 */
-	@GET("/wallets/{walletId}/addresses")
-	Call<ListAddressesResponse> listAddresses(@Path("walletId") String walletId, @Query("state") String state);
+	@GET("/v2/wallets/{walletId}/addresses")
+	Call<List<ListAddressesResponseItem>> listAddresses(@Path("walletId") String walletId, @Query("state") String state);
 
 
 	/**
@@ -255,10 +256,10 @@ public interface InternalWalletApiService {
 	 * 
 	 * @param stake the stake (optional).
 	 * - Value range from {@code 0} to {@code 45000000000000000}.
-	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListStakePoolsResponse}
+	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListStakePoolsResponseItem}
 	 */
-	@GET("/stake-pools")
-	Call<ListStakePoolsResponse> listStakePools(@Query("stake") Integer stake);
+	@GET("/v2/stake-pools")
+	Call<List<ListStakePoolsResponseItem>> listStakePools(@Query("stake") Integer stake);
 
 
 	/**
@@ -274,7 +275,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 40}.
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetDelegationFeeResponse}
 	 */
-	@GET("/wallets/{walletId}/delegation-fees")
+	@GET("/v2/wallets/{walletId}/delegation-fees")
 	Call<GetDelegationFeeResponse> getDelegationFee(@Path("walletId") String walletId);
 
 
@@ -296,7 +297,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link QuitStakePoolResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@DELETE("/stake-pools/*/wallets/{walletId}")
+	@DELETE("/v2/stake-pools/*/wallets/{walletId}")
 	Call<QuitStakePoolResponse> quitStakePool(@Path("walletId") String walletId);
 
 
@@ -315,7 +316,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link JoinStakePoolResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@PUT("/stake-pools/{stakePoolId}/wallets/{walletId}")
+	@PUT("/v2/stake-pools/{stakePoolId}/wallets/{walletId}")
 	Call<JoinStakePoolResponse> joinStakePool(@Path("stakePoolId") String stakePoolId, @Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -333,7 +334,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link SelectCoinsResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("/wallets/{walletId}/coin-selections/random")
+	@POST("/v2/wallets/{walletId}/coin-selections/random")
 	Call<SelectCoinsResponse> selectCoins(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -352,11 +353,11 @@ public interface InternalWalletApiService {
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
 	 * @param requestBody a request body containing the json representation of {@link MigrateShelleyWalletRequest}
-	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link MigrateShelleyWalletResponse}
+	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link MigrateShelleyWalletResponseItem}
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("/wallets/{walletId}/migrations")
-	Call<MigrateShelleyWalletResponse> migrateShelleyWallet(@Path("walletId") String walletId, @Body RequestBody requestBody);
+	@POST("/v2/wallets/{walletId}/migrations")
+	Call<List<MigrateShelleyWalletResponseItem>> migrateShelleyWallet(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
 	/**
@@ -370,7 +371,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 40}.
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetShelleyWalletMigrationInfoResponse}
 	 */
-	@GET("/wallets/{walletId}/migrations")
+	@GET("/v2/wallets/{walletId}/migrations")
 	Call<GetShelleyWalletMigrationInfoResponse> getShelleyWalletMigrationInfo(@Path("walletId") String walletId);
 
 
@@ -383,7 +384,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PostByronWalletResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("/byron-wallets")
+	@POST("/v2/byron-wallets")
 	Call<PostByronWalletResponse> postByronWallet(@Body RequestBody requestBody);
 
 
@@ -392,10 +393,10 @@ public interface InternalWalletApiService {
 	 * Return a list of known Byron wallets, ordered from oldest to newest.
 	 * {@code status: stable}
 	 * 
-	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListByronWalletsResponse}
+	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListByronWalletsResponseItem}
 	 */
-	@GET("/byron-wallets")
-	Call<ListByronWalletsResponse> listByronWallets();
+	@GET("/v2/byron-wallets")
+	Call<List<ListByronWalletsResponseItem>> listByronWallets();
 
 
 	/**
@@ -422,7 +423,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 40}.
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetByronUTxOsStatisticsResponse}
 	 */
-	@GET("/byron-wallets/{walletId}/statistics/utxos")
+	@GET("/v2/byron-wallets/{walletId}/statistics/utxos")
 	Call<GetByronUTxOsStatisticsResponse> getByronUTxOsStatistics(@Path("walletId") String walletId);
 
 
@@ -436,7 +437,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 40}.
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetByronWalletResponse}
 	 */
-	@GET("/byron-wallets/{walletId}")
+	@GET("/v2/byron-wallets/{walletId}")
 	Call<GetByronWalletResponse> getByronWallet(@Path("walletId") String walletId);
 
 
@@ -450,7 +451,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 40}.
 	 * @return a Retrofit {@link Call} which is used as a handle for this HTTP request. No response body is expected.
 	 */
-	@DELETE("/byron-wallets/{walletId}")
+	@DELETE("/v2/byron-wallets/{walletId}")
 	Call<Void> deleteByronWallet(@Path("walletId") String walletId);
 
 
@@ -463,7 +464,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PutByronWalletResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@PUT("/byron-wallets/{walletId}")
+	@PUT("/v2/byron-wallets/{walletId}")
 	Call<PutByronWalletResponse> putByronWallet(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -476,7 +477,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} which is used as a handle for this HTTP request. No response body is expected.
 	 */
 	@Headers("Content-Type: application/json")
-	@PUT("/byron-wallets/{walletId}/passphrase")
+	@PUT("/v2/byron-wallets/{walletId}/passphrase")
 	Call<Void> putByronWalletPassphrase(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -494,7 +495,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link CreateAddressResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("/byron-wallets/{walletId}/addresses")
+	@POST("/v2/byron-wallets/{walletId}/addresses")
 	Call<CreateAddressResponse> createAddress(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -509,10 +510,10 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 40}.
 	 * @param state the state.
 	 * - Accepted values: {@code [used, unused]}.
-	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListByronAddressesResponse}
+	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListByronAddressesResponseItem}
 	 */
-	@GET("/byron-wallets/{walletId}/addresses")
-	Call<ListByronAddressesResponse> listByronAddresses(@Path("walletId") String walletId, @Query("state") String state);
+	@GET("/v2/byron-wallets/{walletId}/addresses")
+	Call<List<ListByronAddressesResponseItem>> listByronAddresses(@Path("walletId") String walletId, @Query("state") String state);
 
 
 	/**
@@ -529,7 +530,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} which is used as a handle for this HTTP request. No response body is expected.
 	 */
 	@Headers("Content-Type: application/json")
-	@PUT("/byron-wallets/{walletId}/addresses")
+	@PUT("/v2/byron-wallets/{walletId}/addresses")
 	Call<Void> importAddresses(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -550,7 +551,7 @@ public interface InternalWalletApiService {
 	 *   <pre>{@code DdzFFzCqrhtCNjPk5Lei7E1FxnoqMoAYtJ8VjAWbFmDb614nNBWBwv3kt6QHJa59cGezzf6piMWsbK7sWRB5sv325QqWdRuusMqqLdMt}</pre>
 	 * @return a Retrofit {@link Call} which is used as a handle for this HTTP request. No response body is expected.
 	 */
-	@PUT("/byron-wallets/{walletId}/addresses/{addressId}")
+	@PUT("/v2/byron-wallets/{walletId}/addresses/{addressId}")
 	Call<Void> importAddress(@Path("walletId") String walletId, @Path("addressId") String addressId);
 
 
@@ -566,7 +567,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PostByronTransactionFeeResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("/byron-wallets/{walletId}/payment-fees")
+	@POST("/v2/byron-wallets/{walletId}/payment-fees")
 	Call<PostByronTransactionFeeResponse> postByronTransactionFee(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -582,7 +583,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PostByronTransactionResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("/byron-wallets/{walletId}/transactions")
+	@POST("/v2/byron-wallets/{walletId}/transactions")
 	Call<PostByronTransactionResponse> postByronTransaction(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -601,10 +602,10 @@ public interface InternalWalletApiService {
 	 * @param order the order.
 	 * - Accepted values: {@code [ascending, descending]}.
 	 * - Defaults to: {@code descending}.
-	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListByronTransactionsResponse}
+	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListByronTransactionsResponseItem}
 	 */
-	@GET("/byron-wallets/{walletId}/transactions")
-	Call<ListByronTransactionsResponse> listByronTransactions(@Path("walletId") String walletId, @Query("start") String start, @Query("end") String end, @Query("order") String order);
+	@GET("/v2/byron-wallets/{walletId}/transactions")
+	Call<List<ListByronTransactionsResponseItem>> listByronTransactions(@Path("walletId") String walletId, @Query("start") String start, @Query("end") String end, @Query("order") String order);
 
 
 	/**
@@ -620,7 +621,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 64}.
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetByronTransactionResponse}
 	 */
-	@GET("/byron-wallets/{walletId}/transactions/{transactionId}")
+	@GET("/v2/byron-wallets/{walletId}/transactions/{transactionId}")
 	Call<GetByronTransactionResponse> getByronTransaction(@Path("walletId") String walletId, @Path("transactionId") String transactionId);
 
 
@@ -641,7 +642,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 64}.
 	 * @return a Retrofit {@link Call} which is used as a handle for this HTTP request. No response body is expected.
 	 */
-	@DELETE("/byron-wallets/{walletId}/transactions/{transactionId}")
+	@DELETE("/v2/byron-wallets/{walletId}/transactions/{transactionId}")
 	Call<Void> deleteByronTransaction(@Path("walletId") String walletId, @Path("transactionId") String transactionId);
 
 
@@ -659,7 +660,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ByronSelectCoinsResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("/byron-wallets/{walletId}/coin-selections/random")
+	@POST("/v2/byron-wallets/{walletId}/coin-selections/random")
 	Call<ByronSelectCoinsResponse> byronSelectCoins(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
@@ -678,11 +679,11 @@ public interface InternalWalletApiService {
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
 	 * @param requestBody a request body containing the json representation of {@link MigrateByronWalletRequest}
-	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link MigrateByronWalletResponse}
+	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link MigrateByronWalletResponseItem}
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("/byron-wallets/{walletId}/migrations")
-	Call<MigrateByronWalletResponse> migrateByronWallet(@Path("walletId") String walletId, @Body RequestBody requestBody);
+	@POST("/v2/byron-wallets/{walletId}/migrations")
+	Call<List<MigrateByronWalletResponseItem>> migrateByronWallet(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
 	/**
@@ -696,7 +697,7 @@ public interface InternalWalletApiService {
 	 * - Length must be exactly {@code 40}.
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetByronWalletMigrationInfoResponse}
 	 */
-	@GET("/byron-wallets/{walletId}/migrations")
+	@GET("/v2/byron-wallets/{walletId}/migrations")
 	Call<GetByronWalletMigrationInfoResponse> getByronWalletMigrationInfo(@Path("walletId") String walletId);
 
 
@@ -704,7 +705,7 @@ public interface InternalWalletApiService {
 	 * status: stable
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetNetworkInformationResponse}
 	 */
-	@GET("/network/information")
+	@GET("/v2/network/information")
 	Call<GetNetworkInformationResponse> getNetworkInformation();
 
 
@@ -713,7 +714,7 @@ public interface InternalWalletApiService {
 	 * @param forceNtpCheck the forceNtpCheck.
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetNetworkClockResponse}
 	 */
-	@GET("/network/clock")
+	@GET("/v2/network/clock")
 	Call<GetNetworkClockResponse> getNetworkClock(@Query("forceNtpCheck") Boolean forceNtpCheck);
 
 
@@ -724,7 +725,7 @@ public interface InternalWalletApiService {
 	 * 
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetNetworkParametersResponse}
 	 */
-	@GET("/network/parameters")
+	@GET("/v2/network/parameters")
 	Call<GetNetworkParametersResponse> getNetworkParameters();
 
 
@@ -737,7 +738,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PostExternalTransactionResponse}
 	 */
 	@Headers("Content-Type: application/octet-stream")
-	@POST("/proxy/transactions")
+	@POST("/v2/proxy/transactions")
 	Call<PostExternalTransactionResponse> postExternalTransaction(@Body RequestBody requestBody);
 
 
@@ -753,7 +754,7 @@ public interface InternalWalletApiService {
 	 *   <pre>{@code DdzFFzCqrhtCNjPk5Lei7E1FxnoqMoAYtJ8VjAWbFmDb614nNBWBwv3kt6QHJa59cGezzf6piMWsbK7sWRB5sv325QqWdRuusMqqLdMt}</pre>
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link InspectAddressResponse}
 	 */
-	@GET("/addresses/{addressId}")
+	@GET("/v2/addresses/{addressId}")
 	Call<InspectAddressResponse> inspectAddress(@Path("addressId") String addressId);
 
 }

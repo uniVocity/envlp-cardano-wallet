@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.service;
 
 import com.univocity.cardano.wallet.api.generated.*;
+import org.slf4j.*;
 
 /**
  * A functional interface used together with the {@link AsynchronousWalletApi} to provide a non-blocking REST client
@@ -10,6 +11,8 @@ import com.univocity.cardano.wallet.api.generated.*;
  */
 @FunctionalInterface
 public interface WalletApiCallback<T> {
+
+	Logger log = LoggerFactory.getLogger(WalletApiCallback.class);
 
 	/**
 	 * Invoked whenever a response comes back from the {@link InternalWalletApiService}.
@@ -24,5 +27,6 @@ public interface WalletApiCallback<T> {
 	 * @param error the error received when executing the operation.
 	 */
 	default void onFailure(Throwable error) {
+		log.warn("Server could not execute request", error);
 	}
 }

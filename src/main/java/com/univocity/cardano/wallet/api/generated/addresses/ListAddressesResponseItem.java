@@ -1,4 +1,4 @@
-package com.univocity.cardano.wallet.api.generated.byronaddresses;
+package com.univocity.cardano.wallet.api.generated.addresses;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
@@ -8,11 +8,9 @@ import com.univocity.cardano.wallet.api.generated.*;
 
 /**
  * 
- * Response body produced by 
- * {@link InternalWalletApiService#listByronAddresses(String, String)}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class ListByronAddressesResponse {
+public final class ListAddressesResponseItem {
 
 
 	@JsonProperty("id")
