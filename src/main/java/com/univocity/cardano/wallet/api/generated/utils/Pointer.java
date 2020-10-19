@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.generated.utils;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
+import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
 
@@ -103,4 +104,10 @@ public final class Pointer {
 
 		this.outputIndex = outputIndex;
 	}
+
+	@Override
+	public String toString() {
+		return printObject(this);
+	}
+
 }

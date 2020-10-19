@@ -2,9 +2,10 @@ package com.univocity.cardano.wallet.api.generated.byronwallets;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
 import java.util.*;
-import com.univocity.cardano.wallet.api.generated.*;
+import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
+import com.univocity.cardano.wallet.api.generated.*;
 
 /**
  * 
@@ -153,4 +154,10 @@ public final class PostByronWalletRequest {
 
 		this.mnemonicSentence = mnemonicSentence;
 	}
+
+	@Override
+	public String toString() {
+		return printObject(this);
+	}
+
 }

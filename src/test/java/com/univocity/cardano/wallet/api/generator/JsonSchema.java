@@ -62,7 +62,7 @@ public class JsonSchema {
 
 
 	public boolean createClass(String methodSignature, File packageDir, String packageName, String className, Map<String, ClassRef> classes, ClassRef parent) {
-		if(attributes.isEmpty()){
+		if (attributes.isEmpty()) {
 			return false;
 		}
 		File classFile = packageDir.toPath().resolve(className + ".java").toFile();
@@ -82,11 +82,11 @@ public class JsonSchema {
 		StringBuilder out = classRef.code;
 		out.append("package ").append(packageName).append(";\n\n");
 
-
-		if(parent == null) {
+		out.append("import static com.univocity.cardano.wallet.common.Utils.*;\n");
+		out.append("import com.fasterxml.jackson.annotation.*;\n\n");
+		if (parent == null) {
 			out.append("import com.univocity.cardano.wallet.api.generated.*;\n");
 		}
-		out.append("import com.fasterxml.jackson.annotation.*;\n\n");
 //		boolean clearAttributes = false;
 //		if (attributes.isEmpty()) {
 //			if (additionalPropertiesType != null) {
@@ -105,16 +105,16 @@ public class JsonSchema {
 //		}
 
 		out.append("\n/**\n * ");
-		if(methodSignature != null && parent == null){
+		if (methodSignature != null && parent == null) {
 			String apiPath = "InternalWalletApiService";
-			if(className.endsWith("Response")){
+			if (className.endsWith("Response")) {
 				out.append("\n * Response body produced by \n * {@link ").append(apiPath).append('#').append(methodSignature).append("}.");
-			} else if(className.endsWith("Request")){
+			} else if (className.endsWith("Request")) {
 				out.append("\n * Request body definition for \n * {@link ").append(apiPath).append('#').append(methodSignature).append("}.");
 			}
 		}
 
-		if(this.description != null){
+		if (this.description != null) {
 			Attribute.appendMultiLine(out, description, false, 0);
 		}
 		out.append("\n */\n");
@@ -131,11 +131,21 @@ public class JsonSchema {
 			attribute.appendAttributeSetter(out);
 		}
 
+		appendToString(out);
+
 		out.append("}\n");
 //
 //		if(clearAttributes){
 //			attributes.clear();
 //		}
 		return true;
+	}
+
+
+	void appendToString(StringBuilder out) {
+		out.append("\n\t@Override");
+		out.append("\n\tpublic String toString() {");
+		out.append("\n\t\treturn printObject(this);");
+		out.append("\n\t}\n\n");
 	}
 }

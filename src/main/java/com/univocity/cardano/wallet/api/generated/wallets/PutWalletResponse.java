@@ -2,9 +2,10 @@ package com.univocity.cardano.wallet.api.generated.wallets;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
 import java.util.regex.*;
-import com.univocity.cardano.wallet.api.generated.*;
+import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
+import com.univocity.cardano.wallet.api.generated.*;
 
 /**
  * 
@@ -297,4 +298,10 @@ public final class PutWalletResponse {
 
 		this.tip = tip;
 	}
+
+	@Override
+	public String toString() {
+		return printObject(this);
+	}
+
 }

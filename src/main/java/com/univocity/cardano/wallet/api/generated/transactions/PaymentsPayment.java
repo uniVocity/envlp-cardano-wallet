@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.generated.transactions;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
+import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
 
@@ -68,4 +69,10 @@ public final class PaymentsPayment {
 
 		this.amount = amount;
 	}
+
+	@Override
+	public String toString() {
+		return printObject(this);
+	}
+
 }

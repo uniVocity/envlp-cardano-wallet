@@ -3,9 +3,10 @@ package com.univocity.cardano.wallet.api.generated.byronmigrations;
 import com.univocity.cardano.wallet.api.generated.common.*;
 import java.util.regex.*;
 import java.util.*;
-import com.univocity.cardano.wallet.api.generated.*;
+import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
+import com.univocity.cardano.wallet.api.generated.*;
 
 /**
  * 
@@ -440,4 +441,10 @@ public final class MigrateByronWalletResponse {
 
 		this.metadata = metadata;
 	}
+
+	@Override
+	public String toString() {
+		return printObject(this);
+	}
+
 }

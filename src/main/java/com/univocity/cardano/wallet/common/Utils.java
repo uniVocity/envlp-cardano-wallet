@@ -1,5 +1,7 @@
 package com.univocity.cardano.wallet.common;
 
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.*;
 import org.apache.commons.io.*;
 
 import java.io.*;
@@ -7,6 +9,9 @@ import java.nio.charset.*;
 import java.util.*;
 
 public class Utils {
+
+	private static final ObjectWriter OBJECT_PRINTER = new ObjectMapper().writerWithDefaultPrettyPrinter();
+
 	public static String readTextFromResource(String resourcePath, Charset encoding) {
 		return readTextFromInput(getInput(resourcePath), encoding);
 	}
@@ -78,6 +83,17 @@ public class Utils {
 	public static final void notNull(Object o, String fieldName) {
 		if (o == null) {
 			throw new IllegalArgumentException(fieldName + " cannot be null");
+		}
+	}
+
+	public static String printObject(Object o) {
+		if (o == null) {
+			return "null";
+		}
+		try {
+			return OBJECT_PRINTER.writeValueAsString(o);
+		} catch (JsonProcessingException e) {
+			return o.toString();
 		}
 	}
 }
