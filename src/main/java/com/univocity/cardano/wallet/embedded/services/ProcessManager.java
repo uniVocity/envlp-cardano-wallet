@@ -120,6 +120,10 @@ public abstract class ProcessManager extends CardanoToolWrapper {
 		}
 	}
 
+	public final void waitForProcess() throws InterruptedException {
+		process.waitFor();
+	}
+
 	public final boolean isProcessRunning() {
 		return process != null && process.isAlive();
 	}

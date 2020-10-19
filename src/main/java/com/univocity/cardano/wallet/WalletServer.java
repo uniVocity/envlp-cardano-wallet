@@ -3,6 +3,7 @@ package com.univocity.cardano.wallet;
 import com.univocity.cardano.wallet.builders.*;
 
 import java.io.*;
+import java.util.function.*;
 
 public class WalletServer {
 
@@ -14,7 +15,7 @@ public class WalletServer {
 		return new WalletServerConfig(host);
 	}
 
-	static class WalletServerConfig implements EmbeddedWallet, RemoteWallet, BlockchainConfig, NodeConfig, TopologyConfig, PortConfig, WalletPort, Node, Wallet {
+	public static class WalletServerConfig implements EmbeddedWallet, RemoteWallet, Node {
 
 		final String walletHost;
 		int walletPort;
@@ -23,16 +24,77 @@ public class WalletServer {
 		File blockchainDir;
 		File nodeConfigurationFile;
 		File nodeTopologyFile;
+		Consumer<String> walletOutputConsumer;
+		Consumer<String> nodeOutputConsumer;
 
+		class NodeServerBuilder implements NodeConfig, BlockchainConfig, TopologyConfig, PortConfig<Wallet>, ProcessOutput<Wallet>, Wallet {
+			@Override
+			public TopologyConfig configuration(String pathToNodeConfiguration) {
+				nodeConfigurationFile = toValidatedFile(pathToNodeConfiguration, false);
+				return this;
+			}
+
+
+			@Override
+			public BlockchainConfig topology(String pathToTopologyFile) {
+				nodeTopologyFile = toValidatedFile(pathToTopologyFile, false);
+				return this;
+			}
+
+			@Override
+			public ProcessOutput<Wallet> port(int port) {
+				nodePort = port;
+				return this;
+			}
+
+			@Override
+			public PortConfig storeBlockchainIn(String pathToBlockchain) {
+				blockchainDir = toValidatedFile(pathToBlockchain, true);
+				return this;
+			}
+
+			@Override
+			public Wallet consumeOutput(Consumer<String> outputConsumer) {
+				nodeOutputConsumer = outputConsumer;
+				return this;
+			}
+
+			@Override
+			public Wallet ignoreOutput() {
+				return this;
+			}
+
+			@Override
+			public WalletServerBuilder wallet() {
+				return new WalletServerBuilder();
+			}
+		}
+
+		public class WalletServerBuilder implements PortConfig<EmbeddedWalletServer>, ProcessOutput<EmbeddedWalletServer>{
+			@Override
+			public ProcessOutput<EmbeddedWalletServer> port(int port) {
+				walletPort = port;
+				return this;
+			}
+
+			@Override
+			public EmbeddedWalletServer consumeOutput(Consumer<String> outputConsumer) {
+				walletOutputConsumer = outputConsumer;
+				return new EmbeddedWalletServer(WalletServerConfig.this);
+			}
+
+			@Override
+			public EmbeddedWalletServer ignoreOutput() {
+				return new EmbeddedWalletServer(WalletServerConfig.this);
+			}
+		}
+
+		public NodeConfig node() {
+			return new NodeServerBuilder();
+		}
 
 		public WalletServerConfig(String host) {
 			this.walletHost = host;
-		}
-
-		@Override
-		public EmbeddedWalletServer startAtPort(int walletPort) {
-			this.walletPort = walletPort;
-			return new EmbeddedWalletServer(this);
 		}
 
 		@Override
@@ -42,42 +104,8 @@ public class WalletServer {
 		}
 
 		@Override
-		public PortConfig blockchain(String pathToBlockchain) {
-			blockchainDir = toValidatedFile(pathToBlockchain, true);
-			return this;
-		}
-
-		@Override
 		public Node toolsIn(String pathToCardanoTools) {
 			cardanoToolsDir = toValidatedFile(pathToCardanoTools, true);
-			return this;
-		}
-
-		@Override
-		public NodeConfig node() {
-			return this;
-		}
-
-		@Override
-		public TopologyConfig configuration(String pathToNodeConfiguration) {
-			nodeConfigurationFile = toValidatedFile(pathToNodeConfiguration, false);
-			return this;
-		}
-
-		@Override
-		public Wallet port(int port) {
-			nodePort = port;
-			return this;
-		}
-
-		@Override
-		public BlockchainConfig topology(String pathToTopologyFile) {
-			nodeTopologyFile = toValidatedFile(pathToTopologyFile, false);
-			return this;
-		}
-
-		@Override
-		public WalletPort wallet() {
 			return this;
 		}
 
@@ -96,21 +124,27 @@ public class WalletServer {
 	}
 
 
-	public static void main(String... args) {
-		String home = System.getProperty("user.home");
-		String configRoot = home + "/dev/repository/free-commerce/src/main/resources/";
+	public static void main(String... args) throws InterruptedException {
+		final String HOME = System.getProperty("user.home");
+		final String CONFIGS = HOME + "/dev/repository/free-commerce/src/main/resources/";
 
 		EmbeddedWalletServer server = WalletServer.embedded()
-				.toolsIn("/home/jbax/dev/repository/free-commerce/src/main/resources/cli/lin")
+				.toolsIn(HOME + "/dev/repository/free-commerce/src/main/resources/cli/lin")
 				.node()
-					.configuration(configRoot + "mainnet-config.json")
-					.topology(configRoot + "mainnet-topology.json")
-					.blockchain(home + "/Downloads/blockchain")
+					.configuration(CONFIGS + "mainnet-config.json")
+					.topology(CONFIGS + "mainnet-topology.json")
+					.storeBlockchainIn(HOME + "/Downloads/blockchain")
 					.port(3333)
+					.consumeOutput(System.out::println)
 				.wallet()
-					.startAtPort(4444);
+					.port(4444)
+					.consumeOutput(System.out::println);
 
-		//RemoteWalletServer remoteServer = WalletServer.remote("http://blah").connectToPort(1111);
+//		RemoteWalletServer remoteServer = WalletServer.remote("http://localhost").connectToPort(4444);
+//		Thread.sleep(10000);
+//		System.out.println(remoteServer.api().sync().getNetworkInformation());
+
+		server.getNodeManager().waitForProcess();
 
 	}
 

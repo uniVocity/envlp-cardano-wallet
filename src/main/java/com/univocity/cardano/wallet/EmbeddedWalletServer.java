@@ -15,7 +15,7 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 		String socketPath = config.blockchainDir.toPath().resolve("node.socket").toFile().getAbsolutePath();
 
 
-		nodeManager = new CardanoNodeManager(cardanoTools);
+		nodeManager = new CardanoNodeManager(cardanoTools, config.nodeOutputConsumer);
 		nodeManager.setStartupCommand(
 				"run" +
 						" --topology " + config.nodeTopologyFile.getAbsolutePath() +
@@ -26,7 +26,7 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 						" --config " + config.nodeConfigurationFile);
 		nodeManager.startProcess();
 
-		walletManager = new CardanoWalletManager(cardanoTools);
+		walletManager = new CardanoWalletManager(cardanoTools, config.walletOutputConsumer);
 		walletManager.setStartupCommand(
 				"serve" +
 						" --mainnet" +

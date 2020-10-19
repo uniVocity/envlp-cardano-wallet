@@ -1,5 +1,7 @@
 package com.univocity.cardano.wallet.builders;
 
+import com.univocity.cardano.wallet.*;
+
 public interface Wallet {
-	WalletPort wallet();
+	WalletServer.WalletServerConfig.WalletServerBuilder wallet();
 }
