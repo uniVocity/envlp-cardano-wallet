@@ -79,16 +79,16 @@ public final class GetTransactionResponse {
 			throw new IllegalArgumentException("Value of id cannot be null");
 		}
 
-		if (id.length() < 64) {
-			throw new IllegalArgumentException("Length of id must have at least 64 characters");
+		if (id.codePointCount(0, id.length()) < 64) {
+			throw new IllegalArgumentException("Length of id must have at least 64 characters, got '" + id.codePointCount(0, id.length()) + "'");
 		}
 
-		if (id.length() > 64) {
-			throw new IllegalArgumentException("Length of id cannot exceed 64 characters");
+		if (id.codePointCount(0, id.length()) > 64) {
+			throw new IllegalArgumentException("Length of id cannot exceed 64 characters, got '" + id.codePointCount(0, id.length()) + "'");
 		}
 
 	    if(!Pattern.compile("\\p{XDigit}+").matcher(id).matches()){
-    		throw new IllegalArgumentException("Value provided for id does not represent a hexadecimal");
+    		throw new IllegalArgumentException("Value provided for id does not represent a hexadecimal.");
     	}
 
 		this.id = id;

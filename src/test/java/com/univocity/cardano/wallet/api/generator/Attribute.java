@@ -11,7 +11,7 @@ import java.util.*;
 public class Attribute {
 
 	private final String name;
-	private final String type;
+	private String type;
 	private final String format;
 	private String example;
 	private final Number maxLength;
@@ -54,6 +54,12 @@ public class Attribute {
 		this.minimum = (Number) properties.remove("minimum");
 		this.maximum = (Number) properties.remove("maximum");
 		this.defaultValue = properties.remove("default");
+
+		if ("number".equalsIgnoreCase(type) && maximum != null && !maximum.equals(100)) {
+			if (!String.valueOf(maximum).contains(".") && (example == null || !example.contains("."))) {
+				type = "integer";
+			}
+		}
 
 		Map items = (Map) properties.remove("items");
 		if (items == null) {
@@ -372,11 +378,25 @@ public class Attribute {
 		}
 		appendTemplate(out, "minLengthValidation", "NAME", getJavaName(), "MIN_LENGTH", getString(minLength));
 		appendTemplate(out, "maxLengthValidation", "NAME", getJavaName(), "MAX_LENGTH", getString(maxLength));
-		appendTemplate(out, "minValueValidation", "NAME", getJavaName(), "MIN", getString(minimum));
-		appendTemplate(out, "maxValueValidation", "NAME", getJavaName(), "MAX", getString(maximum));
+
+		if ("BigInteger".equals(getJavaType())) {
+			appendTemplate(out, "minBigIntegerValidation", "NAME", getJavaName(), "MIN", getString(minimum));
+			appendTemplate(out, "maxBigIntegerValidation", "NAME", getJavaName(), "MAX", getString(maximum));
+		} else {
+			appendTemplate(out, "minValueValidation", "NAME", getJavaName(), "MIN", getString(minimum));
+			appendTemplate(out, "maxValueValidation", "NAME", getJavaName(), "MAX", getString(maximum));
+		}
 		if ("hex".equalsIgnoreCase(format)) {
 			ClassRef.insertImport(out, "java.util.regex.*");
 			appendTemplate(out, "hexValidation", "NAME", getJavaName());
+		}
+	}
+
+	String getJavaType(){
+		try {
+			return getType(type, maximum);
+		} catch (Exception e) {
+			return null;
 		}
 	}
 

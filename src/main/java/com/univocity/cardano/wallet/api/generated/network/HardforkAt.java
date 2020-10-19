@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.generated.network;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
+import java.math.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
@@ -13,7 +14,7 @@ public final class HardforkAt {
 
 
 	@JsonProperty("epoch_number")
-	private Integer epochNumber;
+	private BigInteger epochNumber;
 
 	@JsonProperty("epoch_start_time")
 	private String epochStartTime;
@@ -27,7 +28,7 @@ public final class HardforkAt {
 	 * 
 	 * @return the epoch is a time period which is divided into slots.
 	 */
-	public Integer getEpochNumber(){
+	public BigInteger getEpochNumber(){
 		return epochNumber;
 	}
 
@@ -40,13 +41,13 @@ public final class HardforkAt {
 	 * 
 	 * @param epochNumber an epoch is a time period which is divided into slots.
 	 */
-	public void setEpochNumber(Integer epochNumber){
+	public void setEpochNumber(BigInteger epochNumber){
 		if (epochNumber == null) {
 			throw new IllegalArgumentException("Value of epochNumber cannot be null");
 		}
 
-		if (epochNumber < 0) {
-			throw new IllegalArgumentException("Value of epochNumber cannot be less than 0");
+		if (epochNumber.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + epochNumber + "': value of epochNumber cannot be less than 0");
 		}
 
 		this.epochNumber = epochNumber;

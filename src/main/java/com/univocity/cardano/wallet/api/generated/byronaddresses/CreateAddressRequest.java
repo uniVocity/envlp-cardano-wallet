@@ -19,7 +19,7 @@ public final class CreateAddressRequest {
 	private String passphrase;
 
 	@JsonProperty("address_index")
-	private Double addressIndex;
+	private Long addressIndex;
 
 	/**
 	 * Returns the master passphrase to lock and protect the wallet for sensitive operation (e.g. sending funds).
@@ -48,12 +48,12 @@ public final class CreateAddressRequest {
 			throw new IllegalArgumentException("Value of passphrase cannot be null");
 		}
 
-		if (passphrase.length() < 0) {
-			throw new IllegalArgumentException("Length of passphrase must have at least 0 characters");
+		if (passphrase.codePointCount(0, passphrase.length()) < 0) {
+			throw new IllegalArgumentException("Length of passphrase must have at least 0 characters, got '" + passphrase.codePointCount(0, passphrase.length()) + "'");
 		}
 
-		if (passphrase.length() > 255) {
-			throw new IllegalArgumentException("Length of passphrase cannot exceed 255 characters");
+		if (passphrase.codePointCount(0, passphrase.length()) > 255) {
+			throw new IllegalArgumentException("Length of passphrase cannot exceed 255 characters, got '" + passphrase.codePointCount(0, passphrase.length()) + "'");
 		}
 
 		this.passphrase = passphrase;
@@ -65,7 +65,7 @@ public final class CreateAddressRequest {
 	 * 
 	 * @return the address derivation index.
 	 */
-	public Double getAddressIndex(){
+	public Long getAddressIndex(){
 		return addressIndex;
 	}
 
@@ -75,18 +75,18 @@ public final class CreateAddressRequest {
 	 * 
 	 * @param addressIndex an address derivation index.
 	 */
-	public void setAddressIndex(Double addressIndex){
+	public void setAddressIndex(Long addressIndex){
 		if (addressIndex == null) {
 			this.addressIndex = addressIndex;
 			return;
 		}
 
 		if (addressIndex < 0) {
-			throw new IllegalArgumentException("Value of addressIndex cannot be less than 0");
+			throw new IllegalArgumentException("Value of addressIndex cannot be less than 0, got '" + addressIndex + "'");
 		}
 
 		if (addressIndex > 4294967295L) {
-			throw new IllegalArgumentException("Value of addressIndex cannot be greater than 4294967295");
+			throw new IllegalArgumentException("Value of addressIndex cannot be greater than 4294967295, got '" + addressIndex + "'");
 		}
 
 		this.addressIndex = addressIndex;

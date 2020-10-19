@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.generated.utils;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
+import java.math.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
@@ -13,13 +14,13 @@ public final class Pointer {
 
 
 	@JsonProperty("slot_num")
-	private Integer slotNum;
+	private BigInteger slotNum;
 
 	@JsonProperty("transaction_index")
-	private Integer transactionIndex;
+	private BigInteger transactionIndex;
 
 	@JsonProperty("output_index")
-	private Integer outputIndex;
+	private BigInteger outputIndex;
 
 	/**
 	 * Returns the slot num.
@@ -27,7 +28,7 @@ public final class Pointer {
 	 * 
 	 * @return the slot num
 	 */
-	public Integer getSlotNum(){
+	public BigInteger getSlotNum(){
 		return slotNum;
 	}
 
@@ -37,13 +38,13 @@ public final class Pointer {
 	 * 
 	 * @param slotNum the slot num
 	 */
-	public void setSlotNum(Integer slotNum){
+	public void setSlotNum(BigInteger slotNum){
 		if (slotNum == null) {
 			throw new IllegalArgumentException("Value of slotNum cannot be null");
 		}
 
-		if (slotNum < 0) {
-			throw new IllegalArgumentException("Value of slotNum cannot be less than 0");
+		if (slotNum.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + slotNum + "': value of slotNum cannot be less than 0");
 		}
 
 		this.slotNum = slotNum;
@@ -55,7 +56,7 @@ public final class Pointer {
 	 * 
 	 * @return the transaction index
 	 */
-	public Integer getTransactionIndex(){
+	public BigInteger getTransactionIndex(){
 		return transactionIndex;
 	}
 
@@ -65,13 +66,13 @@ public final class Pointer {
 	 * 
 	 * @param transactionIndex the transaction index
 	 */
-	public void setTransactionIndex(Integer transactionIndex){
+	public void setTransactionIndex(BigInteger transactionIndex){
 		if (transactionIndex == null) {
 			throw new IllegalArgumentException("Value of transactionIndex cannot be null");
 		}
 
-		if (transactionIndex < 0) {
-			throw new IllegalArgumentException("Value of transactionIndex cannot be less than 0");
+		if (transactionIndex.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + transactionIndex + "': value of transactionIndex cannot be less than 0");
 		}
 
 		this.transactionIndex = transactionIndex;
@@ -83,7 +84,7 @@ public final class Pointer {
 	 * 
 	 * @return the output index
 	 */
-	public Integer getOutputIndex(){
+	public BigInteger getOutputIndex(){
 		return outputIndex;
 	}
 
@@ -93,13 +94,13 @@ public final class Pointer {
 	 * 
 	 * @param outputIndex the output index
 	 */
-	public void setOutputIndex(Integer outputIndex){
+	public void setOutputIndex(BigInteger outputIndex){
 		if (outputIndex == null) {
 			throw new IllegalArgumentException("Value of outputIndex cannot be null");
 		}
 
-		if (outputIndex < 0) {
-			throw new IllegalArgumentException("Value of outputIndex cannot be less than 0");
+		if (outputIndex.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + outputIndex + "': value of outputIndex cannot be less than 0");
 		}
 
 		this.outputIndex = outputIndex;

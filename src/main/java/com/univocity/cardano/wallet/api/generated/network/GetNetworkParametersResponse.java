@@ -2,6 +2,7 @@ package com.univocity.cardano.wallet.api.generated.network;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
 import java.util.regex.*;
+import java.math.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
@@ -38,7 +39,7 @@ public final class GetNetworkParametersResponse {
 	private DecentralizationLevel decentralizationLevel;
 
 	@JsonProperty("desired_pool_number")
-	private Integer desiredPoolNumber;
+	private BigInteger desiredPoolNumber;
 
 	@JsonProperty("minimum_utxo_value")
 	private MinimumUtxoValue minimumUtxoValue;
@@ -75,16 +76,16 @@ public final class GetNetworkParametersResponse {
 			throw new IllegalArgumentException("Value of genesisBlockHash cannot be null");
 		}
 
-		if (genesisBlockHash.length() < 64) {
-			throw new IllegalArgumentException("Length of genesisBlockHash must have at least 64 characters");
+		if (genesisBlockHash.codePointCount(0, genesisBlockHash.length()) < 64) {
+			throw new IllegalArgumentException("Length of genesisBlockHash must have at least 64 characters, got '" + genesisBlockHash.codePointCount(0, genesisBlockHash.length()) + "'");
 		}
 
-		if (genesisBlockHash.length() > 64) {
-			throw new IllegalArgumentException("Length of genesisBlockHash cannot exceed 64 characters");
+		if (genesisBlockHash.codePointCount(0, genesisBlockHash.length()) > 64) {
+			throw new IllegalArgumentException("Length of genesisBlockHash cannot exceed 64 characters, got '" + genesisBlockHash.codePointCount(0, genesisBlockHash.length()) + "'");
 		}
 
 	    if(!Pattern.compile("\\p{XDigit}+").matcher(genesisBlockHash).matches()){
-    		throw new IllegalArgumentException("Value provided for genesisBlockHash does not represent a hexadecimal");
+    		throw new IllegalArgumentException("Value provided for genesisBlockHash does not represent a hexadecimal.");
     	}
 
 		this.genesisBlockHash = genesisBlockHash;
@@ -239,7 +240,7 @@ public final class GetNetworkParametersResponse {
 	 * 
 	 * @return the desired pool number
 	 */
-	public Integer getDesiredPoolNumber(){
+	public BigInteger getDesiredPoolNumber(){
 		return desiredPoolNumber;
 	}
 
@@ -252,13 +253,13 @@ public final class GetNetworkParametersResponse {
 	 * 
 	 * @param desiredPoolNumber the desired pool number
 	 */
-	public void setDesiredPoolNumber(Integer desiredPoolNumber){
+	public void setDesiredPoolNumber(BigInteger desiredPoolNumber){
 		if (desiredPoolNumber == null) {
 			throw new IllegalArgumentException("Value of desiredPoolNumber cannot be null");
 		}
 
-		if (desiredPoolNumber < 0) {
-			throw new IllegalArgumentException("Value of desiredPoolNumber cannot be less than 0");
+		if (desiredPoolNumber.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + desiredPoolNumber + "': value of desiredPoolNumber cannot be less than 0");
 		}
 
 		this.desiredPoolNumber = desiredPoolNumber;

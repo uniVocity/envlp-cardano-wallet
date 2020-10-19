@@ -50,11 +50,11 @@ public final class RelativeStake {
 		}
 
 		if (quantity < 0) {
-			throw new IllegalArgumentException("Value of quantity cannot be less than 0");
+			throw new IllegalArgumentException("Value of quantity cannot be less than 0, got '" + quantity + "'");
 		}
 
 		if (quantity > 100L) {
-			throw new IllegalArgumentException("Value of quantity cannot be greater than 100");
+			throw new IllegalArgumentException("Value of quantity cannot be greater than 100, got '" + quantity + "'");
 		}
 
 		this.quantity = quantity;

@@ -4,6 +4,8 @@ package com.univocity.cardano.wallet.api.generator;
 import java.io.*;
 import java.util.*;
 
+import static com.univocity.cardano.wallet.api.generator.ClassRef.*;
+
 public class JsonSchema {
 
 	private final String type;
@@ -124,6 +126,10 @@ public class JsonSchema {
 
 		for (Attribute attribute : attributes) {
 			attribute.appendAttributeDeclaration(out);
+
+			if("BigInteger".equals(attribute.getJavaType())){
+				insertImport(out, "java.math.*");
+			}
 		}
 
 		for (Attribute attribute : attributes) {

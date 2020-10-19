@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.api.generated;
 
+import java.math.*;
 import com.univocity.cardano.wallet.api.service.*;
 import okhttp3.*;
 
@@ -185,7 +186,7 @@ public class AsynchronousWalletApi {
 	 * - Minimum value: {@code 1}.
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListTransactionsResponseItem}
 	 */
-	public void listTransactions(String walletId, String start, String end, String order, Integer minWithdrawal, WalletApiCallback<List<ListTransactionsResponseItem>> callback){
+	public void listTransactions(String walletId, String start, String end, String order, BigInteger minWithdrawal, WalletApiCallback<List<ListTransactionsResponseItem>> callback){
 		api.listTransactions(walletId, start, end, order, minWithdrawal).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -257,7 +258,7 @@ public class AsynchronousWalletApi {
 	 * - Value range from {@code 0} to {@code 45000000000000000}.
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ListStakePoolsResponseItem}
 	 */
-	public void listStakePools(Integer stake, WalletApiCallback<List<ListStakePoolsResponseItem>> callback){
+	public void listStakePools(Long stake, WalletApiCallback<List<ListStakePoolsResponseItem>> callback){
 		api.listStakePools(stake).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 

@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.api.generated;
 
+import java.math.*;
 import static com.univocity.cardano.wallet.api.service.InternalWalletApiServiceGenerator.*;
 import okhttp3.*;
 
@@ -183,7 +184,7 @@ public class SynchronousWalletApi {
 	 * - Minimum value: {@code 1}.
 	 * @return the server response as a list of {@link ListTransactionsResponseItem}
 	 */
-	public List<ListTransactionsResponseItem> listTransactions(String walletId, String start, String end, String order, Integer minWithdrawal){
+	public List<ListTransactionsResponseItem> listTransactions(String walletId, String start, String end, String order, BigInteger minWithdrawal){
 		return executeSync(api.listTransactions(walletId, start, end, order, minWithdrawal));
 	}
 
@@ -254,7 +255,7 @@ public class SynchronousWalletApi {
 	 * - Value range from {@code 0} to {@code 45000000000000000}.
 	 * @return the server response as a list of {@link ListStakePoolsResponseItem}
 	 */
-	public List<ListStakePoolsResponseItem> listStakePools(Integer stake){
+	public List<ListStakePoolsResponseItem> listStakePools(Long stake){
 		return executeSync(api.listStakePools(stake));
 	}
 

@@ -46,7 +46,7 @@ public final class SlotLength {
 		}
 
 		if (quantity < 0.0) {
-			throw new IllegalArgumentException("Value of quantity cannot be less than 0.0");
+			throw new IllegalArgumentException("Value of quantity cannot be less than 0.0, got '" + quantity + "'");
 		}
 
 		this.quantity = quantity;

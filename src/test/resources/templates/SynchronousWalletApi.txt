@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.api.generated;
 
+import java.math.*;
 import static com.univocity.cardano.wallet.api.service.InternalWalletApiServiceGenerator.*;
 import okhttp3.*;
 

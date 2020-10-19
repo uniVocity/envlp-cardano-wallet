@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.generated.utils;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
+import java.math.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
@@ -22,7 +23,7 @@ public final class InspectAddressResponse {
 	private String stakeReference;
 
 	@JsonProperty("network_tag")
-	private Integer networkTag;
+	private BigInteger networkTag;
 
 	@JsonProperty("spending_key_hash")
 	private String spendingKeyHash;
@@ -96,7 +97,7 @@ public final class InspectAddressResponse {
 	 * 
 	 * @return the can be null for 'Icarus' and 'Byron' styles.
 	 */
-	public Integer getNetworkTag(){
+	public BigInteger getNetworkTag(){
 		return networkTag;
 	}
 
@@ -106,14 +107,14 @@ public final class InspectAddressResponse {
 	 * 
 	 * @param networkTag the can be null for 'Icarus' and 'Byron' styles.
 	 */
-	public void setNetworkTag(Integer networkTag){
+	public void setNetworkTag(BigInteger networkTag){
 		if (networkTag == null) {
 			this.networkTag = networkTag;
 			return;
 		}
 
-		if (networkTag < 0) {
-			throw new IllegalArgumentException("Value of networkTag cannot be less than 0");
+		if (networkTag.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + networkTag + "': value of networkTag cannot be less than 0");
 		}
 
 		this.networkTag = networkTag;
@@ -143,12 +144,12 @@ public final class InspectAddressResponse {
 			return;
 		}
 
-		if (spendingKeyHash.length() < 56) {
-			throw new IllegalArgumentException("Length of spendingKeyHash must have at least 56 characters");
+		if (spendingKeyHash.codePointCount(0, spendingKeyHash.length()) < 56) {
+			throw new IllegalArgumentException("Length of spendingKeyHash must have at least 56 characters, got '" + spendingKeyHash.codePointCount(0, spendingKeyHash.length()) + "'");
 		}
 
-		if (spendingKeyHash.length() > 56) {
-			throw new IllegalArgumentException("Length of spendingKeyHash cannot exceed 56 characters");
+		if (spendingKeyHash.codePointCount(0, spendingKeyHash.length()) > 56) {
+			throw new IllegalArgumentException("Length of spendingKeyHash cannot exceed 56 characters, got '" + spendingKeyHash.codePointCount(0, spendingKeyHash.length()) + "'");
 		}
 
 		this.spendingKeyHash = spendingKeyHash;
@@ -178,12 +179,12 @@ public final class InspectAddressResponse {
 			return;
 		}
 
-		if (stakeKeyHash.length() < 56) {
-			throw new IllegalArgumentException("Length of stakeKeyHash must have at least 56 characters");
+		if (stakeKeyHash.codePointCount(0, stakeKeyHash.length()) < 56) {
+			throw new IllegalArgumentException("Length of stakeKeyHash must have at least 56 characters, got '" + stakeKeyHash.codePointCount(0, stakeKeyHash.length()) + "'");
 		}
 
-		if (stakeKeyHash.length() > 56) {
-			throw new IllegalArgumentException("Length of stakeKeyHash cannot exceed 56 characters");
+		if (stakeKeyHash.codePointCount(0, stakeKeyHash.length()) > 56) {
+			throw new IllegalArgumentException("Length of stakeKeyHash cannot exceed 56 characters, got '" + stakeKeyHash.codePointCount(0, stakeKeyHash.length()) + "'");
 		}
 
 		this.stakeKeyHash = stakeKeyHash;
@@ -213,12 +214,12 @@ public final class InspectAddressResponse {
 			return;
 		}
 
-		if (scriptHash.length() < 64) {
-			throw new IllegalArgumentException("Length of scriptHash must have at least 64 characters");
+		if (scriptHash.codePointCount(0, scriptHash.length()) < 64) {
+			throw new IllegalArgumentException("Length of scriptHash must have at least 64 characters, got '" + scriptHash.codePointCount(0, scriptHash.length()) + "'");
 		}
 
-		if (scriptHash.length() > 64) {
-			throw new IllegalArgumentException("Length of scriptHash cannot exceed 64 characters");
+		if (scriptHash.codePointCount(0, scriptHash.length()) > 64) {
+			throw new IllegalArgumentException("Length of scriptHash cannot exceed 64 characters, got '" + scriptHash.codePointCount(0, scriptHash.length()) + "'");
 		}
 
 		this.scriptHash = scriptHash;

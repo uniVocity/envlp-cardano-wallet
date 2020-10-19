@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.generated.network;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
+import java.math.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
@@ -13,16 +14,16 @@ public final class NodeTip {
 
 
 	@JsonProperty("slot_number")
-	private Integer slotNumber;
+	private BigInteger slotNumber;
 
 	@JsonProperty("epoch_number")
-	private Integer epochNumber;
+	private BigInteger epochNumber;
 
 	@JsonProperty("height")
 	private Height height;
 
 	@JsonProperty("absolute_slot_number")
-	private Integer absoluteSlotNumber;
+	private BigInteger absoluteSlotNumber;
 
 	/**
 	 * Returns the slot index within an epoch.
@@ -33,7 +34,7 @@ public final class NodeTip {
 	 * 
 	 * @return the slot index within an epoch.
 	 */
-	public Integer getSlotNumber(){
+	public BigInteger getSlotNumber(){
 		return slotNumber;
 	}
 
@@ -46,13 +47,13 @@ public final class NodeTip {
 	 * 
 	 * @param slotNumber the slot index within an epoch.
 	 */
-	public void setSlotNumber(Integer slotNumber){
+	public void setSlotNumber(BigInteger slotNumber){
 		if (slotNumber == null) {
 			throw new IllegalArgumentException("Value of slotNumber cannot be null");
 		}
 
-		if (slotNumber < 0) {
-			throw new IllegalArgumentException("Value of slotNumber cannot be less than 0");
+		if (slotNumber.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + slotNumber + "': value of slotNumber cannot be less than 0");
 		}
 
 		this.slotNumber = slotNumber;
@@ -67,7 +68,7 @@ public final class NodeTip {
 	 * 
 	 * @return the epoch is a time period which is divided into slots.
 	 */
-	public Integer getEpochNumber(){
+	public BigInteger getEpochNumber(){
 		return epochNumber;
 	}
 
@@ -80,13 +81,13 @@ public final class NodeTip {
 	 * 
 	 * @param epochNumber an epoch is a time period which is divided into slots.
 	 */
-	public void setEpochNumber(Integer epochNumber){
+	public void setEpochNumber(BigInteger epochNumber){
 		if (epochNumber == null) {
 			throw new IllegalArgumentException("Value of epochNumber cannot be null");
 		}
 
-		if (epochNumber < 0) {
-			throw new IllegalArgumentException("Value of epochNumber cannot be less than 0");
+		if (epochNumber.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + epochNumber + "': value of epochNumber cannot be less than 0");
 		}
 
 		this.epochNumber = epochNumber;
@@ -123,7 +124,7 @@ public final class NodeTip {
 	 * 
 	 * @return the 0-based slot index starting from genesis of the blockchain.
 	 */
-	public Integer getAbsoluteSlotNumber(){
+	public BigInteger getAbsoluteSlotNumber(){
 		return absoluteSlotNumber;
 	}
 
@@ -136,13 +137,13 @@ public final class NodeTip {
 	 * 
 	 * @param absoluteSlotNumber the 0-based slot index starting from genesis of the blockchain.
 	 */
-	public void setAbsoluteSlotNumber(Integer absoluteSlotNumber){
+	public void setAbsoluteSlotNumber(BigInteger absoluteSlotNumber){
 		if (absoluteSlotNumber == null) {
 			throw new IllegalArgumentException("Value of absoluteSlotNumber cannot be null");
 		}
 
-		if (absoluteSlotNumber < 0) {
-			throw new IllegalArgumentException("Value of absoluteSlotNumber cannot be less than 0");
+		if (absoluteSlotNumber.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + absoluteSlotNumber + "': value of absoluteSlotNumber cannot be less than 0");
 		}
 
 		this.absoluteSlotNumber = absoluteSlotNumber;

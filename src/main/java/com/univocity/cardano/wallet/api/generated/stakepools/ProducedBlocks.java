@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.generated.stakepools;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
+import java.math.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
@@ -13,7 +14,7 @@ public final class ProducedBlocks {
 
 
 	@JsonProperty("quantity")
-	private Integer quantity;
+	private BigInteger quantity;
 
 	@JsonProperty("unit")
 	private String unit;
@@ -27,7 +28,7 @@ public final class ProducedBlocks {
 	 * 
 	 * @return the quantity
 	 */
-	public Integer getQuantity(){
+	public BigInteger getQuantity(){
 		return quantity;
 	}
 
@@ -40,13 +41,13 @@ public final class ProducedBlocks {
 	 * 
 	 * @param quantity the quantity
 	 */
-	public void setQuantity(Integer quantity){
+	public void setQuantity(BigInteger quantity){
 		if (quantity == null) {
 			throw new IllegalArgumentException("Value of quantity cannot be null");
 		}
 
-		if (quantity < 0) {
-			throw new IllegalArgumentException("Value of quantity cannot be less than 0");
+		if (quantity.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + quantity + "': value of quantity cannot be less than 0");
 		}
 
 		this.quantity = quantity;

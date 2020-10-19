@@ -80,12 +80,12 @@ public final class PostByronWalletRequest {
 			throw new IllegalArgumentException("Value of name cannot be null");
 		}
 
-		if (name.length() < 1) {
-			throw new IllegalArgumentException("Length of name must have at least 1 characters");
+		if (name.codePointCount(0, name.length()) < 1) {
+			throw new IllegalArgumentException("Length of name must have at least 1 characters, got '" + name.codePointCount(0, name.length()) + "'");
 		}
 
-		if (name.length() > 255) {
-			throw new IllegalArgumentException("Length of name cannot exceed 255 characters");
+		if (name.codePointCount(0, name.length()) > 255) {
+			throw new IllegalArgumentException("Length of name cannot exceed 255 characters, got '" + name.codePointCount(0, name.length()) + "'");
 		}
 
 		this.name = name;
@@ -118,12 +118,12 @@ public final class PostByronWalletRequest {
 			throw new IllegalArgumentException("Value of passphrase cannot be null");
 		}
 
-		if (passphrase.length() < 10) {
-			throw new IllegalArgumentException("Length of passphrase must have at least 10 characters");
+		if (passphrase.codePointCount(0, passphrase.length()) < 10) {
+			throw new IllegalArgumentException("Length of passphrase must have at least 10 characters, got '" + passphrase.codePointCount(0, passphrase.length()) + "'");
 		}
 
-		if (passphrase.length() > 255) {
-			throw new IllegalArgumentException("Length of passphrase cannot exceed 255 characters");
+		if (passphrase.codePointCount(0, passphrase.length()) > 255) {
+			throw new IllegalArgumentException("Length of passphrase cannot exceed 255 characters, got '" + passphrase.codePointCount(0, passphrase.length()) + "'");
 		}
 
 		this.passphrase = passphrase;

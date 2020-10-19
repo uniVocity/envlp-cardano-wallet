@@ -2,6 +2,7 @@ package com.univocity.cardano.wallet.api.generated.stakepools;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
 import java.util.regex.*;
+import java.math.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
@@ -23,7 +24,7 @@ public final class InputsDelete {
 	private String id;
 
 	@JsonProperty("index")
-	private Integer index;
+	private BigInteger index;
 
 	/**
 	 * Returns the address (optional).
@@ -108,16 +109,16 @@ public final class InputsDelete {
 			throw new IllegalArgumentException("Value of id cannot be null");
 		}
 
-		if (id.length() < 64) {
-			throw new IllegalArgumentException("Length of id must have at least 64 characters");
+		if (id.codePointCount(0, id.length()) < 64) {
+			throw new IllegalArgumentException("Length of id must have at least 64 characters, got '" + id.codePointCount(0, id.length()) + "'");
 		}
 
-		if (id.length() > 64) {
-			throw new IllegalArgumentException("Length of id cannot exceed 64 characters");
+		if (id.codePointCount(0, id.length()) > 64) {
+			throw new IllegalArgumentException("Length of id cannot exceed 64 characters, got '" + id.codePointCount(0, id.length()) + "'");
 		}
 
 	    if(!Pattern.compile("\\p{XDigit}+").matcher(id).matches()){
-    		throw new IllegalArgumentException("Value provided for id does not represent a hexadecimal");
+    		throw new IllegalArgumentException("Value provided for id does not represent a hexadecimal.");
     	}
 
 		this.id = id;
@@ -129,7 +130,7 @@ public final class InputsDelete {
 	 * 
 	 * @return the index
 	 */
-	public Integer getIndex(){
+	public BigInteger getIndex(){
 		return index;
 	}
 
@@ -139,13 +140,13 @@ public final class InputsDelete {
 	 * 
 	 * @param index the index
 	 */
-	public void setIndex(Integer index){
+	public void setIndex(BigInteger index){
 		if (index == null) {
 			throw new IllegalArgumentException("Value of index cannot be null");
 		}
 
-		if (index < 0) {
-			throw new IllegalArgumentException("Value of index cannot be less than 0");
+		if (index.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + index + "': value of index cannot be less than 0");
 		}
 
 		this.index = index;

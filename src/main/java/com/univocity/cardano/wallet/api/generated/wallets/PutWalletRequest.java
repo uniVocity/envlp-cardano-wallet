@@ -46,12 +46,12 @@ public final class PutWalletRequest {
 			return;
 		}
 
-		if (name.length() < 1) {
-			throw new IllegalArgumentException("Length of name must have at least 1 characters");
+		if (name.codePointCount(0, name.length()) < 1) {
+			throw new IllegalArgumentException("Length of name must have at least 1 characters, got '" + name.codePointCount(0, name.length()) + "'");
 		}
 
-		if (name.length() > 255) {
-			throw new IllegalArgumentException("Length of name cannot exceed 255 characters");
+		if (name.codePointCount(0, name.length()) > 255) {
+			throw new IllegalArgumentException("Length of name cannot exceed 255 characters, got '" + name.codePointCount(0, name.length()) + "'");
 		}
 
 		this.name = name;

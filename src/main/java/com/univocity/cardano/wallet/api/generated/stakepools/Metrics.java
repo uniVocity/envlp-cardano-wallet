@@ -110,7 +110,7 @@ public final class Metrics {
 		}
 
 		if (saturation < 0) {
-			throw new IllegalArgumentException("Value of saturation cannot be less than 0");
+			throw new IllegalArgumentException("Value of saturation cannot be less than 0, got '" + saturation + "'");
 		}
 
 		this.saturation = saturation;

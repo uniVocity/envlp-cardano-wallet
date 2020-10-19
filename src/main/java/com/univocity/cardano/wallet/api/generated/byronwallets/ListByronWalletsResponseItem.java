@@ -64,16 +64,16 @@ public final class ListByronWalletsResponseItem {
 			throw new IllegalArgumentException("Value of id cannot be null");
 		}
 
-		if (id.length() < 40) {
-			throw new IllegalArgumentException("Length of id must have at least 40 characters");
+		if (id.codePointCount(0, id.length()) < 40) {
+			throw new IllegalArgumentException("Length of id must have at least 40 characters, got '" + id.codePointCount(0, id.length()) + "'");
 		}
 
-		if (id.length() > 40) {
-			throw new IllegalArgumentException("Length of id cannot exceed 40 characters");
+		if (id.codePointCount(0, id.length()) > 40) {
+			throw new IllegalArgumentException("Length of id cannot exceed 40 characters, got '" + id.codePointCount(0, id.length()) + "'");
 		}
 
 	    if(!Pattern.compile("\\p{XDigit}+").matcher(id).matches()){
-    		throw new IllegalArgumentException("Value provided for id does not represent a hexadecimal");
+    		throw new IllegalArgumentException("Value provided for id does not represent a hexadecimal.");
     	}
 
 		this.id = id;
@@ -158,12 +158,12 @@ public final class ListByronWalletsResponseItem {
 			throw new IllegalArgumentException("Value of name cannot be null");
 		}
 
-		if (name.length() < 1) {
-			throw new IllegalArgumentException("Length of name must have at least 1 characters");
+		if (name.codePointCount(0, name.length()) < 1) {
+			throw new IllegalArgumentException("Length of name must have at least 1 characters, got '" + name.codePointCount(0, name.length()) + "'");
 		}
 
-		if (name.length() > 255) {
-			throw new IllegalArgumentException("Length of name cannot exceed 255 characters");
+		if (name.codePointCount(0, name.length()) > 255) {
+			throw new IllegalArgumentException("Length of name cannot exceed 255 characters, got '" + name.codePointCount(0, name.length()) + "'");
 		}
 
 		this.name = name;

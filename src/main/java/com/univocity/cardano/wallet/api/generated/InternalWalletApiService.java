@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.api.generated;
 
+import java.math.*;
 import okhttp3.*;
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -187,7 +188,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListTransactionsResponseItem}
 	 */
 	@GET("/v2/wallets/{walletId}/transactions")
-	Call<List<ListTransactionsResponseItem>> listTransactions(@Path("walletId") String walletId, @Query("start") String start, @Query("end") String end, @Query("order") String order, @Query("minWithdrawal") Integer minWithdrawal);
+	Call<List<ListTransactionsResponseItem>> listTransactions(@Path("walletId") String walletId, @Query("start") String start, @Query("end") String end, @Query("order") String order, @Query("minWithdrawal") BigInteger minWithdrawal);
 
 
 	/**
@@ -259,7 +260,7 @@ public interface InternalWalletApiService {
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link ListStakePoolsResponseItem}
 	 */
 	@GET("/v2/stake-pools")
-	Call<List<ListStakePoolsResponseItem>> listStakePools(@Query("stake") Integer stake);
+	Call<List<ListStakePoolsResponseItem>> listStakePools(@Query("stake") Long stake);
 
 
 	/**

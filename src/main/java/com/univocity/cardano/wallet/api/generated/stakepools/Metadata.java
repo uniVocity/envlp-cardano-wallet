@@ -51,12 +51,12 @@ public final class Metadata {
 			throw new IllegalArgumentException("Value of ticker cannot be null");
 		}
 
-		if (ticker.length() < 3) {
-			throw new IllegalArgumentException("Length of ticker must have at least 3 characters");
+		if (ticker.codePointCount(0, ticker.length()) < 3) {
+			throw new IllegalArgumentException("Length of ticker must have at least 3 characters, got '" + ticker.codePointCount(0, ticker.length()) + "'");
 		}
 
-		if (ticker.length() > 5) {
-			throw new IllegalArgumentException("Length of ticker cannot exceed 5 characters");
+		if (ticker.codePointCount(0, ticker.length()) > 5) {
+			throw new IllegalArgumentException("Length of ticker cannot exceed 5 characters, got '" + ticker.codePointCount(0, ticker.length()) + "'");
 		}
 
 		this.ticker = ticker;
@@ -83,12 +83,12 @@ public final class Metadata {
 			throw new IllegalArgumentException("Value of name cannot be null");
 		}
 
-		if (name.length() < 1) {
-			throw new IllegalArgumentException("Length of name must have at least 1 characters");
+		if (name.codePointCount(0, name.length()) < 1) {
+			throw new IllegalArgumentException("Length of name must have at least 1 characters, got '" + name.codePointCount(0, name.length()) + "'");
 		}
 
-		if (name.length() > 50) {
-			throw new IllegalArgumentException("Length of name cannot exceed 50 characters");
+		if (name.codePointCount(0, name.length()) > 50) {
+			throw new IllegalArgumentException("Length of name cannot exceed 50 characters, got '" + name.codePointCount(0, name.length()) + "'");
 		}
 
 		this.name = name;
@@ -116,8 +116,8 @@ public final class Metadata {
 			return;
 		}
 
-		if (description.length() > 255) {
-			throw new IllegalArgumentException("Length of description cannot exceed 255 characters");
+		if (description.codePointCount(0, description.length()) > 255) {
+			throw new IllegalArgumentException("Length of description cannot exceed 255 characters, got '" + description.codePointCount(0, description.length()) + "'");
 		}
 
 		this.description = description;
