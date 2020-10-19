@@ -1,3 +1,3 @@
-		if ({NAME}.length() < {MIN_LENGTH}) {
-			throw new IllegalArgumentException("Length of {NAME} must have at least {MIN_LENGTH} characters");
+		if ({NAME}.codePointCount(0, {NAME}.length()) < {MIN_LENGTH}) {
+			throw new IllegalArgumentException("'" + {NAME} + "': length of {NAME} must have at least {MIN_LENGTH} characters");
 		}

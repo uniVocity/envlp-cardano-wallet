@@ -11,6 +11,7 @@ import retrofit2.converter.jackson.*;
 
 import java.io.*;
 import java.lang.annotation.*;
+import java.sql.*;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -32,6 +33,10 @@ public class InternalWalletApiServiceGenerator {
 
 		sharedClient = new OkHttpClient.Builder()
 				.dispatcher(dispatcher)
+				.callTimeout(2, TimeUnit.MINUTES)
+				.connectTimeout(2, TimeUnit.MINUTES)
+				.readTimeout(2, TimeUnit.MINUTES)
+				.writeTimeout(2, TimeUnit.MINUTES)
 				.pingInterval(20, TimeUnit.SECONDS)
 				.build();
 	}
@@ -44,6 +49,7 @@ public class InternalWalletApiServiceGenerator {
 				.validateEagerly(true);
 
 		Retrofit retrofit = retrofitBuilder.build();
+
 		return retrofit.create(serviceClass);
 	}
 

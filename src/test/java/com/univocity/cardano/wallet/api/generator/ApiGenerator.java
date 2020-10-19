@@ -39,6 +39,7 @@ public class ApiGenerator {
 
 		Set<String> packagesToImport = new TreeSet<>();
 		packagesToImport.add("java.util");
+		packagesToImport.add("java.math");
 
 		Map<String, ClassRef> classes = new TreeMap<>();
 		endpoints.forEach(e -> e.generateClasses(baseDir, packagesToImport, classes));

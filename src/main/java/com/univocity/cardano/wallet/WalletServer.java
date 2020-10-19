@@ -1,6 +1,5 @@
 package com.univocity.cardano.wallet;
 
-import com.univocity.cardano.wallet.api.generated.wallets.*;
 import com.univocity.cardano.wallet.builders.*;
 
 import java.io.*;
@@ -165,23 +164,31 @@ public class WalletServer {
 //		wallet.rename("new wallet name");
 //		wallet.updatePassword("old", "new");
 //
-//		wallet.addresses().list().unused();
-//		wallet.addresses().list().used();
-//		wallet.addresses().list().all();
+//		wallet.addresses().unused().list();
+//		wallet.addresses().used().list();
+//		wallet.addresses().all().list();
 //
 //		wallet.stakePool().quit();
 //		wallet.stakePool().join(stakePool);
 //
-//		wallet.transfer().to("address", 50000L).andTo("address 2", 25000L).withMetadata("cardano", 1, "object[]").authorize("password");
+//		Transaction transaction = wallet.transfer().to("address", 50000L).andTo("address 2", 25000L).withMetadata("cardano", 1, "object[]").authorize("password");
+//
+//		wallet.transactions().from("date").to("date").ascending().list();
+//		wallet.transactions().from("date").to("date").descending().minWithdrawal(100L).list();
+//
+//		Transaction transaction = wallet.transactions().get("id hex");
+//		transaction.forget();
 
-
+//		remoteServer.network().information();
+//		remoteServer.network().clock();
+//		remoteServer.network().parameters();
 
 
 		while (true) {
 			Thread.sleep(10000);
 
 
-		//	remoteServer.api().sync().postWallet();
+			//	remoteServer.api().sync().postWallet();
 
 			remoteServer.api().async().getNetworkInformation(System.out::println);
 			try {
@@ -194,6 +201,12 @@ public class WalletServer {
 
 			try {
 				System.out.println(remoteServer.api().sync().listWallets());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			try {
+				System.out.println(remoteServer.api().sync().listStakePools(0L));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

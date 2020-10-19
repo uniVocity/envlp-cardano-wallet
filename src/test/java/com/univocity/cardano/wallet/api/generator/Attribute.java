@@ -4,6 +4,7 @@ import com.univocity.cardano.wallet.common.*;
 import org.apache.commons.lang3.*;
 
 import java.io.*;
+import java.math.*;
 import java.nio.charset.*;
 import java.util.*;
 
@@ -90,15 +91,26 @@ public class Attribute {
 	}
 
 	String getType() {
-		return getType(type);
+		return getType(type, maximum);
 	}
 
-	static String getType(String type) {
+	static String getType(String type, Number maximum) {
 		if ("string".equalsIgnoreCase(type)) {
 			return "String";
 		}
 		if ("integer".equalsIgnoreCase(type)) {
-			return "Integer";
+			if (maximum == null) {
+				return "BigInteger";
+			}
+			BigInteger max = new BigInteger(maximum.toString());
+
+			if (new BigInteger(String.valueOf(Integer.MAX_VALUE)).compareTo(max) > 0) {
+				return "Integer";
+			}
+			if (new BigInteger(String.valueOf(Long.MAX_VALUE)).compareTo(max) > 0) {
+				return "Long";
+			}
+			return "BigInteger";
 		}
 		if ("boolean".equalsIgnoreCase(type)) {
 			return "Boolean";
@@ -126,7 +138,7 @@ public class Attribute {
 			if (wrapInCollectionIfNeeded) {
 				String elementType;
 				if (itemType == null) {
-					elementType = getType(arrayElementType);
+					elementType = getType(arrayElementType, maximum);
 				} else {
 					elementType = itemType.getTypeOrClassName(false);
 				}
