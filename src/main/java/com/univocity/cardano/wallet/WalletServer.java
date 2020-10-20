@@ -142,7 +142,7 @@ public class WalletServer {
 
 		RemoteWalletServer remoteServer = server;//WalletServer.remote("http://localhost").connectToPort(4444);
 
-//		remoteServer.stakePools().list();
+		remoteServer.stakePools().list();
 //
 //		remoteServer.wallets().list();
 //		remoteServer.wallets().create("wallet name").shelley().fromSeed("seed abc a").password("qwerty").addressPoolGap(10).secondFactor("");

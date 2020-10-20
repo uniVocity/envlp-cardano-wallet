@@ -7,6 +7,7 @@ import org.apache.commons.io.*;
 import java.io.*;
 import java.nio.charset.*;
 import java.util.*;
+import java.util.function.*;
 
 public class Utils {
 
@@ -95,5 +96,13 @@ public class Utils {
 		} catch (JsonProcessingException e) {
 			return o.toString();
 		}
+	}
+
+	public static <O extends Wrapper<I>, I> List<O> convertList(List<I> in, Function<I, O> converter){
+		List<O> out = new ArrayList<>(in.size());
+		for(I original : in){
+			out.add(converter.apply(original));
+		}
+		return out;
 	}
 }
