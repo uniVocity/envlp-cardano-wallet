@@ -3,21 +3,25 @@ package com.univocity.cardano.wallet.builders.stakepools;
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.service.*;
+import com.univocity.cardano.wallet.builders.*;
 import com.univocity.cardano.wallet.common.*;
 
 import java.util.*;
 
-public class StakePools {
+public class StakePools extends ApiWrapper {
 
 	private boolean fetchingPools;
-	private final WalletApi api;
 	private List<StakePool> lastResult = new ArrayList<>();
 
 	private final WalletApiCallback<List<ListStakePoolsResponseItem>> callback = new WalletApiCallback<List<ListStakePoolsResponseItem>>() {
 		@Override
 		public void onResponse(List<ListStakePoolsResponseItem> response) {
-			lastResult = Utils.convertList(response, StakePool::new);
-			fetchingPools = false;
+			try {
+				lastResult = Utils.convertList(response, StakePool::new);
+			} finally {
+				fetchingPools = false;
+			}
+
 		}
 
 		@Override
@@ -28,7 +32,7 @@ public class StakePools {
 	};
 
 	public StakePools(WalletApi api) {
-		this.api = api;
+		super(api);
 	}
 
 	public List<StakePool> list() {

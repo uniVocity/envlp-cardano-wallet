@@ -17,43 +17,43 @@ public class StakePool extends Wrapper<ListStakePoolsResponseItem> {
 	}
 
 	public String ticker() {
-		return original.getMetadata().getTicker();
+		return safeGet(() -> original.getMetadata().getTicker());
 	}
 
 	public String description() {
-		return original.getMetadata().getDescription();
+		return safeGet(() -> original.getMetadata().getDescription());
 	}
 
 	public String homePage() {
-		return original.getMetadata().getHomepage();
+		return safeGet(() -> original.getMetadata().getHomepage());
 	}
 
-	public double relativeStake() {
-		return toPct(original.getMetrics().getRelativeStake().getQuantity());
+	public double relativeStakePercentage() {
+		return toPercentage(original.getMetrics().getRelativeStake().getQuantity());
 	}
 
-	public String formattedRelativeStake() {
-		return toFormattedPct(relativeStake());
+	public String formattedRelativeStakePercentage() {
+		return toFormattedPercentage(relativeStakePercentage());
 	}
 
-	public double saturation() {
-		return toPct(original.getMetrics().getSaturation());
+	public double saturationPercentage() {
+		return toPercentage(original.getMetrics().getSaturation());
 	}
 
-	public String formattedSaturation() {
-		return toFormattedPct(saturation());
+	public String formattedSaturationPercentage() {
+		return toFormattedPercentage(saturationPercentage());
 	}
 
 	public long blocksProduced() {
 		return original.getMetrics().getProducedBlocks().getQuantity().longValue();
 	}
 
-	public double margin() {
-		return toPct(original.getMargin().getQuantity());
+	public double marginPercentage() {
+		return toPercentage(original.getMargin().getQuantity());
 	}
 
-	public String formattedMargin() {
-		return toFormattedPct(margin());
+	public String formattedMarginPercentage() {
+		return toFormattedPercentage(marginPercentage());
 	}
 
 	public BigInteger fixedFee() {

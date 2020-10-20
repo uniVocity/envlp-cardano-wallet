@@ -1,4 +1,4 @@
-package com.univocity.cardano.wallet.builders;
+package com.univocity.cardano.wallet.builders.server;
 
 import java.util.function.*;
 

@@ -2,6 +2,7 @@ package com.univocity.cardano.wallet.common;
 
 import java.math.*;
 import java.text.*;
+import java.util.function.*;
 
 public abstract class Wrapper<T> {
 
@@ -17,18 +18,18 @@ public abstract class Wrapper<T> {
 		return original;
 	}
 
-	protected static double toPct(Double value) {
+	protected static double toPercentage(Double value) {
 		if (value == null || Double.isNaN(value)) {
 			return 0.0;
 		}
 		return value / 100.0;
 	}
 
-	protected static String toFormattedPct(Double value) {
-		return toFormattedPct(toPct(value));
+	protected static String toFormattedPercentage(Double value) {
+		return toFormattedPercentage(toPercentage(value));
 	}
 
-	protected static String toFormattedPct(double value) {
+	protected static String toFormattedPercentage(double value) {
 		return PERCENTAGE_FORMAT.get().format(value);
 	}
 
@@ -39,7 +40,15 @@ public abstract class Wrapper<T> {
 		return quantity;
 	}
 
-	public String toString() {
+	public String safeGet(Supplier<String> supplier){
+		try {
+			return supplier.get();
+		} catch (Exception e){
+			return null;
+		}
+	}
+
+	public final String toString() {
 		return original.toString();
 	}
 }

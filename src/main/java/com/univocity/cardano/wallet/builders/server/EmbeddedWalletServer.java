@@ -1,4 +1,4 @@
-package com.univocity.cardano.wallet;
+package com.univocity.cardano.wallet.builders.server;
 
 import com.univocity.cardano.wallet.embedded.services.*;
 

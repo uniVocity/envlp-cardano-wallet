@@ -1,8 +1,9 @@
-package com.univocity.cardano.wallet;
+package com.univocity.cardano.wallet.builders.server;
 
-import com.univocity.cardano.wallet.builders.*;
+import com.univocity.cardano.wallet.builders.stakepools.*;
 
 import java.io.*;
+import java.util.*;
 import java.util.function.*;
 
 public class WalletServer {
@@ -141,8 +142,6 @@ public class WalletServer {
 				.consumeOutput(System.out::println);
 
 		RemoteWalletServer remoteServer = server;//WalletServer.remote("http://localhost").connectToPort(4444);
-
-		remoteServer.stakePools().list();
 //
 //		remoteServer.wallets().list();
 //		remoteServer.wallets().create("wallet name").shelley().fromSeed("seed abc a").password("qwerty").addressPoolGap(10).secondFactor("");
@@ -179,37 +178,26 @@ public class WalletServer {
 //		Transaction transaction = wallet.transactions().get("id hex");
 //		transaction.forget();
 
-//		remoteServer.network().information();
-//		remoteServer.network().clock();
-//		remoteServer.network().parameters();
-
-
 		while (true) {
 			Thread.sleep(10000);
 
+			printResult(() -> remoteServer.network().clock());
+			printResult(() -> remoteServer.network().information());
+			printResult(() -> remoteServer.network().parameters());
+			printResult(() -> {
+				List<StakePool> pools = remoteServer.stakePools().list();
+				StringBuilder tmp = new StringBuilder();
+				pools.forEach(p -> tmp.append(p.ticker()).append(" - ").append(p.formattedMarginPercentage()).append('\n'));
+				return tmp.toString();
+			});
+		}
+	}
 
-			//	remoteServer.api().sync().postWallet();
-
-			remoteServer.api().async().getNetworkInformation(System.out::println);
-			try {
-				System.out.println(remoteServer.api().sync().getNetworkParameters());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			remoteServer.api().async().listByronWallets(System.out::println);
-
-			try {
-				System.out.println(remoteServer.api().sync().listWallets());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			try {
-				System.out.println(remoteServer.api().sync().listStakePools(0L));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	private static void printResult(Supplier<Object> supplier) {
+		try {
+			System.out.println(supplier.get());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
