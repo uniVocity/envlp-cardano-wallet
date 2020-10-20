@@ -3,12 +3,14 @@ package com.univocity.cardano.wallet.builders.server;
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.builders.network.*;
 import com.univocity.cardano.wallet.builders.stakepools.*;
+import com.univocity.cardano.wallet.builders.wallets.*;
 
 public class RemoteWalletServer {
 
 	private final WalletApi api;
-	private StakePools stakePools;
-	private Network network;
+	private final StakePools stakePools;
+	private final Network network;
+	private final Wallets wallets;
 
 	public RemoteWalletServer(WalletServer.WalletServerConfig config) {
 		ApiConfiguration configuration = new ApiConfiguration();
@@ -19,6 +21,7 @@ public class RemoteWalletServer {
 
 		stakePools = new StakePools(api);
 		network = new Network(api);
+		wallets = new Wallets(api);
 	}
 
 	public WalletApi api() {
@@ -31,5 +34,9 @@ public class RemoteWalletServer {
 
 	public Network network(){
 		return network;
+	}
+
+	public Wallets wallets(){
+		return wallets;
 	}
 }

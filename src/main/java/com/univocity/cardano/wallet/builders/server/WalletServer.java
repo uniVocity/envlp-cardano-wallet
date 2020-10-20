@@ -143,7 +143,7 @@ public class WalletServer {
 
 		RemoteWalletServer remoteServer = server;//WalletServer.remote("http://localhost").connectToPort(4444);
 //
-//		remoteServer.wallets().list();
+
 //		remoteServer.wallets().create("wallet name").shelley().fromSeed("seed abc a").password("qwerty").addressPoolGap(10).secondFactor("");
 //		remoteServer.wallets().create("wallet name").shelley().fromPublicKey("hex xpub").addressPoolGap(10);
 //
@@ -184,12 +184,15 @@ public class WalletServer {
 			printResult(() -> remoteServer.network().clock());
 			printResult(() -> remoteServer.network().information());
 			printResult(() -> remoteServer.network().parameters());
+
 			printResult(() -> {
 				List<StakePool> pools = remoteServer.stakePools().list();
 				StringBuilder tmp = new StringBuilder();
 				pools.forEach(p -> tmp.append(p.ticker()).append(" - ").append(p.formattedMarginPercentage()).append('\n'));
 				return tmp.toString();
 			});
+
+			printResult(() -> remoteServer.wallets().list());
 		}
 	}
 
