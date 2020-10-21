@@ -5,7 +5,6 @@ import com.univocity.cardano.wallet.api.generated.byronwallets.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
 import com.univocity.cardano.wallet.builders.*;
 import com.univocity.cardano.wallet.common.*;
-import jdk.nashorn.tools.*;
 
 import java.util.*;
 

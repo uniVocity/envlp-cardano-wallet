@@ -17,6 +17,14 @@ import java.util.function.*;
 
 @Ignore
 public class ApiGenerator {
+	static final String home = System.getProperty("user.home");
+	static final String yaml = home + "/dev/repository/iog-cardano-wallet/specifications/api/swagger.yaml";
+	static final String generated = home + "/dev/repository/envlp/cardano-wallet/src/main/java/com/univocity/cardano/wallet/api/generated";
+
+
+	private static Reader openYamlFile() throws Exception {
+		return new FileReader(new File(yaml));
+	}
 
 	public static void main(String... args) throws Exception {
 
@@ -24,8 +32,8 @@ public class ApiGenerator {
 		loaderOptions.setMaxAliasesForCollections(5000);
 		Yaml yaml = new Yaml(new Constructor(), new Representer(), new DumperOptions(), loaderOptions, new Resolver());
 
-		String home = System.getProperty("user.home");
-		Map globals = yaml.load(new FileReader(new File(home + "/dev/repository/iog-cardano-wallet/specifications/api/swagger.yaml")));
+		Map globals = yaml.load(openYamlFile());
+
 		globals = (Map) deepCopy(globals);
 		Map paths = (Map) globals.get("paths");
 
@@ -34,7 +42,7 @@ public class ApiGenerator {
 		paths.forEach((k, v) -> processEndpoint(k, (Map) v, endpoints));
 
 		System.out.println("-------------------[ Generating class structure ]-------------------");
-		File baseDir = new File(home + "/dev/repository/envlp/cardano-wallet/src/main/java/com/univocity/cardano/wallet/api/generated");
+		File baseDir = new File(generated);
 
 
 		Set<String> packagesToImport = new TreeSet<>();
@@ -74,9 +82,11 @@ public class ApiGenerator {
 	private static Collection<ClassRef> mergeClasses(Collection<ClassRef> classes) {
 		for (ClassRef ref1 : classes) {
 			for (ClassRef ref2 : classes) {
-				if (ref1 != ref2 && ref1.isSameCode(ref2)) {
-					ref1.common = true;
-					ref2.common = true;
+				if (ref1 != ref2) {
+					if (ref1.isSameCode(ref2)) {
+						ref1.common = true;
+						ref2.common = true;
+					}
 				}
 			}
 		}
@@ -98,7 +108,7 @@ public class ApiGenerator {
 			}
 		}
 
-		return out.values();
+		return CommonParent.refactorToCommonParent(out.values());
 	}
 
 	private static String identValue(Object v, Object k, String identation) {

@@ -47,6 +47,19 @@ class ClassRef {
 		return this.code.substring(mine).equals(ref.code.substring(theirs));
 	}
 
+	boolean isSameStructure(ClassRef ref) {
+		int mine = code.indexOf("public final class ");
+		mine = code.indexOf("{", mine);
+
+		int theirs = ref.code.indexOf("public final class ");
+		theirs = ref.code.indexOf("{", theirs);
+
+		String myCode = this.code.substring(mine);
+		String theirCode = ref.code.substring(theirs);
+
+		return myCode.length() > 10 && theirCode.length() > 10 && myCode.equals(theirCode);
+	}
+
 	public void moveToCommonPackage() {
 		String oldPackageName = classFile.getParentFile().getName();
 		classFile = classFile.getParentFile().getParentFile().toPath().resolve("common").resolve(classFile.getName()).toFile();
@@ -70,5 +83,9 @@ class ClassRef {
 				break;
 			}
 		}
+	}
+
+	public String toString(){
+		return name;
 	}
 }

@@ -98,11 +98,52 @@ public class Utils {
 		}
 	}
 
-	public static <O extends Wrapper<I>, I> List<O> convertList(List<I> in, Function<I, O> converter){
+	public static <O extends Wrapper<I>, I> List<O> convertList(List<I> in, Function<I, O> converter) {
 		List<O> out = new ArrayList<>(in.size());
-		for(I original : in){
+		for (I original : in) {
 			out.add(converter.apply(original));
 		}
 		return out;
+	}
+
+	private static String getShortestString(String ... strings){
+		String shortest = "";
+		for (String s : strings) {
+			if (shortest.length() < s.length()) {
+				shortest = s;
+			}
+		}
+		return shortest;
+	}
+
+	public static String longestCommonSubstring(String... strings) {
+		char[] shortest = getShortestString(strings).toCharArray();
+
+		StringBuilder tmp = new StringBuilder();
+		String common = "";
+		for (int i = 0; i < shortest.length; i++) {
+			char c = shortest[i];
+			tmp.append(c);
+
+			for (String s : strings) {
+				if (!s.contains(tmp)) {
+					tmp.setLength(0);
+					tmp.append(c);
+					for (String str : strings) {
+						if (!str.contains(tmp)) {
+							tmp.setLength(0);
+							break;
+						}
+					}
+					break;
+				}
+			}
+
+			if (tmp.length() > 0 && tmp.length() > common.length()) {
+				common = tmp.toString();
+			}
+		}
+
+		return common;
 	}
 }
