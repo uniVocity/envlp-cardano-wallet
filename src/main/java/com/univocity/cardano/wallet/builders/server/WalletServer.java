@@ -1,5 +1,7 @@
 package com.univocity.cardano.wallet.builders.server;
 
+import com.univocity.cardano.wallet.api.generated.network.*;
+import com.univocity.cardano.wallet.builders.network.*;
 import com.univocity.cardano.wallet.builders.stakepools.*;
 
 import java.io.*;
