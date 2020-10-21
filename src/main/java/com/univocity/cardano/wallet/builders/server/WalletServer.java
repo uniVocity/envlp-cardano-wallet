@@ -129,9 +129,10 @@ public class WalletServer {
 	public static void main(String... args) throws InterruptedException {
 		final String HOME = System.getProperty("user.home");
 		final String CONFIGS = HOME + "/dev/repository/free-commerce/src/main/resources/";
+		final String DOWNLOADS = HOME + "/Downloads";
 
 		EmbeddedWalletServer server = WalletServer.embedded()
-				.binariesIn(HOME + "/dev/repository/free-commerce/src/main/resources/cli/lin")
+				.binariesIn(DOWNLOADS + "/cardano-wallet-2020.10.13/")
 				.node()
 				.configuration(CONFIGS + "mainnet-config.json")
 				.topology(CONFIGS + "mainnet-topology.json")

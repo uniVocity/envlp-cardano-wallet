@@ -248,6 +248,20 @@ CardanoWalletManager waletManager = server.getWalletManager();
 waletManager.waitForProcess();
 ```
 
+### NOTES:
+
+For the cardano-wallet to work, the cardano-node has to be fully synced. 
+On the first run this will take hours to complete. Make sure you have enough 
+space available (~5GB) for the blockchain directory configured earlier. 
+
+The `cardano-wallet` process will take a long time to retrieve the full list of
+stake pools initially. This code will fail to run with `TimeOutException` a few
+times until the cardano-wallet finally caches the result:
+
+```java
+List<StakePool> pools = remoteServer.stakePools().list(); 
+```
+
 ## REST API code generation
 
 All classes and methods that interact directly with the cardano-wallet REST API 
