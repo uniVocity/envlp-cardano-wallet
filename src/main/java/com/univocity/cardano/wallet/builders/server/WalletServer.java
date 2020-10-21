@@ -1,8 +1,7 @@
 package com.univocity.cardano.wallet.builders.server;
 
-import com.univocity.cardano.wallet.api.generated.network.*;
-import com.univocity.cardano.wallet.builders.network.*;
 import com.univocity.cardano.wallet.builders.stakepools.*;
+import com.univocity.cardano.wallet.embedded.services.*;
 
 import java.io.*;
 import java.util.*;
@@ -107,7 +106,7 @@ public class WalletServer {
 		}
 
 		@Override
-		public Node toolsIn(String pathToCardanoTools) {
+		public Node binariesIn(String pathToCardanoTools) {
 			cardanoToolsDir = toValidatedFile(pathToCardanoTools, true);
 			return this;
 		}
@@ -132,7 +131,7 @@ public class WalletServer {
 		final String CONFIGS = HOME + "/dev/repository/free-commerce/src/main/resources/";
 
 		EmbeddedWalletServer server = WalletServer.embedded()
-				.toolsIn(HOME + "/dev/repository/free-commerce/src/main/resources/cli/lin")
+				.binariesIn(HOME + "/dev/repository/free-commerce/src/main/resources/cli/lin")
 				.node()
 				.configuration(CONFIGS + "mainnet-config.json")
 				.topology(CONFIGS + "mainnet-topology.json")
@@ -180,6 +179,9 @@ public class WalletServer {
 //		Transaction transaction = wallet.transactions().get("id hex");
 //		transaction.forget();
 
+
+		CardanoNodeManager nodeManager = server.getNodeManager();
+		CardanoWalletManager waletManager = server.getWalletManager();
 		while (true) {
 			Thread.sleep(10000);
 
@@ -196,6 +198,7 @@ public class WalletServer {
 
 			printResult(() -> remoteServer.wallets().list());
 		}
+
 	}
 
 	private static void printResult(Supplier<Object> supplier) {
