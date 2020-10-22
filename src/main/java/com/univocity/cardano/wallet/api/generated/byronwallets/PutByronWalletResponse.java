@@ -13,5 +13,5 @@ import com.univocity.cardano.wallet.api.generated.*;
  * {@link InternalWalletApiService#putByronWallet(String, okhttp3.RequestBody)}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class PutByronWalletResponse extends AbstractByronWalletResponse {
+public final class PutByronWalletResponse extends AbstractWalletResponse {
 }

@@ -2,7 +2,7 @@ package com.univocity.cardano.wallet.api.generated;
 
 import java.math.*;
 import com.univocity.cardano.wallet.api.service.*;
-import okhttp3.*;
+import com.univocity.cardano.wallet.common.*;
 
 import com.univocity.cardano.wallet.api.generated.addresses.*;
 import com.univocity.cardano.wallet.api.generated.byronaddresses.*;
@@ -44,8 +44,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostWalletRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostWalletResponse}
 	 */
-	public void postWallet(RequestBody requestBody, WalletApiCallback<PostWalletResponse> callback){
-		api.postWallet(requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void postWallet(PostWalletRequest requestBody, WalletApiCallback<PostWalletResponse> callback){
+		api.postWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -117,8 +117,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PutWalletRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PutWalletResponse}
 	 */
-	public void putWallet(String walletId, RequestBody requestBody, WalletApiCallback<PutWalletResponse> callback){
-		api.putWallet(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void putWallet(String walletId, PutWalletRequest requestBody, WalletApiCallback<PutWalletResponse> callback){
+		api.putWallet(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -129,8 +129,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PutWalletPassphraseRequest}
 	 * @param callback code to be executed once a response is available. No response body is expected.
 	 */
-	public void putWalletPassphrase(String walletId, RequestBody requestBody, WalletApiCallback<Void> callback){
-		api.putWalletPassphrase(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void putWalletPassphrase(String walletId, PutWalletPassphraseRequest requestBody, WalletApiCallback<Void> callback){
+		api.putWalletPassphrase(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -148,8 +148,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostTransactionFeeRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostTransactionFeeResponse}
 	 */
-	public void postTransactionFee(String walletId, RequestBody requestBody, WalletApiCallback<PostTransactionFeeResponse> callback){
-		api.postTransactionFee(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void postTransactionFee(String walletId, PostTransactionFeeRequest requestBody, WalletApiCallback<PostTransactionFeeResponse> callback){
+		api.postTransactionFee(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -163,8 +163,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostTransactionRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostTransactionResponse}
 	 */
-	public void postTransaction(String walletId, RequestBody requestBody, WalletApiCallback<PostTransactionResponse> callback){
-		api.postTransaction(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void postTransaction(String walletId, PostTransactionRequest requestBody, WalletApiCallback<PostTransactionResponse> callback){
+		api.postTransaction(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -314,8 +314,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link JoinStakePoolRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link JoinStakePoolResponse}
 	 */
-	public void joinStakePool(String stakePoolId, String walletId, RequestBody requestBody, WalletApiCallback<JoinStakePoolResponse> callback){
-		api.joinStakePool(stakePoolId, walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void joinStakePool(String stakePoolId, String walletId, JoinStakePoolRequest requestBody, WalletApiCallback<JoinStakePoolResponse> callback){
+		api.joinStakePool(stakePoolId, walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -331,8 +331,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link SelectCoinsRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link SelectCoinsResponse}
 	 */
-	public void selectCoins(String walletId, RequestBody requestBody, WalletApiCallback<SelectCoinsResponse> callback){
-		api.selectCoins(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void selectCoins(String walletId, SelectCoinsRequest requestBody, WalletApiCallback<SelectCoinsResponse> callback){
+		api.selectCoins(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -352,8 +352,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link MigrateShelleyWalletRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link MigrateShelleyWalletResponseItem}
 	 */
-	public void migrateShelleyWallet(String walletId, RequestBody requestBody, WalletApiCallback<List<MigrateShelleyWalletResponseItem>> callback){
-		api.migrateShelleyWallet(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void migrateShelleyWallet(String walletId, MigrateShelleyWalletRequest requestBody, WalletApiCallback<List<MigrateShelleyWalletResponseItem>> callback){
+		api.migrateShelleyWallet(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -379,8 +379,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronWalletResponse}
 	 */
-	public void postByronWallet(RequestBody requestBody, WalletApiCallback<PostByronWalletResponse> callback){
-		api.postByronWallet(requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void postByronWallet(PostByronWalletRequest requestBody, WalletApiCallback<PostByronWalletResponse> callback){
+		api.postByronWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -458,8 +458,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PutByronWalletRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PutByronWalletResponse}
 	 */
-	public void putByronWallet(String walletId, RequestBody requestBody, WalletApiCallback<PutByronWalletResponse> callback){
-		api.putByronWallet(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void putByronWallet(String walletId, PutByronWalletRequest requestBody, WalletApiCallback<PutByronWalletResponse> callback){
+		api.putByronWallet(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -470,8 +470,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PutByronWalletPassphraseRequest}
 	 * @param callback code to be executed once a response is available. No response body is expected.
 	 */
-	public void putByronWalletPassphrase(String walletId, RequestBody requestBody, WalletApiCallback<Void> callback){
-		api.putByronWalletPassphrase(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void putByronWalletPassphrase(String walletId, PutByronWalletPassphraseRequest requestBody, WalletApiCallback<Void> callback){
+		api.putByronWalletPassphrase(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -487,8 +487,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link CreateAddressRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link CreateAddressResponse}
 	 */
-	public void createAddress(String walletId, RequestBody requestBody, WalletApiCallback<CreateAddressResponse> callback){
-		api.createAddress(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void createAddress(String walletId, CreateAddressRequest requestBody, WalletApiCallback<CreateAddressResponse> callback){
+		api.createAddress(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -521,8 +521,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link ImportAddressesRequest}
 	 * @param callback code to be executed once a response is available. No response body is expected.
 	 */
-	public void importAddresses(String walletId, RequestBody requestBody, WalletApiCallback<Void> callback){
-		api.importAddresses(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void importAddresses(String walletId, ImportAddressesRequest requestBody, WalletApiCallback<Void> callback){
+		api.importAddresses(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -557,8 +557,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostByronTransactionFeeRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronTransactionFeeResponse}
 	 */
-	public void postByronTransactionFee(String walletId, RequestBody requestBody, WalletApiCallback<PostByronTransactionFeeResponse> callback){
-		api.postByronTransactionFee(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void postByronTransactionFee(String walletId, PostByronTransactionFeeRequest requestBody, WalletApiCallback<PostByronTransactionFeeResponse> callback){
+		api.postByronTransactionFee(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -572,8 +572,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostByronTransactionRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronTransactionResponse}
 	 */
-	public void postByronTransaction(String walletId, RequestBody requestBody, WalletApiCallback<PostByronTransactionResponse> callback){
-		api.postByronTransaction(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void postByronTransaction(String walletId, PostByronTransactionRequest requestBody, WalletApiCallback<PostByronTransactionResponse> callback){
+		api.postByronTransaction(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -648,8 +648,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link ByronSelectCoinsRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link ByronSelectCoinsResponse}
 	 */
-	public void byronSelectCoins(String walletId, RequestBody requestBody, WalletApiCallback<ByronSelectCoinsResponse> callback){
-		api.byronSelectCoins(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void byronSelectCoins(String walletId, ByronSelectCoinsRequest requestBody, WalletApiCallback<ByronSelectCoinsResponse> callback){
+		api.byronSelectCoins(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -669,8 +669,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link MigrateByronWalletRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link MigrateByronWalletResponseItem}
 	 */
-	public void migrateByronWallet(String walletId, RequestBody requestBody, WalletApiCallback<List<MigrateByronWalletResponseItem>> callback){
-		api.migrateByronWallet(walletId, requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void migrateByronWallet(String walletId, MigrateByronWalletRequest requestBody, WalletApiCallback<List<MigrateByronWalletResponseItem>> callback){
+		api.migrateByronWallet(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**
@@ -724,8 +724,8 @@ public class AsynchronousWalletApi {
 	 * @param requestBody a request body containing a {@code byte[]} loaded from a signed transaction message binary blob.
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostExternalTransactionResponse}
 	 */
-	public void postExternalTransaction(RequestBody requestBody, WalletApiCallback<PostExternalTransactionResponse> callback){
-		api.postExternalTransaction(requestBody).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void postExternalTransaction(byte[] requestBody, WalletApiCallback<PostExternalTransactionResponse> callback){
+		api.postExternalTransaction(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**

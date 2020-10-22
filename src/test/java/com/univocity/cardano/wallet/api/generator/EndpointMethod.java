@@ -120,7 +120,7 @@ public class EndpointMethod {
 				methodInvocation.append(", ");
 			}
 			methodSignature.append("okhttp3.RequestBody");
-			methodInvocation.append("requestBody");
+			methodInvocation.append("Utils.createRequestBody(requestBody)");
 		}
 
 		methodSignature.append(')');
@@ -224,8 +224,10 @@ public class EndpointMethod {
 			}
 			if (annotate) {
 				out.append("@Body ");
+				out.append("RequestBody requestBody");
+			} else {
+				out.append(requestBodyClass).append(" requestBody");
 			}
-			out.append("RequestBody requestBody");
 		}
 	}
 

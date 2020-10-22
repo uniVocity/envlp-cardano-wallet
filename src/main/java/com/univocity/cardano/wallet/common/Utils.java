@@ -2,8 +2,7 @@ package com.univocity.cardano.wallet.common;
 
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
-import com.univocity.cardano.wallet.api.generated.wallets.*;
-import com.univocity.cardano.wallet.builders.wallets.*;
+import okhttp3.*;
 import org.apache.commons.io.*;
 
 import java.io.*;
@@ -98,6 +97,10 @@ public class Utils {
 		} catch (JsonProcessingException e) {
 			return o.toString();
 		}
+	}
+
+	public static RequestBody createRequestBody(Object requestBody){
+		return okhttp3.RequestBody.create(requestBody.toString(), MediaType.parse("application/json"));
 	}
 
 	public static <O extends Wrapper<I>, I> List<O> convertList(List<? extends I> in, Function<? extends I, ? extends O> converter) {

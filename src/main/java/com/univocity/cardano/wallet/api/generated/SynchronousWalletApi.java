@@ -2,7 +2,7 @@ package com.univocity.cardano.wallet.api.generated;
 
 import java.math.*;
 import static com.univocity.cardano.wallet.api.service.InternalWalletApiServiceGenerator.*;
-import okhttp3.*;
+import com.univocity.cardano.wallet.common.*;
 
 import com.univocity.cardano.wallet.api.generated.addresses.*;
 import com.univocity.cardano.wallet.api.generated.byronaddresses.*;
@@ -44,8 +44,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostWalletRequest}
 	 * @return the server response as an instance of {@link PostWalletResponse}
 	 */
-	public PostWalletResponse postWallet(RequestBody requestBody){
-		return executeSync(api.postWallet(requestBody));
+	public PostWalletResponse postWallet(PostWalletRequest requestBody){
+		return executeSync(api.postWallet(Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -116,8 +116,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PutWalletRequest}
 	 * @return the server response as an instance of {@link PutWalletResponse}
 	 */
-	public PutWalletResponse putWallet(String walletId, RequestBody requestBody){
-		return executeSync(api.putWallet(walletId, requestBody));
+	public PutWalletResponse putWallet(String walletId, PutWalletRequest requestBody){
+		return executeSync(api.putWallet(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -127,8 +127,8 @@ public class SynchronousWalletApi {
 	 * - Length must be exactly {@code 40}.
 	 * @param requestBody a request body containing the json representation of {@link PutWalletPassphraseRequest}
 	 */
-	public void putWalletPassphrase(String walletId, RequestBody requestBody){
-		executeSync(api.putWalletPassphrase(walletId, requestBody));
+	public void putWalletPassphrase(String walletId, PutWalletPassphraseRequest requestBody){
+		executeSync(api.putWalletPassphrase(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -146,8 +146,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostTransactionFeeRequest}
 	 * @return the server response as an instance of {@link PostTransactionFeeResponse}
 	 */
-	public PostTransactionFeeResponse postTransactionFee(String walletId, RequestBody requestBody){
-		return executeSync(api.postTransactionFee(walletId, requestBody));
+	public PostTransactionFeeResponse postTransactionFee(String walletId, PostTransactionFeeRequest requestBody){
+		return executeSync(api.postTransactionFee(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -161,8 +161,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostTransactionRequest}
 	 * @return the server response as an instance of {@link PostTransactionResponse}
 	 */
-	public PostTransactionResponse postTransaction(String walletId, RequestBody requestBody){
-		return executeSync(api.postTransaction(walletId, requestBody));
+	public PostTransactionResponse postTransaction(String walletId, PostTransactionRequest requestBody){
+		return executeSync(api.postTransaction(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -311,8 +311,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link JoinStakePoolRequest}
 	 * @return the server response as an instance of {@link JoinStakePoolResponse}
 	 */
-	public JoinStakePoolResponse joinStakePool(String stakePoolId, String walletId, RequestBody requestBody){
-		return executeSync(api.joinStakePool(stakePoolId, walletId, requestBody));
+	public JoinStakePoolResponse joinStakePool(String stakePoolId, String walletId, JoinStakePoolRequest requestBody){
+		return executeSync(api.joinStakePool(stakePoolId, walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -328,8 +328,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link SelectCoinsRequest}
 	 * @return the server response as an instance of {@link SelectCoinsResponse}
 	 */
-	public SelectCoinsResponse selectCoins(String walletId, RequestBody requestBody){
-		return executeSync(api.selectCoins(walletId, requestBody));
+	public SelectCoinsResponse selectCoins(String walletId, SelectCoinsRequest requestBody){
+		return executeSync(api.selectCoins(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -349,8 +349,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link MigrateShelleyWalletRequest}
 	 * @return the server response as a list of {@link MigrateShelleyWalletResponseItem}
 	 */
-	public List<MigrateShelleyWalletResponseItem> migrateShelleyWallet(String walletId, RequestBody requestBody){
-		return executeSync(api.migrateShelleyWallet(walletId, requestBody));
+	public List<MigrateShelleyWalletResponseItem> migrateShelleyWallet(String walletId, MigrateShelleyWalletRequest requestBody){
+		return executeSync(api.migrateShelleyWallet(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -376,8 +376,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRequest}
 	 * @return the server response as an instance of {@link PostByronWalletResponse}
 	 */
-	public PostByronWalletResponse postByronWallet(RequestBody requestBody){
-		return executeSync(api.postByronWallet(requestBody));
+	public PostByronWalletResponse postByronWallet(PostByronWalletRequest requestBody){
+		return executeSync(api.postByronWallet(Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -454,8 +454,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PutByronWalletRequest}
 	 * @return the server response as an instance of {@link PutByronWalletResponse}
 	 */
-	public PutByronWalletResponse putByronWallet(String walletId, RequestBody requestBody){
-		return executeSync(api.putByronWallet(walletId, requestBody));
+	public PutByronWalletResponse putByronWallet(String walletId, PutByronWalletRequest requestBody){
+		return executeSync(api.putByronWallet(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -465,8 +465,8 @@ public class SynchronousWalletApi {
 	 * - Length must be exactly {@code 40}.
 	 * @param requestBody a request body containing the json representation of {@link PutByronWalletPassphraseRequest}
 	 */
-	public void putByronWalletPassphrase(String walletId, RequestBody requestBody){
-		executeSync(api.putByronWalletPassphrase(walletId, requestBody));
+	public void putByronWalletPassphrase(String walletId, PutByronWalletPassphraseRequest requestBody){
+		executeSync(api.putByronWalletPassphrase(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -482,8 +482,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link CreateAddressRequest}
 	 * @return the server response as an instance of {@link CreateAddressResponse}
 	 */
-	public CreateAddressResponse createAddress(String walletId, RequestBody requestBody){
-		return executeSync(api.createAddress(walletId, requestBody));
+	public CreateAddressResponse createAddress(String walletId, CreateAddressRequest requestBody){
+		return executeSync(api.createAddress(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -515,8 +515,8 @@ public class SynchronousWalletApi {
 	 * - Length must be exactly {@code 40}.
 	 * @param requestBody a request body containing the json representation of {@link ImportAddressesRequest}
 	 */
-	public void importAddresses(String walletId, RequestBody requestBody){
-		executeSync(api.importAddresses(walletId, requestBody));
+	public void importAddresses(String walletId, ImportAddressesRequest requestBody){
+		executeSync(api.importAddresses(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -550,8 +550,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostByronTransactionFeeRequest}
 	 * @return the server response as an instance of {@link PostByronTransactionFeeResponse}
 	 */
-	public PostByronTransactionFeeResponse postByronTransactionFee(String walletId, RequestBody requestBody){
-		return executeSync(api.postByronTransactionFee(walletId, requestBody));
+	public PostByronTransactionFeeResponse postByronTransactionFee(String walletId, PostByronTransactionFeeRequest requestBody){
+		return executeSync(api.postByronTransactionFee(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -565,8 +565,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link PostByronTransactionRequest}
 	 * @return the server response as an instance of {@link PostByronTransactionResponse}
 	 */
-	public PostByronTransactionResponse postByronTransaction(String walletId, RequestBody requestBody){
-		return executeSync(api.postByronTransaction(walletId, requestBody));
+	public PostByronTransactionResponse postByronTransaction(String walletId, PostByronTransactionRequest requestBody){
+		return executeSync(api.postByronTransaction(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -640,8 +640,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link ByronSelectCoinsRequest}
 	 * @return the server response as an instance of {@link ByronSelectCoinsResponse}
 	 */
-	public ByronSelectCoinsResponse byronSelectCoins(String walletId, RequestBody requestBody){
-		return executeSync(api.byronSelectCoins(walletId, requestBody));
+	public ByronSelectCoinsResponse byronSelectCoins(String walletId, ByronSelectCoinsRequest requestBody){
+		return executeSync(api.byronSelectCoins(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -661,8 +661,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing the json representation of {@link MigrateByronWalletRequest}
 	 * @return the server response as a list of {@link MigrateByronWalletResponseItem}
 	 */
-	public List<MigrateByronWalletResponseItem> migrateByronWallet(String walletId, RequestBody requestBody){
-		return executeSync(api.migrateByronWallet(walletId, requestBody));
+	public List<MigrateByronWalletResponseItem> migrateByronWallet(String walletId, MigrateByronWalletRequest requestBody){
+		return executeSync(api.migrateByronWallet(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**
@@ -716,8 +716,8 @@ public class SynchronousWalletApi {
 	 * @param requestBody a request body containing a {@code byte[]} loaded from a signed transaction message binary blob.
 	 * @return the server response as an instance of {@link PostExternalTransactionResponse}
 	 */
-	public PostExternalTransactionResponse postExternalTransaction(RequestBody requestBody){
-		return executeSync(api.postExternalTransaction(requestBody));
+	public PostExternalTransactionResponse postExternalTransaction(byte[] requestBody){
+		return executeSync(api.postExternalTransaction(Utils.createRequestBody(requestBody)));
 	}
 
 	/**

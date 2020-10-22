@@ -154,14 +154,14 @@ public class CreateWallet implements WalletType {
 						byronRequest.setStyle(walletFormat == WalletFormat.byron ? "random" : walletFormat.name());
 					}
 				}
-				return new ByronWallet(api.sync().postByronWallet(RequestBody.create(byronRequest.toString(), MediaType.parse("application/json"))));
+				return new ByronWallet(api.sync().postByronWallet(byronRequest));
 			case shelley:
 				PostWalletRequest shelleyRequest = new PostWalletRequest();
 				shelleyRequest.setName(walletName);
 				shelleyRequest.setMnemonicSentence(mnemonicSentence);
 				shelleyRequest.setPassphrase(walletPassword);
 				shelleyRequest.setMnemonicSecondFactor(mnemonicSecondFactor);
-				return new ShelleyWallet(api.sync().postWallet(RequestBody.create(shelleyRequest.toString(), MediaType.parse("application/json"))));
+				return new ShelleyWallet(api.sync().postWallet(shelleyRequest));
 		}
 		throw new IllegalStateException("Unable to create wallet. Unknown format " + walletFormat);
 	}
