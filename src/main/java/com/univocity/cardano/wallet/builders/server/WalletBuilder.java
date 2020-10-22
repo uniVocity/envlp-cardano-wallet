@@ -1,5 +1,5 @@
 package com.univocity.cardano.wallet.builders.server;
 
-public interface Wallet {
+public interface WalletBuilder {
 	WalletServer.WalletServerConfig.WalletServerBuilder wallet();
 }

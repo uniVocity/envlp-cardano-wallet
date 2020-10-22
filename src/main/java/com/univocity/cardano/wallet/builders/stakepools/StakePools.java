@@ -15,6 +15,7 @@ public class StakePools extends ApiWrapper {
 		super(api);
 
 		this.asyncCallbackHandler = new AsyncCallbackHandler<>(
+				Collections.emptyList(),
 				callback -> api.async().listStakePools(0L, callback),
 				result -> Utils.convertList(result, StakePool::new)
 		);

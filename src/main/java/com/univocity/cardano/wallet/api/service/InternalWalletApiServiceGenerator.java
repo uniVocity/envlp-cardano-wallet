@@ -11,8 +11,6 @@ import retrofit2.converter.jackson.*;
 
 import java.io.*;
 import java.lang.annotation.*;
-import java.sql.*;
-import java.util.*;
 import java.util.concurrent.*;
 
 /**

@@ -2,5 +2,5 @@ package com.univocity.cardano.wallet.builders.server;
 
 public interface BlockchainConfig {
 
-	PortConfig<Wallet> storeBlockchainIn(String pathToBlockchainDir);
+	PortConfig<WalletBuilder> storeBlockchainIn(String pathToBlockchainDir);
 }

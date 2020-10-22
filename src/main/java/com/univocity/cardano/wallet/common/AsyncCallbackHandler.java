@@ -11,10 +11,16 @@ public class AsyncCallbackHandler<T, O> implements WalletApiCallback<T> {
 
 	private final Consumer<WalletApiCallback<T>> action;
 	private final Function<T, O> conversion;
+	private final O defaultValue;
 
 	public AsyncCallbackHandler(Consumer<WalletApiCallback<T>> action, Function<T, O> conversion) {
+		this(null, action, conversion);
+	}
+
+	public AsyncCallbackHandler(O defaultValue, Consumer<WalletApiCallback<T>> action, Function<T, O> conversion) {
 		this.action = action;
 		this.conversion = conversion;
+		this.defaultValue = defaultValue;
 	}
 
 	@Override
@@ -42,7 +48,7 @@ public class AsyncCallbackHandler<T, O> implements WalletApiCallback<T> {
 				}
 			}
 		}
-		return lastResult;
+		return lastResult == null ? defaultValue : lastResult;
 	}
 }
 

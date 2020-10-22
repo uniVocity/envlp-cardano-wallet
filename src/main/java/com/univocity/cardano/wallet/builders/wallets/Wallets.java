@@ -17,11 +17,13 @@ public class Wallets extends ApiWrapper {
 		super(api);
 
 		shelleyWalletCallbackHandler = new AsyncCallbackHandler<>(
+				Collections.emptyList(),
 				callback -> api.async().listWallets(callback),
 				response -> Utils.convertList(response, ShelleyWallet::new)
 		);
 
 		byronWalletCallbackHandler = new AsyncCallbackHandler<>(
+				Collections.emptyList(),
 				callback -> api.async().listByronWallets(callback),
 				response -> Utils.convertList(response, ByronWallet::new)
 		);
@@ -42,5 +44,9 @@ public class Wallets extends ApiWrapper {
 		out.addAll(byronWallets);
 
 		return out;
+	}
+
+	public WalletOptions create(String walletName){
+		return new CreateWallet(walletName, api);
 	}
 }
