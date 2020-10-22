@@ -7,9 +7,9 @@ import com.univocity.cardano.wallet.common.*;
 import java.math.*;
 import java.time.*;
 
-public class ShelleyWallet extends Wrapper<ListWalletsResponseItem> implements Wallet {
+public class ShelleyWallet extends Wrapper<AbstractWalletResponse> implements Wallet {
 
-	public ShelleyWallet(ListWalletsResponseItem original) {
+	public ShelleyWallet(AbstractWalletResponse original) {
 		super(original);
 	}
 

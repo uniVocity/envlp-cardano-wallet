@@ -7,9 +7,9 @@ import com.univocity.cardano.wallet.common.*;
 import java.math.*;
 import java.time.*;
 
-public class ByronWallet extends Wrapper<ListByronWalletsResponseItem> implements Wallet {
+public class ByronWallet extends Wrapper<AbstractByronWalletResponse> implements Wallet {
 
-	public ByronWallet(ListByronWalletsResponseItem original) {
+	public ByronWallet(AbstractByronWalletResponse original) {
 		super(original);
 	}
 

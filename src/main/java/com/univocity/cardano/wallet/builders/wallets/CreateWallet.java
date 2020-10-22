@@ -1,9 +1,14 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
 import com.univocity.cardano.wallet.api.*;
+import com.univocity.cardano.wallet.api.generated.byronwallets.*;
+import com.univocity.cardano.wallet.api.generated.wallets.*;
+import okhttp3.*;
 import org.apache.commons.lang3.*;
 
-public class CreateWallet implements WalletOptions {
+import java.util.*;
+
+public class CreateWallet implements WalletType {
 
 	private enum WalletFormat {
 		shelley, byron, icarus, trezor, ledger;
@@ -19,6 +24,8 @@ public class CreateWallet implements WalletOptions {
 	private String privateKey;
 	private WalletFormat walletFormat;
 	private int addressPoolGap = 20;
+	private ArrayList<String> mnemonicSentence;
+	private ArrayList<String> mnemonicSecondFactor;
 
 
 	CreateWallet(String walletName, WalletApi api) {
@@ -30,7 +37,7 @@ public class CreateWallet implements WalletOptions {
 	}
 
 	@Override
-	public ShelleyWalletRestoration shelley() {
+	public ShelleyWalletRestorationOptions shelley() {
 		walletFormat = WalletFormat.shelley;
 		return new ShelleyWalletBuilder();
 	}
@@ -82,7 +89,13 @@ public class CreateWallet implements WalletOptions {
 		}
 	}
 
-	private class ShelleyWalletBuilder extends WalletBuilder implements ShelleyWalletRestoration, ShelleyWalletPassword {
+	private class ShelleyWalletBuilder extends WalletBuilder implements ShelleyWalletRestorationOptions, ShelleyWalletPassword {
+
+		@Override
+		public ShelleyWalletRestoration addressPoolGap(int gap) {
+			addressPoolGap = gap;
+			return this;
+		}
 
 		@Override
 		public WalletPassword secondFactor(String secondFactorPhrase) {
@@ -106,12 +119,6 @@ public class CreateWallet implements WalletOptions {
 		}
 	}
 
-	@Override
-	public WalletType addressPoolGap(int gap) {
-		addressPoolGap = gap;
-		return this;
-	}
-
 	private <T> T setSeed(T parent, String seedPhrase) {
 		this.seedPhrase = seedPhrase;
 		return parent;
@@ -133,7 +140,30 @@ public class CreateWallet implements WalletOptions {
 	}
 
 	private Wallet createWallet() {
-		return null;
+		switch (walletFormat) {
+			case byron:
+			case icarus:
+			case ledger:
+			case trezor:
+				PostByronWalletRequest byronRequest = new PostByronWalletRequest();
+				if (mnemonicSentence != null) {
+					byronRequest.setName(walletName);
+					byronRequest.setMnemonicSentence(mnemonicSentence);
+					byronRequest.setPassphrase(walletPassword);
+					if (publicKey == null) {
+						byronRequest.setStyle(walletFormat == WalletFormat.byron ? "random" : walletFormat.name());
+					}
+				}
+				return new ByronWallet(api.sync().postByronWallet(RequestBody.create(byronRequest.toString(), MediaType.parse("application/json"))));
+			case shelley:
+				PostWalletRequest shelleyRequest = new PostWalletRequest();
+				shelleyRequest.setName(walletName);
+				shelleyRequest.setMnemonicSentence(mnemonicSentence);
+				shelleyRequest.setPassphrase(walletPassword);
+				shelleyRequest.setMnemonicSecondFactor(mnemonicSecondFactor);
+				return new ShelleyWallet(api.sync().postWallet(RequestBody.create(shelleyRequest.toString(), MediaType.parse("application/json"))));
+		}
+		throw new IllegalStateException("Unable to create wallet. Unknown format " + walletFormat);
 	}
 
 }

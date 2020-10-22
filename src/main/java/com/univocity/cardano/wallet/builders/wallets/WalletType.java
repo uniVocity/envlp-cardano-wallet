@@ -2,7 +2,7 @@ package com.univocity.cardano.wallet.builders.wallets;
 
 public interface WalletType {
 
-	ShelleyWalletRestoration shelley();
+	ShelleyWalletRestorationOptions shelley();
 
 	ByronWalletRestoration byron();
 

@@ -46,7 +46,7 @@ public class Wallets extends ApiWrapper {
 		return out;
 	}
 
-	public WalletOptions create(String walletName){
+	public CreateWallet create(String walletName){
 		return new CreateWallet(walletName, api);
 	}
 }

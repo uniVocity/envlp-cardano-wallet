@@ -11,8 +11,8 @@ public class TestRemoteServer {
 		System.out.println(server.wallets().list());
 
 		Wallet wallet;
-		wallet = server.wallets().create("wallet name").addressPoolGap(20).shelley().fromSeed("seed abc a").password("querty");
-		wallet = server.wallets().create("wallet name").addressPoolGap(20).shelley().fromSeed("seed abc a").secondFactor("a v c").password("querty");
+		wallet = server.wallets().create("wallet name").shelley().addressPoolGap(20).fromSeed("seed abc a").password("querty");
+		wallet = server.wallets().create("wallet name").shelley().addressPoolGap(20).fromSeed("seed abc a").secondFactor("a v c").password("querty");
 		wallet = server.wallets().create("wallet name").shelley().fromSeed("seed abc a").secondFactor("a v c").password("querty");
 		wallet = server.wallets().create("wallet name").shelley().fromPublicKey("hex xpub");
 		wallet = server.wallets().create("wallet name").byron().fromSeed("seed abc a").password("qwerty");
@@ -20,9 +20,9 @@ public class TestRemoteServer {
 		wallet = server.wallets().create("wallet name").icarus().fromSeed("seed abc a").password("qwerty");
 		wallet = server.wallets().create("wallet name").ledger().fromSeed("seed abc a").password("qwerty");
 		wallet = server.wallets().create("wallet name").trezor().fromSeed("seed abc a").password("qwerty");
-		wallet = server.wallets().create("wallet name").addressPoolGap(10).icarus().fromPublicKey("hex xpub");
-		wallet = server.wallets().create("wallet name").addressPoolGap(10).ledger().fromPublicKey("hex xpub");
-		wallet = server.wallets().create("wallet name").addressPoolGap(10).trezor().fromPublicKey("hex xpub");
+		wallet = server.wallets().create("wallet name").icarus().fromPublicKey("hex xpub");
+		wallet = server.wallets().create("wallet name").ledger().fromPublicKey("hex xpub");
+		wallet = server.wallets().create("wallet name").trezor().fromPublicKey("hex xpub");
 //
 //
 //		Wallet wallet = server.wallets().getById("hex xpub");

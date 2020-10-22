@@ -2,6 +2,8 @@ package com.univocity.cardano.wallet.common;
 
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
+import com.univocity.cardano.wallet.api.generated.wallets.*;
+import com.univocity.cardano.wallet.builders.wallets.*;
 import org.apache.commons.io.*;
 
 import java.io.*;
@@ -98,10 +100,11 @@ public class Utils {
 		}
 	}
 
-	public static <O extends Wrapper<I>, I> List<O> convertList(List<I> in, Function<I, O> converter) {
+	public static <O extends Wrapper<I>, I> List<O> convertList(List<? extends I> in, Function<? extends I, ? extends O> converter) {
 		List<O> out = new ArrayList<>(in.size());
-		for (I original : in) {
-			out.add(converter.apply(original));
+		Function conv = converter;
+		for (Object original : in) {
+			out.add((O)conv.apply(original));
 		}
 		return out;
 	}
