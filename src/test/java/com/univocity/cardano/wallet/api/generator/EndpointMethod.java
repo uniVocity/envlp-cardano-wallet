@@ -78,7 +78,7 @@ public class EndpointMethod {
 		}
 
 		methodName = operationId;
-		requestBodyClass = StringUtils.capitalize(methodName) + "Request";
+		requestBodyClass = StringUtils.capitalize(methodName) + includeTitle() + "Request";
 		if (contentType != null && contentType.equals("application/octet-stream")) {
 			requestBodyClass = "byte[]";
 		}
@@ -94,6 +94,22 @@ public class EndpointMethod {
 		parameters.forEach(p -> p.createClass(packageDir, packageName, classes));
 
 		return packageName;
+	}
+
+	private String includeTitle() {
+		String tmp = requestBody == null ? null : requestBody.title;
+		if (StringUtils.isNotBlank(tmp)) {
+			tmp = tmp.replaceAll("[^A-Za-z0-9]", " ");
+			tmp = StringUtils.replace(tmp, "  ", " ");
+
+			String[] parts = tmp.split(" ");
+			StringBuilder out = new StringBuilder();
+			for (String part : parts) {
+				out.append(StringUtils.capitalize(part));
+			}
+			return out.toString();
+		}
+		return "";
 	}
 
 	private void generateMethodSignatureAndInvocation() {
@@ -131,41 +147,57 @@ public class EndpointMethod {
 	}
 
 	public void generateInternalInterface(StringBuilder out, String endpoint) {
-		out.append("\n\t/**");
-		if (this.description != null) {
-			Attribute.appendMultiLine(out, description, false, 1);
-		}
-		appendParameterDocs(out);
-		appendReturnDocs(out, returnType);
-		out.append("\n\t */\n");
+		StringBuilder signature = new StringBuilder();
+		signature.append("Call<");
+		appendReturnType(signature);
+		signature.append("> ").append(methodName).append('(');
+		appendParameters(signature, true);
+		appendBody(signature, true);
+		signature.append(");\n\n");
 
-		if (contentType != null) {
-			out.append("\t@Headers(\"Content-Type: ").append(contentType).append("\")\n");
-		}
 
-		out.append('\t');
-		if ("get".equalsIgnoreCase(method)) {
-			out.append("@GET(\"");
-		} else if ("post".equalsIgnoreCase(method)) {
-			out.append("@POST(\"");
-		} else if ("put".equalsIgnoreCase(method)) {
-			out.append("@PUT(\"");
-		} else if ("delete".equalsIgnoreCase(method)) {
-			out.append("@DELETE(\"");
+		int signatureIndex = out.toString().indexOf(signature.toString());
+		if(signatureIndex < 0){
+			out.append("\n\t/**");
+			if (this.description != null) {
+				Attribute.appendMultiLine(out, description, false, 1);
+			}
+			appendParameterDocs(out);
+			appendReturnDocs(out, returnType);
+			out.append("\n\t */\n");
+
+			if (contentType != null) {
+				out.append("\t@Headers(\"Content-Type: ").append(contentType).append("\")\n");
+			}
+
+			out.append('\t');
+			if ("get".equalsIgnoreCase(method)) {
+				out.append("@GET(\"");
+			} else if ("post".equalsIgnoreCase(method)) {
+				out.append("@POST(\"");
+			} else if ("put".equalsIgnoreCase(method)) {
+				out.append("@PUT(\"");
+			} else if ("delete".equalsIgnoreCase(method)) {
+				out.append("@DELETE(\"");
+			} else {
+				throw new IllegalStateException("Unsupported HTTP method: " + method);
+			}
+
+			out.append("/v2" + endpoint).append("\")\n");
+			out.append('\t');
+
+			out.append(signature);
 		} else {
-			throw new IllegalStateException("Unsupported HTTP method: " + method);
+			String s = "a request body containing the json representation of ";
+			int existingDocIndex = out.lastIndexOf(s);
+			if(existingDocIndex > 0) {
+				String separator = " or ";
+				if(out.indexOf("or {@link ", existingDocIndex) != -1){
+					separator = ", ";
+				}
+				out.insert(existingDocIndex + s.length(), "{@link " + requestBodyClass+ "}" + separator);
+			}
 		}
-
-		out.append("/v2" + endpoint).append("\")\n");
-		out.append('\t');
-
-		out.append("Call<");
-		appendReturnType(out);
-		out.append("> ").append(methodName).append('(');
-
-		appendParameters(out, true);
-		appendBody(out, true);
-		out.append(");\n\n");
 	}
 
 	private void appendParameterDocs(StringBuilder out) {

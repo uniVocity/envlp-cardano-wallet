@@ -48,6 +48,7 @@ public class CommonParent {
 		put("AbstractDate", "InsertedAt", "PendingSince");
 		put("AbstractStakePoolRequest", "JoinStakePoolRequest", "QuitStakePoolRequest");
 		put("AbstractPayment", "Output", "OutputsDelete", "Payment", "PaymentsPayment", "PaymentsRedemption");
+		put("AbstractWalletFromPublicKey","PostByronWalletIcarusTrezorLedgerFromXpubRequest","PostWalletShelleyFromXpubRequest");
 		put("AbstractPutWalletRequest", "PutByronWalletRequest", "PutWalletRequest");
 		put("AbstractProgress", "State", "SyncProgress");
 		put("AbstractWithdrawal", "Withdrawal", "WithdrawalsDelete");

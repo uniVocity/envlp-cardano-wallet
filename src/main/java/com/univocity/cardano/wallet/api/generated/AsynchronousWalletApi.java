@@ -41,10 +41,22 @@ public class AsynchronousWalletApi {
 	 * Create and restore a wallet from a mnemonic sentence or account public key.
 	 * {@code status: stable}
 	 * 
-	 * @param requestBody a request body containing the json representation of {@link PostWalletRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostWalletShelleyRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostWalletResponse}
 	 */
-	public void postWallet(PostWalletRequest requestBody, WalletApiCallback<PostWalletResponse> callback){
+	public void postWallet(PostWalletShelleyRequest requestBody, WalletApiCallback<PostWalletResponse> callback){
+		api.postWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Create and restore a wallet from a mnemonic sentence or account public key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostWalletShelleyFromXpubRequest}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostWalletResponse}
+	 */
+	public void postWallet(PostWalletShelleyFromXpubRequest requestBody, WalletApiCallback<PostWalletResponse> callback){
 		api.postWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -145,10 +157,29 @@ public class AsynchronousWalletApi {
 	 * @param walletId the walletId.
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
-	 * @param requestBody a request body containing the json representation of {@link PostTransactionFeeRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostTransactionFeePaymentRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostTransactionFeeResponse}
 	 */
-	public void postTransactionFee(String walletId, PostTransactionFeeRequest requestBody, WalletApiCallback<PostTransactionFeeResponse> callback){
+	public void postTransactionFee(String walletId, PostTransactionFeePaymentRequest requestBody, WalletApiCallback<PostTransactionFeeResponse> callback){
+		api.postTransactionFee(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Estimate fee for the transaction. The estimate is made by
+	 * assembling multiple transactions and analyzing the
+	 * distribution of their fees. The estimated_max is the highest
+	 * fee observed, and the estimated_min is the fee which is lower
+	 * than at least 90% of the fees observed.
+	 * {@code status: stable}
+	 * 
+	 * @param walletId the walletId.
+	 * - Format: {@code hex}.
+	 * - Length must be exactly {@code 40}.
+	 * @param requestBody a request body containing the json representation of {@link PostTransactionFeeRedemptionRequest}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostTransactionFeeResponse}
+	 */
+	public void postTransactionFee(String walletId, PostTransactionFeeRedemptionRequest requestBody, WalletApiCallback<PostTransactionFeeResponse> callback){
 		api.postTransactionFee(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -160,10 +191,25 @@ public class AsynchronousWalletApi {
 	 * @param walletId the walletId.
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
-	 * @param requestBody a request body containing the json representation of {@link PostTransactionRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostTransactionPaymentRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostTransactionResponse}
 	 */
-	public void postTransaction(String walletId, PostTransactionRequest requestBody, WalletApiCallback<PostTransactionResponse> callback){
+	public void postTransaction(String walletId, PostTransactionPaymentRequest requestBody, WalletApiCallback<PostTransactionResponse> callback){
+		api.postTransaction(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Create and send transaction from the wallet.
+	 * {@code status: stable}
+	 * 
+	 * @param walletId the walletId.
+	 * - Format: {@code hex}.
+	 * - Length must be exactly {@code 40}.
+	 * @param requestBody a request body containing the json representation of {@link PostTransactionRedemptionRequest}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostTransactionResponse}
+	 */
+	public void postTransaction(String walletId, PostTransactionRedemptionRequest requestBody, WalletApiCallback<PostTransactionResponse> callback){
 		api.postTransaction(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -376,10 +422,70 @@ public class AsynchronousWalletApi {
 	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
 	 * {@code status: stable}
 	 * 
-	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRandomRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronWalletResponse}
 	 */
-	public void postByronWallet(PostByronWalletRequest requestBody, WalletApiCallback<PostByronWalletResponse> callback){
+	public void postByronWallet(PostByronWalletRandomRequest requestBody, WalletApiCallback<PostByronWalletResponse> callback){
+		api.postByronWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRandomFromXprvRequest}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronWalletResponse}
+	 */
+	public void postByronWallet(PostByronWalletRandomFromXprvRequest requestBody, WalletApiCallback<PostByronWalletResponse> callback){
+		api.postByronWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletIcarusRequest}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronWalletResponse}
+	 */
+	public void postByronWallet(PostByronWalletIcarusRequest requestBody, WalletApiCallback<PostByronWalletResponse> callback){
+		api.postByronWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletTrezorRequest}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronWalletResponse}
+	 */
+	public void postByronWallet(PostByronWalletTrezorRequest requestBody, WalletApiCallback<PostByronWalletResponse> callback){
+		api.postByronWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletLedgerRequest}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronWalletResponse}
+	 */
+	public void postByronWallet(PostByronWalletLedgerRequest requestBody, WalletApiCallback<PostByronWalletResponse> callback){
+		api.postByronWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletIcarusTrezorLedgerFromXpubRequest}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronWalletResponse}
+	 */
+	public void postByronWallet(PostByronWalletIcarusTrezorLedgerFromXpubRequest requestBody, WalletApiCallback<PostByronWalletResponse> callback){
 		api.postByronWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 

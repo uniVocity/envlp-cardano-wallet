@@ -7,10 +7,11 @@ public class RequestBody {
 	private final Boolean required;
 	String contentType;
 	String nonJsonDescription;
-	private List<JsonSchema> jsonSchemas = new ArrayList<>();
+	JsonSchema jsonSchema;
+	String title;
 
 	public RequestBody(Map properties, Stack<Object> path) {
-
+		title = (String)properties.remove("title");
 		required = (Boolean) properties.remove("required");
 
 		Map content = (Map) properties.remove("content");
@@ -21,9 +22,9 @@ public class RequestBody {
 
 			List oneOf = (List) schema.remove("oneOf");
 			if (oneOf != null) {
-				oneOf.forEach(o -> jsonSchemas.add(new JsonSchema((Map) o, path)));
+				throw new IllegalStateException("Expecting one json schema only");
 			} else {
-				jsonSchemas.add(new JsonSchema(schema, path));
+				jsonSchema = new JsonSchema(schema, path);
 			}
 		}
 		schema = (Map) content.remove("application/octet-stream");
@@ -42,8 +43,8 @@ public class RequestBody {
 	}
 
 	public void createClass(String methodSignature, File packageDir, String packageName, String className, Map<String, ClassRef> classes) {
-		for(JsonSchema schema : jsonSchemas){
-			schema.createClass(methodSignature, packageDir, packageName, className, classes, null);
+		if(jsonSchema != null) {
+			jsonSchema.createClass(methodSignature, packageDir, packageName, className, classes, null);
 		}
 	}
 }

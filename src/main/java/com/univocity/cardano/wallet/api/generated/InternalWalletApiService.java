@@ -37,7 +37,7 @@ public interface InternalWalletApiService {
 	 * Create and restore a wallet from a mnemonic sentence or account public key.
 	 * {@code status: stable}
 	 * 
-	 * @param requestBody a request body containing the json representation of {@link PostWalletRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostWalletShelleyFromXpubRequest} or {@link PostWalletShelleyRequest}
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PostWalletResponse}
 	 */
 	@Headers("Content-Type: application/json")
@@ -144,7 +144,7 @@ public interface InternalWalletApiService {
 	 * @param walletId the walletId.
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
-	 * @param requestBody a request body containing the json representation of {@link PostTransactionFeeRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostTransactionFeeRedemptionRequest} or {@link PostTransactionFeePaymentRequest}
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PostTransactionFeeResponse}
 	 */
 	@Headers("Content-Type: application/json")
@@ -160,7 +160,7 @@ public interface InternalWalletApiService {
 	 * @param walletId the walletId.
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
-	 * @param requestBody a request body containing the json representation of {@link PostTransactionRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostTransactionRedemptionRequest} or {@link PostTransactionPaymentRequest}
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PostTransactionResponse}
 	 */
 	@Headers("Content-Type: application/json")
@@ -381,7 +381,7 @@ public interface InternalWalletApiService {
 	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
 	 * {@code status: stable}
 	 * 
-	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletIcarusTrezorLedgerFromXpubRequest}, {@link PostByronWalletLedgerRequest}, {@link PostByronWalletTrezorRequest}, {@link PostByronWalletIcarusRequest}, {@link PostByronWalletRandomFromXprvRequest} or {@link PostByronWalletRandomRequest}
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link PostByronWalletResponse}
 	 */
 	@Headers("Content-Type: application/json")

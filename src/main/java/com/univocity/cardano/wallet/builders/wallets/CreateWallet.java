@@ -140,30 +140,29 @@ public class CreateWallet implements WalletType {
 	}
 
 	private Wallet createWallet() {
-		switch (walletFormat) {
-			case byron:
-			case icarus:
-			case ledger:
-			case trezor:
-				PostByronWalletRequest byronRequest = new PostByronWalletRequest();
-				if (mnemonicSentence != null) {
-					byronRequest.setName(walletName);
-					byronRequest.setMnemonicSentence(mnemonicSentence);
-					byronRequest.setPassphrase(walletPassword);
-					if (publicKey == null) {
-						byronRequest.setStyle(walletFormat == WalletFormat.byron ? "random" : walletFormat.name());
-					}
-				}
-				return new ByronWallet(api.sync().postByronWallet(byronRequest));
-			case shelley:
-				PostWalletRequest shelleyRequest = new PostWalletRequest();
-				shelleyRequest.setName(walletName);
-				shelleyRequest.setMnemonicSentence(mnemonicSentence);
-				shelleyRequest.setPassphrase(walletPassword);
-				shelleyRequest.setMnemonicSecondFactor(mnemonicSecondFactor);
-				return new ShelleyWallet(api.sync().postWallet(shelleyRequest));
-		}
-		throw new IllegalStateException("Unable to create wallet. Unknown format " + walletFormat);
+		return walletFormat == WalletFormat.shelley ? createShelleyWallet() : createByronWallet();
 	}
 
+	private Wallet createByronWallet(){
+		PostByronWalletRequest byronRequest = new PostByronWalletRequest();
+		byronRequest.setStyle(walletFormat == WalletFormat.byron ? "random" : walletFormat.name());
+		byronRequest.setName(walletName);
+
+		if (mnemonicSentence != null) {
+			byronRequest.setMnemonicSentence(mnemonicSentence);
+			byronRequest.setPassphrase(walletPassword);
+		} else if (publicKey == null) {
+			//?
+		}
+		return null;// new ByronWallet(api.sync().postByronWallet(byronRequest));
+	}
+
+	private Wallet createShelleyWallet(){
+		PostWalletRequest shelleyRequest = new PostWalletRequest();
+		shelleyRequest.setName(walletName);
+		shelleyRequest.setMnemonicSentence(mnemonicSentence);
+		shelleyRequest.setPassphrase(walletPassword);
+		shelleyRequest.setMnemonicSecondFactor(mnemonicSecondFactor);
+		return null;//return new ShelleyWallet(api.sync().postWallet(shelleyRequest));
+	}
 }

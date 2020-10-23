@@ -166,7 +166,7 @@ public class ApiGenerator {
 		});
 	}
 
-	private static Object deepCopy(Object o) {
+	static Object deepCopy(Object o) {
 		Object out;
 
 		try {

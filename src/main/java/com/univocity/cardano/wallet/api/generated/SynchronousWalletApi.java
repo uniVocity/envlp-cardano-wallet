@@ -41,10 +41,22 @@ public class SynchronousWalletApi {
 	 * Create and restore a wallet from a mnemonic sentence or account public key.
 	 * {@code status: stable}
 	 * 
-	 * @param requestBody a request body containing the json representation of {@link PostWalletRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostWalletShelleyRequest}
 	 * @return the server response as an instance of {@link PostWalletResponse}
 	 */
-	public PostWalletResponse postWallet(PostWalletRequest requestBody){
+	public PostWalletResponse postWallet(PostWalletShelleyRequest requestBody){
+		return executeSync(api.postWallet(Utils.createRequestBody(requestBody)));
+	}
+
+	/**
+	 * 
+	 * Create and restore a wallet from a mnemonic sentence or account public key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostWalletShelleyFromXpubRequest}
+	 * @return the server response as an instance of {@link PostWalletResponse}
+	 */
+	public PostWalletResponse postWallet(PostWalletShelleyFromXpubRequest requestBody){
 		return executeSync(api.postWallet(Utils.createRequestBody(requestBody)));
 	}
 
@@ -143,10 +155,29 @@ public class SynchronousWalletApi {
 	 * @param walletId the walletId.
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
-	 * @param requestBody a request body containing the json representation of {@link PostTransactionFeeRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostTransactionFeePaymentRequest}
 	 * @return the server response as an instance of {@link PostTransactionFeeResponse}
 	 */
-	public PostTransactionFeeResponse postTransactionFee(String walletId, PostTransactionFeeRequest requestBody){
+	public PostTransactionFeeResponse postTransactionFee(String walletId, PostTransactionFeePaymentRequest requestBody){
+		return executeSync(api.postTransactionFee(walletId, Utils.createRequestBody(requestBody)));
+	}
+
+	/**
+	 * 
+	 * Estimate fee for the transaction. The estimate is made by
+	 * assembling multiple transactions and analyzing the
+	 * distribution of their fees. The estimated_max is the highest
+	 * fee observed, and the estimated_min is the fee which is lower
+	 * than at least 90% of the fees observed.
+	 * {@code status: stable}
+	 * 
+	 * @param walletId the walletId.
+	 * - Format: {@code hex}.
+	 * - Length must be exactly {@code 40}.
+	 * @param requestBody a request body containing the json representation of {@link PostTransactionFeeRedemptionRequest}
+	 * @return the server response as an instance of {@link PostTransactionFeeResponse}
+	 */
+	public PostTransactionFeeResponse postTransactionFee(String walletId, PostTransactionFeeRedemptionRequest requestBody){
 		return executeSync(api.postTransactionFee(walletId, Utils.createRequestBody(requestBody)));
 	}
 
@@ -158,10 +189,25 @@ public class SynchronousWalletApi {
 	 * @param walletId the walletId.
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
-	 * @param requestBody a request body containing the json representation of {@link PostTransactionRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostTransactionPaymentRequest}
 	 * @return the server response as an instance of {@link PostTransactionResponse}
 	 */
-	public PostTransactionResponse postTransaction(String walletId, PostTransactionRequest requestBody){
+	public PostTransactionResponse postTransaction(String walletId, PostTransactionPaymentRequest requestBody){
+		return executeSync(api.postTransaction(walletId, Utils.createRequestBody(requestBody)));
+	}
+
+	/**
+	 * 
+	 * Create and send transaction from the wallet.
+	 * {@code status: stable}
+	 * 
+	 * @param walletId the walletId.
+	 * - Format: {@code hex}.
+	 * - Length must be exactly {@code 40}.
+	 * @param requestBody a request body containing the json representation of {@link PostTransactionRedemptionRequest}
+	 * @return the server response as an instance of {@link PostTransactionResponse}
+	 */
+	public PostTransactionResponse postTransaction(String walletId, PostTransactionRedemptionRequest requestBody){
 		return executeSync(api.postTransaction(walletId, Utils.createRequestBody(requestBody)));
 	}
 
@@ -373,10 +419,70 @@ public class SynchronousWalletApi {
 	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
 	 * {@code status: stable}
 	 * 
-	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRequest}
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRandomRequest}
 	 * @return the server response as an instance of {@link PostByronWalletResponse}
 	 */
-	public PostByronWalletResponse postByronWallet(PostByronWalletRequest requestBody){
+	public PostByronWalletResponse postByronWallet(PostByronWalletRandomRequest requestBody){
+		return executeSync(api.postByronWallet(Utils.createRequestBody(requestBody)));
+	}
+
+	/**
+	 * 
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRandomFromXprvRequest}
+	 * @return the server response as an instance of {@link PostByronWalletResponse}
+	 */
+	public PostByronWalletResponse postByronWallet(PostByronWalletRandomFromXprvRequest requestBody){
+		return executeSync(api.postByronWallet(Utils.createRequestBody(requestBody)));
+	}
+
+	/**
+	 * 
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletIcarusRequest}
+	 * @return the server response as an instance of {@link PostByronWalletResponse}
+	 */
+	public PostByronWalletResponse postByronWallet(PostByronWalletIcarusRequest requestBody){
+		return executeSync(api.postByronWallet(Utils.createRequestBody(requestBody)));
+	}
+
+	/**
+	 * 
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletTrezorRequest}
+	 * @return the server response as an instance of {@link PostByronWalletResponse}
+	 */
+	public PostByronWalletResponse postByronWallet(PostByronWalletTrezorRequest requestBody){
+		return executeSync(api.postByronWallet(Utils.createRequestBody(requestBody)));
+	}
+
+	/**
+	 * 
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletLedgerRequest}
+	 * @return the server response as an instance of {@link PostByronWalletResponse}
+	 */
+	public PostByronWalletResponse postByronWallet(PostByronWalletLedgerRequest requestBody){
+		return executeSync(api.postByronWallet(Utils.createRequestBody(requestBody)));
+	}
+
+	/**
+	 * 
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletIcarusTrezorLedgerFromXpubRequest}
+	 * @return the server response as an instance of {@link PostByronWalletResponse}
+	 */
+	public PostByronWalletResponse postByronWallet(PostByronWalletIcarusTrezorLedgerFromXpubRequest requestBody){
 		return executeSync(api.postByronWallet(Utils.createRequestBody(requestBody)));
 	}
 
