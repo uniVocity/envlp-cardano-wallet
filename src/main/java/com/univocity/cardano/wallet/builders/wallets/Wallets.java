@@ -38,8 +38,8 @@ public class Wallets extends ApiWrapper {
 	}
 
 	public List<Wallet> list() {
-		List<ShelleyWallet> shelleyWallets = shelleyWalletCallbackHandler.get();
-		List<ByronWallet> byronWallets = byronWalletCallbackHandler.get();
+		List<ShelleyWallet> shelleyWallets = shelleyWalletCallbackHandler.getSync();
+		List<ByronWallet> byronWallets = byronWalletCallbackHandler.getSync();
 
 		List<Wallet> out = new ArrayList<>(shelleyWallets.size() + byronWallets.size());
 		out.addAll(shelleyWallets);

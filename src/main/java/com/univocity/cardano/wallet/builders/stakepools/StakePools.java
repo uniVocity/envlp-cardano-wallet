@@ -6,6 +6,7 @@ import com.univocity.cardano.wallet.builders.*;
 import com.univocity.cardano.wallet.common.*;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 public class StakePools extends ApiWrapper {
 
@@ -22,6 +23,10 @@ public class StakePools extends ApiWrapper {
 	}
 
 	public List<StakePool> list() {
-		return asyncCallbackHandler.get();
+		return asyncCallbackHandler.getEventually();
+	}
+
+	public Future<List<StakePool>> listAsync() {
+		return asyncCallbackHandler.getAsync();
 	}
 }

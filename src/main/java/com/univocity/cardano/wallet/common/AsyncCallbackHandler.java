@@ -2,6 +2,7 @@ package com.univocity.cardano.wallet.common;
 
 import com.univocity.cardano.wallet.api.service.*;
 
+import java.util.concurrent.*;
 import java.util.function.*;
 
 public class AsyncCallbackHandler<T, O> implements WalletApiCallback<T> {
@@ -30,7 +31,6 @@ public class AsyncCallbackHandler<T, O> implements WalletApiCallback<T> {
 		} finally {
 			fetching = false;
 		}
-
 	}
 
 	@Override
@@ -39,7 +39,43 @@ public class AsyncCallbackHandler<T, O> implements WalletApiCallback<T> {
 		WalletApiCallback.super.onFailure(error);
 	}
 
-	public O get() {
+	public Future<O> getAsync() {
+		return getAsync(null);
+	}
+
+	public Future<O> getAsync(Consumer<Throwable> errorHandler) {
+		fetching = true;
+		WalletApiCallbackFuture<T, O> future = new WalletApiCallbackFuture<>(defaultValue, conversion, errorHandler == null ? this::onFailure : error -> {
+			fetching = false;
+			errorHandler.accept(error);
+		});
+		action.accept(future);
+		return future;
+	}
+
+	public O getSync() {
+		fetching = true;
+
+		try {
+			return getAsync().get();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		} catch (ExecutionException e) {
+			Throwable cause = e.getCause();
+			if (cause != null) {
+				if (cause instanceof RuntimeException) {
+					throw (RuntimeException) cause;
+				}
+				throw new IllegalStateException(cause);
+			}
+			throw new IllegalStateException(e);
+		} finally {
+			fetching = false;
+		}
+		return defaultValue;
+	}
+
+	public O getEventually() {
 		if (!fetching) {
 			synchronized (this) {
 				if (!fetching) {

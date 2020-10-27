@@ -118,7 +118,7 @@ public class CreateWallet implements WalletType {
 	}
 
 	private <T> T setSeed(T parent, String seedPhrase) {
-
+		this.mnemonicSentence = Seed.toMnemonicList(seedPhrase);
 		return parent;
 	}
 
