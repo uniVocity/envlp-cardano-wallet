@@ -3,8 +3,8 @@ package com.univocity.cardano.wallet.builders.wallets;
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.byronwallets.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
-import okhttp3.*;
-import org.apache.commons.lang3.*;
+import com.univocity.cardano.wallet.common.*;
+import com.univocity.parsers.common.*;
 
 import java.util.*;
 
@@ -17,9 +17,7 @@ public class CreateWallet implements WalletType {
 	private final WalletApi api;
 	private final String walletName;
 
-	private String seedPhrase;
 	private String walletPassword;
-	private String secondFactorPhrase;
 	private String publicKey;
 	private String privateKey;
 	private WalletFormat walletFormat;
@@ -29,9 +27,8 @@ public class CreateWallet implements WalletType {
 
 
 	CreateWallet(String walletName, WalletApi api) {
-		if (StringUtils.isBlank(walletName)) {
-			throw new IllegalArgumentException("Wallet name cannot be blank");
-		}
+		Utils.notBlank(walletName, "Wallet name");
+		Utils.notNull(api, "Wallet API");
 		this.walletName = walletName;
 		this.api = api;
 	}
@@ -99,7 +96,8 @@ public class CreateWallet implements WalletType {
 
 		@Override
 		public WalletPassword secondFactor(String secondFactorPhrase) {
-			CreateWallet.this.secondFactorPhrase = secondFactorPhrase;
+			Utils.notBlank(secondFactorPhrase, "Second factor phrase");
+			CreateWallet.this.mnemonicSecondFactor = new ArrayList<>(Arrays.asList(secondFactorPhrase.split(" ")));
 			return this;
 		}
 
@@ -120,49 +118,104 @@ public class CreateWallet implements WalletType {
 	}
 
 	private <T> T setSeed(T parent, String seedPhrase) {
-		this.seedPhrase = seedPhrase;
+
 		return parent;
 	}
 
 	private Wallet setPassword(String walletPassword) {
+		Utils.notBlank(walletPassword, "Wallet password");
 		this.walletPassword = walletPassword;
 		return createWallet();
 	}
 
 	private Wallet setPublicKey(String publicKey) {
+		Utils.notBlank(publicKey, "Public key");
 		this.publicKey = publicKey;
 		return createWallet();
 	}
 
 	private <T> T setPrivateKey(T parent, String privateKey) {
+		Utils.notBlank(privateKey, "Public key");
 		this.privateKey = privateKey;
 		return parent;
 	}
 
 	private Wallet createWallet() {
-		return walletFormat == WalletFormat.shelley ? createShelleyWallet() : createByronWallet();
-	}
-
-	private Wallet createByronWallet(){
-		PostByronWalletRequest byronRequest = new PostByronWalletRequest();
-		byronRequest.setStyle(walletFormat == WalletFormat.byron ? "random" : walletFormat.name());
-		byronRequest.setName(walletName);
-
 		if (mnemonicSentence != null) {
-			byronRequest.setMnemonicSentence(mnemonicSentence);
-			byronRequest.setPassphrase(walletPassword);
-		} else if (publicKey == null) {
-			//?
+			switch (walletFormat) {
+				case shelley: {
+					PostWalletShelleyRequest req = new PostWalletShelleyRequest();
+					req.setName(walletName);
+					req.setMnemonicSentence(mnemonicSentence);
+					req.setPassphrase(walletPassword);
+					req.setMnemonicSecondFactor(mnemonicSecondFactor);
+					req.setAddressPoolGap(addressPoolGap);
+					return new ShelleyWallet(api.sync().postWallet(req));
+				}
+				case byron: {
+					PostByronWalletRandomRequest req = new PostByronWalletRandomRequest();
+					req.setStyle("random");
+					req.setName(walletName);
+					req.setMnemonicSentence(mnemonicSentence);
+					req.setPassphrase(walletPassword);
+					return new ByronWallet(api.sync().postByronWallet(req));
+				}
+				case trezor: {
+					PostByronWalletTrezorRequest req = new PostByronWalletTrezorRequest();
+					req.setStyle("trezor");
+					req.setName(walletName);
+					req.setMnemonicSentence(mnemonicSentence);
+					req.setPassphrase(walletPassword);
+					return new ByronWallet(api.sync().postByronWallet(req));
+				}
+				case ledger: {
+					PostByronWalletLedgerRequest req = new PostByronWalletLedgerRequest();
+					req.setStyle("ledger");
+					req.setName(walletName);
+					req.setMnemonicSentence(mnemonicSentence);
+					req.setPassphrase(walletPassword);
+					return new ByronWallet(api.sync().postByronWallet(req));
+				}
+				case icarus: {
+					PostByronWalletIcarusRequest req = new PostByronWalletIcarusRequest();
+					req.setStyle("icarus");
+					req.setName(walletName);
+					req.setMnemonicSentence(mnemonicSentence);
+					req.setPassphrase(walletPassword);
+					return new ByronWallet(api.sync().postByronWallet(req));
+				}
+			}
+		} else if (publicKey != null) {
+			switch (walletFormat) {
+				case shelley: {
+					PostWalletShelleyFromXpubRequest req = new PostWalletShelleyFromXpubRequest();
+					req.setName(walletName);
+					req.setAccountPublicKey(publicKey);
+					req.setAddressPoolGap(addressPoolGap);
+					return new ShelleyWallet(api.sync().postWallet(req));
+				}
+				case icarus:
+				case ledger:
+				case trezor: { //TODO: this doesn't look right (no style parameter plus address pool gap).
+					PostByronWalletIcarusTrezorLedgerFromXpubRequest req = new PostByronWalletIcarusTrezorLedgerFromXpubRequest();
+					req.setName(walletName);
+					req.setAccountPublicKey(publicKey);
+					req.setAddressPoolGap(addressPoolGap);
+					return new ByronWallet(api.sync().postByronWallet(req));
+				}
+			}
+		} else if(privateKey != null){
+			switch (walletFormat) {
+				case byron: {
+					PostByronWalletRandomFromXprvRequest req = new PostByronWalletRandomFromXprvRequest();
+					req.setStyle("random");
+					req.setName(walletName);
+					req.setEncryptedRootPrivateKey(privateKey);
+					req.setPassphraseHash(walletPassword);
+					return new ByronWallet(api.sync().postByronWallet(req));
+				}
+			}
 		}
-		return null;// new ByronWallet(api.sync().postByronWallet(byronRequest));
-	}
-
-	private Wallet createShelleyWallet(){
-		PostWalletRequest shelleyRequest = new PostWalletRequest();
-		shelleyRequest.setName(walletName);
-		shelleyRequest.setMnemonicSentence(mnemonicSentence);
-		shelleyRequest.setPassphrase(walletPassword);
-		shelleyRequest.setMnemonicSecondFactor(mnemonicSecondFactor);
-		return null;//return new ShelleyWallet(api.sync().postWallet(shelleyRequest));
+		throw new IllegalStateException("Incomplete shelley wallet details");
 	}
 }

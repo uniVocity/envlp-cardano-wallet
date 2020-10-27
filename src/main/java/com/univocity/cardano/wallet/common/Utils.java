@@ -14,8 +14,13 @@ public class Utils {
 
 	private static final ObjectWriter OBJECT_PRINTER = new ObjectMapper().writerWithDefaultPrettyPrinter();
 
+
 	public static String readTextFromResource(String resourcePath, Charset encoding) {
 		return readTextFromInput(getInput(resourcePath), encoding);
+	}
+
+	public static List<String> readLinesFromResource(String resourcePath, Charset encoding) {
+		return readLinesFromInput(getInput(resourcePath), encoding);
 	}
 
 	public static List<String> readLinesFromInput(InputStream in, Charset encoding) {
@@ -88,6 +93,35 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * Throws an IllegalArgumentException if the given array is null or empty.
+	 *
+	 * @param argDescription the description of the elements
+	 * @param args           the elements to be validated.
+	 * @param <T>            Type of arguments to be validated
+	 */
+	public static <T> void notEmpty(String argDescription, T... args) {
+		if (args == null) {
+			throw new IllegalArgumentException(argDescription + " must not be null");
+		}
+		if (args.length == 0) {
+			throw new IllegalArgumentException(argDescription + " must not be empty");
+		}
+	}
+
+	/**
+	 * Ensures a given {@link CharSequence} argument is not null/empty/blank
+	 *
+	 * @param o         a character sequence
+	 * @param fieldName the description of the field
+	 */
+	public static final void notBlank(CharSequence o, String fieldName) {
+		notNull(o, fieldName);
+		if (o.toString().trim().isEmpty()) {
+			throw new IllegalArgumentException(fieldName + " cannot be blank");
+		}
+	}
+
 	public static String printObject(Object o) {
 		if (o == null) {
 			return "null";
@@ -99,7 +133,7 @@ public class Utils {
 		}
 	}
 
-	public static RequestBody createRequestBody(Object requestBody){
+	public static RequestBody createRequestBody(Object requestBody) {
 		return okhttp3.RequestBody.create(requestBody.toString(), MediaType.parse("application/json"));
 	}
 
@@ -107,12 +141,12 @@ public class Utils {
 		List<O> out = new ArrayList<>(in.size());
 		Function conv = converter;
 		for (Object original : in) {
-			out.add((O)conv.apply(original));
+			out.add((O) conv.apply(original));
 		}
 		return out;
 	}
 
-	private static String getShortestString(String ... strings){
+	private static String getShortestString(String... strings) {
 		String shortest = "";
 		for (String s : strings) {
 			if (shortest.length() < s.length()) {

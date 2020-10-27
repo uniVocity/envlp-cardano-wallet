@@ -29,10 +29,12 @@ public class Wallets extends ApiWrapper {
 		);
 	}
 
-	public Wallet getById(String walletId){
-//		ShelleyWallet shelleyWallet = new ShelleyWallet(api.sync().getWallet(walletId));
-
-		return null;
+	public Wallet getById(String walletId) {
+		try {
+			return new ShelleyWallet(api.sync().getWallet(walletId));
+		} catch (Exception e) {
+			return new ByronWallet(api.sync().getByronWallet(walletId));
+		}
 	}
 
 	public List<Wallet> list() {
@@ -46,7 +48,7 @@ public class Wallets extends ApiWrapper {
 		return out;
 	}
 
-	public CreateWallet create(String walletName){
+	public CreateWallet create(String walletName) {
 		return new CreateWallet(walletName, api);
 	}
 }
