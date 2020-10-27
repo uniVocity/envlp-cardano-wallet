@@ -1,11 +1,9 @@
 package com.univocity.cardano.wallet.common;
 
 import com.google.common.base.*;
+import org.apache.commons.codec.*;
 import org.apache.commons.codec.binary.*;
-import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.*;
-
-import java.util.*;
 
 import static org.testng.Assert.*;
 
@@ -20,11 +18,20 @@ public class SeedTest {
 	}
 
 	@Test
-	public void testSeedGeneration(){
-		List<String> seed = Seed.generateEnglishSeedPhrase(24);
-		System.out.println(seed);
+	public void testSeedGeneration() throws DecoderException {
+		String seed = "lawsuit lens wood license same give hurt eight bonus dragon kick hammer margin company road clip tornado coin salon pizza whale spell yard benefit";
+		String hex = "7e3007f4c09beec4dbf237196841e8b4487e5d2eb95ae565aefa52df9ba27fb0";
 
-		Seed.checkEnglishSeedPhrase(seed);
+		//String seed = Seed.generateEnglishSeedPhrase(24);
+		//System.out.println(seed);
+		String hexFromSeed = new String(Hex.encodeHex(Seed.checkEnglishSeedPhrase(seed)));
+
+		//System.out.println(hexFromSeed);
+		assertEquals(hexFromSeed, hex);
+
+		String seedFromHex = Seed.generateEnglishSeedPhrase(Hex.decodeHex(hex));
+		assertEquals(seedFromHex, seed);
+
 	}
 
 	@Test
@@ -35,26 +42,22 @@ public class SeedTest {
 
 	@Test
 	public void testBadLength() {
-		List<String> words = Arrays.asList("risk tiger venture dinner age assume float denial penalty hello".split(" "));
-		assertErrorMessage("Word list size must be multiple of three words.", () -> Seed.checkEnglishSeedPhrase(words));
+		assertErrorMessage("Word list size must be multiple of three words.", () -> Seed.checkEnglishSeedPhrase("risk tiger venture dinner age assume float denial penalty hello"));
 	}
 
 	@Test
 	public void testBadWord() {
-		List<String> words = Arrays.asList("risk tiger venture dinner xyzzy assume float denial penalty hello game wing".split(" "));
-		assertErrorMessage("Unknown mnemonic word: 'xyzzy'", () -> Seed.checkEnglishSeedPhrase(words));
+		assertErrorMessage("'xyzzy' is an unknown mnemonic word", () -> Seed.checkEnglishSeedPhrase("risk tiger venture dinner xyzzy assume float denial penalty hello game wing"));
 	}
 
 	@Test
 	public void testBadChecksum() {
-		List<String> words = Arrays.asList("bless cloud wheel regular tiny venue bird web grief security dignity zoo".split(" "));
-		assertErrorMessage("Mnemonic checksum failed", () -> Seed.checkEnglishSeedPhrase(words));
+		assertErrorMessage("Mnemonic checksum failed", () -> Seed.checkEnglishSeedPhrase("bless cloud wheel regular tiny venue bird web grief security dignity zoo"));
 	}
 
 	@Test
 	public void testEmptyMnemonic() {
-		List<String> words = new ArrayList<>();
-		assertErrorMessage("Word list is empty.", () -> Seed.checkEnglishSeedPhrase(words));
+		assertErrorMessage("Seed phrase cannot be blank", () -> Seed.checkEnglishSeedPhrase(""));
 	}
 
 	@Test
@@ -65,24 +68,23 @@ public class SeedTest {
 
 	@Test(dataProvider = "data")
 	public void testMnemonicCode(String vectorEntropy, String vectorMnemonicCode, String vectorSeed, String vectorPassphrase) throws Exception {
-		final List<String> mnemonicCode = Seed.generateEnglishSeedPhrase(Hex.decodeHex(vectorEntropy));
+		final String mnemonicCode = Seed.generateEnglishSeedPhrase(Hex.decodeHex(vectorEntropy));
 		final byte[] seed = toSeed(mnemonicCode, vectorPassphrase);
-		final byte[] entropy = Seed.checkEnglishSeedPhrase(Arrays.asList(vectorMnemonicCode.split(" ")));
+		final byte[] entropy = Seed.checkEnglishSeedPhrase(vectorMnemonicCode);
 
 		assertEquals(vectorEntropy, new String(Hex.encodeHex(entropy)));
-		assertEquals(vectorMnemonicCode, StringUtils.join(mnemonicCode, ' '));
+		assertEquals(vectorMnemonicCode, mnemonicCode);
 		assertEquals(vectorSeed, new String(Hex.encodeHex(seed)));
 	}
 
 	/**
 	 * Convert mnemonic word list to seed.
 	 */
-	public static byte[] toSeed(List<String> words, String passphrase) {
-		String pass = StringUtils.join(words, ' ');
+	public static byte[] toSeed(String words, String passphrase) {
 		String salt = "mnemonic" + passphrase;
 
 		final Stopwatch watch = Stopwatch.createStarted();
-		byte[] seed = PBKDF2SHA512.derive(pass, salt, 64);
+		byte[] seed = PBKDF2SHA512.derive(words, salt, 64);
 		watch.stop();
 		return seed;
 	}

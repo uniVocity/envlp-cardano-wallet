@@ -18,7 +18,7 @@ public class Seed {
 	public static final Map<String, List<String>> mnemonicWords = Collections.unmodifiableMap(loadMnemonics());
 	public static final String ENGLISH = "English";
 
-	static Map<String, List<String>> loadMnemonics() {
+	private static Map<String, List<String>> loadMnemonics() {
 		Map<String, List<String>> out = new ConcurrentHashMap<>();
 
 		List<String> lines = Utils.readLinesFromResource("/mnemonic/english.txt", StandardCharsets.UTF_8);
@@ -30,10 +30,10 @@ public class Seed {
 	}
 
 	public static List<String> englishMnemonicWords() {
-		return mnemonicWords("english");
+		return mnemonicWordsForLanguage(ENGLISH);
 	}
 
-	public static List<String> mnemonicWords(String language) {
+	public static List<String> mnemonicWordsForLanguage(String language) {
 		return mnemonicWords.get(language);
 	}
 
@@ -83,11 +83,11 @@ public class Seed {
 		return digest.digest(input);
 	}
 
-	public static List<String> generateEnglishSeedPhrase(int wordCount) {
+	public static String generateEnglishSeedPhrase(int wordCount) {
 		return generateSeedPhrase(wordCount, ENGLISH);
 	}
 
-	public static List<String> generateSeedPhrase(int wordCount, String language) {
+	public static String generateSeedPhrase(int wordCount, String language) {
 		int byteCount;
 		if (wordCount == 9) {
 			byteCount = 12;
@@ -112,14 +112,14 @@ public class Seed {
 		return generateSeedPhrase(entropy, language);
 	}
 
-	public static List<String> generateEnglishSeedPhrase(byte[] entropy) {
+	public static String generateEnglishSeedPhrase(byte[] entropy) {
 		return generateSeedPhrase(entropy, ENGLISH);
 	}
 
 	/**
 	 * Convert entropy data to mnemonic word list.
 	 */
-	public static List<String> generateSeedPhrase(byte[] entropy, String language) {
+	public static String generateSeedPhrase(byte[] entropy, String language) {
 		if (entropy.length % 4 > 0) {
 			throw new IllegalArgumentException("Entropy length not multiple of 32 bits.");
 		}
@@ -145,8 +145,8 @@ public class Seed {
 		// which is a position in a wordlist.  We convert numbers into
 		// words and use joined words as mnemonic sentence.
 
-		ArrayList<String> words = new ArrayList<>();
-		List<String> wordList = mnemonicWords(language);
+		StringBuilder out = new StringBuilder();
+		List<String> wordList = mnemonicWordsForLanguage(language);
 		int nwords = concatBits.length / 11;
 		for (int i = 0; i < nwords; ++i) {
 			int index = 0;
@@ -156,22 +156,27 @@ public class Seed {
 					index |= 0x1;
 				}
 			}
-			words.add(wordList.get(index));
+			out.append(wordList.get(index)).append(' ');
 		}
 
-		return words;
+		out.deleteCharAt(out.length() - 1);
+		return out.toString();
 	}
 
 
-	public static byte[] checkEnglishSeedPhrase(List<String> words) {
-		return checkSeedPhrase(words, ENGLISH);
+	public static byte[] checkEnglishSeedPhrase(String seedPhrase) {
+		return checkSeedPhrase(seedPhrase, ENGLISH);
+	}
+
+	public static byte[] checkSeedPhrase(String seedPhrase, String language) {
+		return checkSeedPhrase(toMnemonicList(seedPhrase), language);
 	}
 
 	/**
 	 * Check to see if a mnemonic word list is valid.
 	 */
 	public static byte[] checkSeedPhrase(List<String> words, String language) {
-		List<String> wordList = mnemonicWords(language);
+		List<String> wordList = mnemonicWordsForLanguage(language);
 		if (words.size() % 3 > 0) {
 			throw new IllegalArgumentException("Word list size must be multiple of three words.");
 		}
