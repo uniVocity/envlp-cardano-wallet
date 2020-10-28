@@ -31,4 +31,5 @@ public interface Wallet {
 
 	String formattedSynchronizationProgressPercentage();
 
+	void delete();
 }

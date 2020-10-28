@@ -9,7 +9,7 @@ import java.time.*;
 public class StakePool extends Wrapper<ListStakePoolsResponseItem> {
 
 	StakePool(ListStakePoolsResponseItem pool) {
-		super(pool);
+		super(pool, null);
 	}
 
 	public String id() {

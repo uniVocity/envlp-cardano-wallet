@@ -11,7 +11,7 @@ public class NetworkInformation extends Wrapper<GetNetworkInformationResponse> {
 
 
 	NetworkInformation(GetNetworkInformationResponse response) {
-		super(response);
+		super(response, null);
 	}
 
 	public SynchronizationStatus synchronizationStatus() {

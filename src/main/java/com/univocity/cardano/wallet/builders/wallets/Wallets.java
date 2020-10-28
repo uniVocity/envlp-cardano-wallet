@@ -22,21 +22,21 @@ public class Wallets extends ApiWrapper {
 		shelleyWalletCallbackHandler = new AsyncCallbackHandler<>(
 				Collections.emptyList(),
 				callback -> api.async().listWallets(callback),
-				response -> Utils.convertList(response, ShelleyWallet::new)
+				response -> Utils.convertList(response, (r) -> new ShelleyWallet(r, api))
 		);
 
 		byronWalletCallbackHandler = new AsyncCallbackHandler<>(
 				Collections.emptyList(),
 				callback -> api.async().listByronWallets(callback),
-				response -> Utils.convertList(response, ByronWallet::new)
+				response -> Utils.convertList(response, (r) -> new ByronWallet(r, api))
 		);
 	}
 
 	public Wallet getById(String walletId) {
 		try {
-			return new ShelleyWallet(api.sync().getWallet(walletId));
+			return new ShelleyWallet(api.sync().getWallet(walletId), api);
 		} catch (Exception e) {
-			return new ByronWallet(api.sync().getByronWallet(walletId));
+			return new ByronWallet(api.sync().getByronWallet(walletId), api);
 		}
 	}
 

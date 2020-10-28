@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
+import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.byronwallets.*;
 import com.univocity.cardano.wallet.builders.network.*;
 import com.univocity.cardano.wallet.common.*;
@@ -9,8 +10,8 @@ import java.time.*;
 
 public class ByronWallet extends Wrapper<AbstractByronWalletResponse> implements Wallet {
 
-	public ByronWallet(AbstractByronWalletResponse original) {
-		super(original);
+	ByronWallet(AbstractByronWalletResponse original, WalletApi api) {
+		super(original, api);
 	}
 
 	@Override
@@ -72,4 +73,11 @@ public class ByronWallet extends Wrapper<AbstractByronWalletResponse> implements
 	public String formattedSynchronizationProgressPercentage() {
 		return toFormattedPercentage(synchronizationProgressPercentage());
 	}
+
+	@Override
+	public void delete() {
+		api.sync().deleteByronWallet(this.id());
+	}
+
+
 }

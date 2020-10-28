@@ -9,7 +9,7 @@ import java.time.*;
 public class NetworkParameters extends Wrapper<GetNetworkParametersResponse> {
 
 	NetworkParameters(GetNetworkParametersResponse response) {
-		super(response);
+		super(response, null);
 	}
 
 	public String genesisBlockHash() {

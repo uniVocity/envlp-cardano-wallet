@@ -150,7 +150,7 @@ public class CreateWallet implements WalletType {
 					req.setPassphrase(walletPassword);
 					req.setMnemonicSecondFactor(mnemonicSecondFactor);
 					req.setAddressPoolGap(addressPoolGap);
-					return new ShelleyWallet(api.sync().postWallet(req));
+					return new ShelleyWallet(api.sync().postWallet(req), api);
 				}
 				case byron: {
 					PostByronWalletRandomRequest req = new PostByronWalletRandomRequest();
@@ -158,7 +158,7 @@ public class CreateWallet implements WalletType {
 					req.setName(walletName);
 					req.setMnemonicSentence(mnemonicSentence);
 					req.setPassphrase(walletPassword);
-					return new ByronWallet(api.sync().postByronWallet(req));
+					return new ByronWallet(api.sync().postByronWallet(req), api);
 				}
 				case trezor: {
 					PostByronWalletTrezorRequest req = new PostByronWalletTrezorRequest();
@@ -166,7 +166,7 @@ public class CreateWallet implements WalletType {
 					req.setName(walletName);
 					req.setMnemonicSentence(mnemonicSentence);
 					req.setPassphrase(walletPassword);
-					return new ByronWallet(api.sync().postByronWallet(req));
+					return new ByronWallet(api.sync().postByronWallet(req), api);
 				}
 				case ledger: {
 					PostByronWalletLedgerRequest req = new PostByronWalletLedgerRequest();
@@ -174,7 +174,7 @@ public class CreateWallet implements WalletType {
 					req.setName(walletName);
 					req.setMnemonicSentence(mnemonicSentence);
 					req.setPassphrase(walletPassword);
-					return new ByronWallet(api.sync().postByronWallet(req));
+					return new ByronWallet(api.sync().postByronWallet(req), api);
 				}
 				case icarus: {
 					PostByronWalletIcarusRequest req = new PostByronWalletIcarusRequest();
@@ -182,7 +182,7 @@ public class CreateWallet implements WalletType {
 					req.setName(walletName);
 					req.setMnemonicSentence(mnemonicSentence);
 					req.setPassphrase(walletPassword);
-					return new ByronWallet(api.sync().postByronWallet(req));
+					return new ByronWallet(api.sync().postByronWallet(req), api);
 				}
 			}
 		} else if (publicKey != null) {
@@ -192,7 +192,7 @@ public class CreateWallet implements WalletType {
 					req.setName(walletName);
 					req.setAccountPublicKey(publicKey);
 					req.setAddressPoolGap(addressPoolGap);
-					return new ShelleyWallet(api.sync().postWallet(req));
+					return new ShelleyWallet(api.sync().postWallet(req), api);
 				}
 				case icarus:
 				case ledger:
@@ -201,7 +201,7 @@ public class CreateWallet implements WalletType {
 					req.setName(walletName);
 					req.setAccountPublicKey(publicKey);
 					req.setAddressPoolGap(addressPoolGap);
-					return new ByronWallet(api.sync().postByronWallet(req));
+					return new ByronWallet(api.sync().postByronWallet(req), api);
 				}
 			}
 		} else if(privateKey != null){
@@ -212,7 +212,7 @@ public class CreateWallet implements WalletType {
 					req.setName(walletName);
 					req.setEncryptedRootPrivateKey(privateKey);
 					req.setPassphraseHash(walletPassword);
-					return new ByronWallet(api.sync().postByronWallet(req));
+					return new ByronWallet(api.sync().postByronWallet(req), api);
 				}
 			}
 		}

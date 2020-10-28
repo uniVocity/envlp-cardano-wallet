@@ -6,7 +6,7 @@ import com.univocity.cardano.wallet.common.*;
 public class NetworkClock extends Wrapper<GetNetworkClockResponse> {
 
 	NetworkClock(GetNetworkClockResponse response) {
-		super(response);
+		super(response, null);
 	}
 
 	public ClockStatus status() {

@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
+import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
 import com.univocity.cardano.wallet.builders.network.*;
 import com.univocity.cardano.wallet.common.*;
@@ -9,8 +10,8 @@ import java.time.*;
 
 public class ShelleyWallet extends Wrapper<AbstractWalletResponse> implements Wallet {
 
-	public ShelleyWallet(AbstractWalletResponse original) {
-		super(original);
+	public ShelleyWallet(AbstractWalletResponse original, WalletApi api) {
+		super(original, api);
 	}
 
 	@Override
@@ -71,5 +72,10 @@ public class ShelleyWallet extends Wrapper<AbstractWalletResponse> implements Wa
 	@Override
 	public String formattedSynchronizationProgressPercentage() {
 		return toFormattedPercentage(synchronizationProgressPercentage());
+	}
+
+	@Override
+	public void delete() {
+		api.sync().deleteWallet(this.id());
 	}
 }

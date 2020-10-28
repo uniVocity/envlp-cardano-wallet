@@ -1,5 +1,7 @@
 package com.univocity.cardano.wallet.common;
 
+import com.univocity.cardano.wallet.api.*;
+
 import java.math.*;
 import java.text.*;
 import java.util.function.*;
@@ -9,9 +11,11 @@ public abstract class Wrapper<T> {
 	public static final BigInteger ONE_ADA_IN_LOVELACE = new BigInteger("1000000");
 	public static final ThreadLocal<DecimalFormat> PERCENTAGE_FORMAT = ThreadLocal.withInitial(() -> new DecimalFormat("#,##0.00%"));
 	protected final T original;
+	protected final WalletApi api;
 
-	public Wrapper(T original) {
+	public Wrapper(T original, WalletApi api) {
 		this.original = original;
+		this.api = api;
 	}
 
 	public final T unwrap() {
