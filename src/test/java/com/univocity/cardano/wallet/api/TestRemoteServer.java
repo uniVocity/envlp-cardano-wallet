@@ -2,6 +2,8 @@ package com.univocity.cardano.wallet.api;
 
 import com.univocity.cardano.wallet.builders.server.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
+import com.univocity.cardano.wallet.common.*;
+import com.univocity.cardano.wallet.embedded.services.*;
 
 public class TestRemoteServer {
 
@@ -9,23 +11,30 @@ public class TestRemoteServer {
 		try {
 			RemoteWalletServer server = WalletServer.remote("http://localhost").connectToPort(4444);
 
-			System.out.println(server.wallets().list());
+			String seed = Seed.generateEnglishSeedPhrase(12);
+			String factor = Seed.generateEnglishSeedPhrase(9);
+			System.out.println(seed);
+			System.out.println(factor);
 
 			Wallet wallet;
-			wallet = server.wallets().create("wallet name").shelley().addressPoolGap(20).fromSeed("seed abc a seed abc a bb aa c seed abc a seed abc a").password("quertyqwerty");
-			System.out.println(wallet);
+//
+//			wallet = server.wallets().create("wallet name 2").shelley()
+//					.fromSeed("inside file hole illegal join recipe ski option stable treat toss pyramid throw utility veteran ethics auction abuse curious essence congress kingdom surround task")
+//					.secondFactor("enjoy region endless vivid hawk flock poet green broom")
+//					.password("qwertyqwerty"); // 870f52b3fb75f17933dfea41bc6b904bb7381851
+																			  //f35dbf54027d2b149f23de8a9ef6d44154f076a47e07fc02823c9f4cb2cd466cb3eafae68b2ac39ff1ccbd222304060b8fe75767d6d09b47c1c03f565be6c02f
+			                                                                  //xpub1de5qy33g35w3dfglcfu449g8nhyrmrfd27dfw756ukz5j069erzngafm4p2l9razuga3smtdmq3l9wjxj7u5tdhxvk429j9d0v5490c8qs5ck
+//			wallet = server.wallets().create("public").shelley().fromPublicKey("f35dbf54027d2b149f23de8a9ef6d44154f076a47e07fc02823c9f4cb2cd466cb3eafae68b2ac39ff1ccbd222304060b8fe75767d6d09b47c1c03f565be6c02f");
+//
 
+//		wallet = server.wallets().create("byron2").byron().fromSeed("there anxiety vast trim family coast dismiss nut autumn detail record rule").password("qwertyqwerty"); //50e4e9dc55e41469ca465f774dd8902436d9e351
 
-			System.out.println(server.wallets().list());
+//      TODO: don't know how to generate the correct byron private key
+//		wallet = server.wallets().create("byron_prv").byron().fromPrivateKey("f0d955181360f8e4756e09cd142f152e5fbd8059a1fe69fd0192e77669b48740c3eb3a428954f42d541e15d77e6215e291e32d64563fd9992a6c1084271bcfba834313ba333d60a90641c06d713457c958b7b0775649f7d53d4764309a86314b").password("qwertyqwerty");
 
-//		wallet = server.wallets().create("wallet name").shelley().addressPoolGap(20).fromSeed("seed abc a").secondFactor("a v c").password("querty");
-//		wallet = server.wallets().create("wallet name").shelley().fromSeed("seed abc a").secondFactor("a v c").password("querty");
-//		wallet = server.wallets().create("wallet name").shelley().fromPublicKey("hex xpub");
-//		wallet = server.wallets().create("wallet name").byron().fromSeed("seed abc a").password("qwerty");
-//		wallet = server.wallets().create("wallet name").byron().fromPrivateKey("rootprivatekey HEX").password("qwerty");
-//		wallet = server.wallets().create("wallet name").icarus().fromSeed("seed abc a").password("qwerty");
-//		wallet = server.wallets().create("wallet name").ledger().fromSeed("seed abc a").password("qwerty");
-//		wallet = server.wallets().create("wallet name").trezor().fromSeed("seed abc a").password("qwerty");
+//		wallet = server.wallets().create("wallet name").icarus().fromSeed("seed abc a").password("qwertyqwerty");
+//		wallet = server.wallets().create("wallet name").ledger().fromSeed("seed abc a").password("qwertyqwerty");
+//		wallet = server.wallets().create("wallet name").trezor().fromSeed("seed abc a").password("qwertyqwerty");
 //		wallet = server.wallets().create("wallet name").icarus().fromPublicKey("hex xpub");
 //		wallet = server.wallets().create("wallet name").ledger().fromPublicKey("hex xpub");
 //		wallet = server.wallets().create("wallet name").trezor().fromPublicKey("hex xpub");
@@ -52,7 +61,9 @@ public class TestRemoteServer {
 //		Transaction transaction = wallet.transactions().get("id hex");
 //		transaction.forget();
 
-		} catch (Exception e){
+			System.out.println(server.wallets().list());
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			System.exit(0);

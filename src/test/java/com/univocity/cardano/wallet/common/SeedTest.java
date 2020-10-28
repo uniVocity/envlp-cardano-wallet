@@ -3,6 +3,8 @@ package com.univocity.cardano.wallet.common;
 import co.nstant.in.cbor.*;
 import co.nstant.in.cbor.model.*;
 import com.google.common.base.*;
+import net.i2p.crypto.eddsa.*;
+import net.i2p.crypto.eddsa.spec.*;
 import org.apache.commons.codec.*;
 import org.apache.commons.codec.binary.*;
 import org.testng.annotations.*;

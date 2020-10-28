@@ -7,6 +7,9 @@ import com.univocity.cardano.wallet.builders.*;
 import com.univocity.cardano.wallet.common.*;
 
 import java.util.*;
+import java.util.concurrent.*;
+
+import static com.univocity.cardano.wallet.common.AsyncCallbackHandler.*;
 
 public class Wallets extends ApiWrapper {
 
@@ -38,8 +41,11 @@ public class Wallets extends ApiWrapper {
 	}
 
 	public List<Wallet> list() {
-		List<ShelleyWallet> shelleyWallets = shelleyWalletCallbackHandler.getSync();
-		List<ByronWallet> byronWallets = byronWalletCallbackHandler.getSync();
+		Future<List<ShelleyWallet>> shelleyList = shelleyWalletCallbackHandler.getAsync();
+		Future<List<ByronWallet>> byronList = byronWalletCallbackHandler.getAsync();
+
+		List<ShelleyWallet> shelleyWallets = sync(shelleyList, Collections.emptyList());
+		List<ByronWallet> byronWallets = sync(byronList, Collections.emptyList());
 
 		List<Wallet> out = new ArrayList<>(shelleyWallets.size() + byronWallets.size());
 		out.addAll(shelleyWallets);

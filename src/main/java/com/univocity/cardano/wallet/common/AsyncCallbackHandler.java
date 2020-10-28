@@ -53,11 +53,9 @@ public class AsyncCallbackHandler<T, O> implements WalletApiCallback<T> {
 		return future;
 	}
 
-	public O getSync() {
-		fetching = true;
-
+	public static <O> O sync(Future<O> future, O defaultValue) {
 		try {
-			return getAsync().get();
+			return future.get();
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		} catch (ExecutionException e) {
@@ -69,10 +67,17 @@ public class AsyncCallbackHandler<T, O> implements WalletApiCallback<T> {
 				throw new IllegalStateException(cause);
 			}
 			throw new IllegalStateException(e);
+		}
+		return defaultValue;
+	}
+
+	public O getSync() {
+		fetching = true;
+		try {
+			return sync(getAsync(), defaultValue);
 		} finally {
 			fetching = false;
 		}
-		return defaultValue;
 	}
 
 	public O getEventually() {
