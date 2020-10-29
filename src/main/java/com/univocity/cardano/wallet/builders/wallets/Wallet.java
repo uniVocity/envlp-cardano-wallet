@@ -1,11 +1,12 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
 import com.univocity.cardano.wallet.builders.network.*;
+import org.jetbrains.annotations.*;
 
 import java.math.*;
 import java.time.*;
 
-public interface Wallet {
+public interface Wallet extends Comparable<Wallet>{
 
 	String id();
 
@@ -34,4 +35,9 @@ public interface Wallet {
 	void delete();
 
 	UTxOStatistics utxoStatistics();
+
+	@Override
+	default int compareTo(Wallet o) {
+		return this.id().compareTo(o.id());
+	}
 }

@@ -3,8 +3,8 @@ package com.univocity.cardano.wallet.builders.wallets;
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.byronwallets.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
+import com.univocity.cardano.wallet.api.service.exception.*;
 import com.univocity.cardano.wallet.common.*;
-import com.univocity.parsers.common.*;
 
 import java.util.*;
 
@@ -24,13 +24,15 @@ public class CreateWallet implements WalletType {
 	private int addressPoolGap = 20;
 	private ArrayList<String> mnemonicSentence;
 	private ArrayList<String> mnemonicSecondFactor;
+	private final boolean onDuplicateGet;
 
 
-	CreateWallet(String walletName, WalletApi api) {
+	CreateWallet(String walletName, WalletApi api, boolean onDuplicateGet) {
 		Utils.notBlank(walletName, "Wallet name");
 		Utils.notNull(api, "Wallet API");
 		this.walletName = walletName;
 		this.api = api;
+		this.onDuplicateGet = onDuplicateGet;
 	}
 
 	@Override
@@ -125,19 +127,35 @@ public class CreateWallet implements WalletType {
 	private Wallet setPassword(String walletPassword) {
 		Utils.notBlank(walletPassword, "Wallet password");
 		this.walletPassword = walletPassword;
-		return createWallet();
+		return createOrGetWallet();
 	}
 
 	private Wallet setPublicKey(String publicKey) {
 		Utils.notBlank(publicKey, "Public key");
 		this.publicKey = publicKey;
-		return createWallet();
+		return createOrGetWallet();
 	}
 
 	private <T> T setPrivateKey(T parent, String privateKey) {
 		Utils.notBlank(privateKey, "Public key");
 		this.privateKey = privateKey;
 		return parent;
+	}
+
+	private Wallet createOrGetWallet() {
+		try {
+			return createWallet();
+		} catch (DuplicateWalletException e) {
+			if (onDuplicateGet) {
+				if(walletFormat == WalletFormat.shelley){
+					return new ShelleyWallet(api.sync().getWallet(e.getWalletId()), api);
+				} else {
+					return new ByronWallet(api.sync().getByronWallet(e.getWalletId()), api);
+				}
+			} else {
+				throw e;
+			}
+		}
 	}
 
 	private Wallet createWallet() {
@@ -204,7 +222,7 @@ public class CreateWallet implements WalletType {
 					return new ByronWallet(api.sync().postByronWallet(req), api);
 				}
 			}
-		} else if(privateKey != null){
+		} else if (privateKey != null) {
 			switch (walletFormat) {
 				case byron: {
 					PostByronWalletRandomFromXprvRequest req = new PostByronWalletRandomFromXprvRequest();

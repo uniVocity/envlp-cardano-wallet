@@ -84,5 +84,16 @@ public class ByronWallet extends Wrapper<AbstractByronWalletResponse> implements
 		return new UTxOStatistics(api.sync().getByronUTxOsStatistics(this.id()), null);
 	}
 
+	@Override
+	public int hashCode() {
+		return id().hashCode();
+	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof ByronWallet) {
+			return id().equals(((ByronWallet) o).id());
+		}
+		return false;
+	}
 }

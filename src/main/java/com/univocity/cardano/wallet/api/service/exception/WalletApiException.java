@@ -1,6 +1,8 @@
-package com.univocity.cardano.wallet.api.service;
+package com.univocity.cardano.wallet.api.service.exception;
 
 import com.univocity.cardano.wallet.api.generated.*;
+import com.univocity.cardano.wallet.api.service.*;
+import org.apache.commons.lang3.*;
 
 /**
  * An exception which can occur while invoking methods of the {@link InternalWalletApiService}.
@@ -13,12 +15,26 @@ public class WalletApiException extends RuntimeException {
 	 */
 	private WalletApiError error;
 
+	public static WalletApiException translateError(WalletApiError error) {
+		String message = error.getMessage();
+		if (StringUtils.isNotBlank(message)) {
+			if (message.contains("would yield a wallet with")) {
+				String id = StringUtils.substringBetween(message, "id: ", " ");
+				if (StringUtils.isNotBlank(id)) {
+					return new DuplicateWalletException(error, id);
+				}
+			}
+
+		}
+		return new WalletApiException(error);
+	}
+
 	/**
 	 * Instantiates a new wallet api exception.
 	 *
 	 * @param error an error response object
 	 */
-	public WalletApiException(WalletApiError error) {
+	protected WalletApiException(WalletApiError error) {
 		this.error = error;
 	}
 

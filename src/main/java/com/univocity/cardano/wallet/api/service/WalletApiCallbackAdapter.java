@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.api.service;
 
+import com.univocity.cardano.wallet.api.service.exception.*;
 import retrofit2.*;
 
 import java.io.*;
@@ -22,7 +23,7 @@ public final class WalletApiCallbackAdapter<T> implements Callback<T> {
 		} else {
 			try {
 				WalletApiError apiError = InternalWalletApiServiceGenerator.getWalletApiError(response);
-				onFailure(call, new WalletApiException(apiError));
+				onFailure(call, WalletApiException.translateError(apiError));
 			} catch (IOException e) {
 				onFailure(call, new WalletApiException(e));
 			}

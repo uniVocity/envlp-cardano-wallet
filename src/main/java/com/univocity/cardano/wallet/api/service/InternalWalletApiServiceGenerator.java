@@ -3,6 +3,7 @@ package com.univocity.cardano.wallet.api.service;
 
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.*;
+import com.univocity.cardano.wallet.api.service.exception.*;
 import okhttp3.*;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -61,7 +62,7 @@ public class InternalWalletApiServiceGenerator {
 				return response.body();
 			} else {
 				WalletApiError apiError = getWalletApiError(response);
-				throw new WalletApiException(apiError);
+				throw WalletApiException.translateError(apiError);
 			}
 		} catch (IOException e) {
 			throw new WalletApiException(e);

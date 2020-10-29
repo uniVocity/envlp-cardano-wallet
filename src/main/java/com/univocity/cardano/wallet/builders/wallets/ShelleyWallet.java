@@ -83,4 +83,17 @@ public class ShelleyWallet extends Wrapper<AbstractWalletResponse> implements Wa
 	public UTxOStatistics utxoStatistics() {
 		return new UTxOStatistics(api.sync().getUTxOsStatistics(this.id()), null);
 	}
+
+	@Override
+	public int hashCode() {
+		return id().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof ShelleyWallet) {
+			return id().equals(((ShelleyWallet) o).id());
+		}
+		return false;
+	}
 }

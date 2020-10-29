@@ -47,7 +47,7 @@ public class TestRemoteServer {
 		shelleySeed = "between faint debris journey happy bounce sword grow card suggest fury beach smoke paper employ thunder grocery uphold menu dad dutch alley coral noise";//Seed.generateEnglishSeedPhrase(24);
 		shelleyFactor = "fiber urban wood thing fluid sibling hunt theme output";//Seed.generateEnglishSeedPhrase(9);
 
-		testWallet(shelleyWallet = server.wallets().create("shelleyWallet").shelley()
+		testWallet(shelleyWallet = server.wallets().createOrGet("shelleyWallet").shelley()
 				.fromSeed(shelleySeed)
 				.secondFactor(shelleyFactor)
 				.password("qwertyqwerty"));
@@ -55,21 +55,21 @@ public class TestRemoteServer {
 
 	@Test(dependsOnMethods = "testShelleyWalletCreation")
 	public void testShelleyReadOnlyWallet() {
-		testWallet(shelleyReadOnlyWallet = server.wallets().create("shelleyReadOnlyWallet").shelley()
+		testWallet(shelleyReadOnlyWallet = server.wallets().createOrGet("shelleyReadOnlyWallet").shelley()
 				.fromPublicKey("invalid")); //TODO
 	}
 
 	@Test
 	public void testByronWalletCreationFromSeed() {
 		byronSeed = "when mosquito raccoon current resource shuffle shine bubble secret thumb fee pumpkin";//Seed.generateEnglishSeedPhrase(12);
-		testWallet(byronWallet = server.wallets().create("byronWallet").byron()
+		testWallet(byronWallet = server.wallets().createOrGet("byronWallet").byron()
 				.fromSeed(byronSeed)
 				.password("qwertyqwerty"));
 	}
 
 	@Test(dependsOnMethods = "testByronWalletCreationFromSeed")
 	public void testByronWalletCreationFromPrivateKey() {
-		testWallet(byronWalletFromPrivateKey = server.wallets().create("byronWalletFromPrivateKey").byron()
+		testWallet(byronWalletFromPrivateKey = server.wallets().createOrGet("byronWalletFromPrivateKey").byron()
 				.fromPrivateKey("invalid") //TODO
 				.password("qwertyqwerty"));
 	}
@@ -77,42 +77,42 @@ public class TestRemoteServer {
 	@Test
 	public void testIcarusWalletCreation() {
 		icarusSeed = "traffic fortune weapon strong renew edit snack glow infant super sadness repair spend dwarf arrange";//Seed.generateEnglishSeedPhrase(15);
-		testWallet(icarusWallet = server.wallets().create("icarusWallet").icarus()
+		testWallet(icarusWallet = server.wallets().createOrGet("icarusWallet").icarus()
 				.fromSeed(icarusSeed)
 				.password("qwertyqwerty"));
 	}
 
 	@Test(dependsOnMethods = "testIcarusWalletCreation")
 	public void testIcarusReadOnlyWallet() {
-		testWallet(icarusReadOnlyWallet = server.wallets().create("icarusReadOnlyWallet").icarus()
+		testWallet(icarusReadOnlyWallet = server.wallets().createOrGet("icarusReadOnlyWallet").icarus()
 				.fromPublicKey("invalid"));//TODO
 	}
 
 	@Test
 	public void testLedgerWalletCreation() {
 		ledgerSeed = "retreat ill gold funny rent alpha swear fiber just spawn action maple business snake junior atom noise convince";//Seed.generateEnglishSeedPhrase(18);
-		testWallet(ledgerWallet = server.wallets().create("ledgerWallet").ledger()
+		testWallet(ledgerWallet = server.wallets().createOrGet("ledgerWallet").ledger()
 				.fromSeed(ledgerSeed)
 				.password("qwertyqwerty"));
 	}
 
 	@Test(dependsOnMethods = "testLedgerWalletCreation")
 	public void testLedgerReadOnlyWalletCreation() {
-		testWallet(ledgerReadOnlyWallet = server.wallets().create("ledgerReadOnlyWallet").ledger()
+		testWallet(ledgerReadOnlyWallet = server.wallets().createOrGet("ledgerReadOnlyWallet").ledger()
 				.fromPublicKey("invalid"));//TODO
 	}
 
 	@Test
 	public void testTrezorWalletCreation() {
 		trezorSeed = "census dolphin follow cactus result vital beach zoo claw suffer drift ability voice ladder wedding sustain stomach kick mechanic save host trim cable arrest";//Seed.generateEnglishSeedPhrase(24);
-		testWallet(trezorWallet = server.wallets().create("trezorWallet").trezor()
+		testWallet(trezorWallet = server.wallets().createOrGet("trezorWallet").trezor()
 				.fromSeed(trezorSeed)
 				.password("qwertyqwerty"));
 	}
 
 	@Test(dependsOnMethods = "testTrezorWalletCreation")
 	public void testTrezorReadOnlyWalletCreation() {
-		testWallet(trezorReadOnlyWallet = server.wallets().create("trezorReadOnlyWallet").trezor()
+		testWallet(trezorReadOnlyWallet = server.wallets().createOrGet("trezorReadOnlyWallet").trezor()
 				.fromPublicKey("invalid"));//TODO
 	}
 
