@@ -32,4 +32,6 @@ public interface Wallet {
 	String formattedSynchronizationProgressPercentage();
 
 	void delete();
+
+	UTxOStatistics utxoStatistics();
 }

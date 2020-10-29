@@ -78,4 +78,9 @@ public class ShelleyWallet extends Wrapper<AbstractWalletResponse> implements Wa
 	public void delete() {
 		api.sync().deleteWallet(this.id());
 	}
+
+	@Override
+	public UTxOStatistics utxoStatistics() {
+		return new UTxOStatistics(api.sync().getUTxOsStatistics(this.id()), null);
+	}
 }

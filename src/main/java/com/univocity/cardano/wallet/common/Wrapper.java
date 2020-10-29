@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.common;
 
 import com.univocity.cardano.wallet.api.*;
+import com.univocity.cardano.wallet.api.generated.common.*;
 
 import java.math.*;
 import java.text.*;
@@ -46,6 +47,13 @@ public abstract class Wrapper<T> {
 
 	protected static BigDecimal lovelaceToAda(BigInteger quantity) {
 		return new BigDecimal(quantity).divide(new BigDecimal(ONE_ADA_IN_LOVELACE), 6, RoundingMode.HALF_UP);
+	}
+
+	protected static BigDecimal lovelaceToAda(AbstractAmount amount) {
+		if("lovelace".equalsIgnoreCase(amount.getUnit())){
+			return lovelaceToAda(amount.getQuantity());
+		}
+		return new BigDecimal(amount.getQuantity());
 	}
 
 	public String safeGet(Supplier<String> supplier){

@@ -79,5 +79,10 @@ public class ByronWallet extends Wrapper<AbstractByronWalletResponse> implements
 		api.sync().deleteByronWallet(this.id());
 	}
 
+	@Override
+	public UTxOStatistics utxoStatistics() {
+		return new UTxOStatistics(api.sync().getByronUTxOsStatistics(this.id()), null);
+	}
+
 
 }
