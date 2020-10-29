@@ -136,6 +136,24 @@ public class TestRemoteServer {
 	}
 
 	@Test(dependsOnMethods = "testWalletListing")
+	public void testWalletRename() {
+		rename(shelleyWallet);
+		rename(byronWallet);
+		rename(icarusWallet);
+	}
+
+	private void rename(Wallet wallet) {
+		String originalName = wallet.name();
+		wallet.rename("UPDATED-" + originalName);
+		assertEquals(wallet.name(), "UPDATED-" + originalName);
+		assertEquals(server.wallets().getById(wallet.id()).name(), "UPDATED-" + originalName);
+
+		wallet.rename(originalName);
+		assertEquals(wallet.name(), originalName);
+		assertEquals(server.wallets().getById(wallet.id()).name(), originalName);
+	}
+
+	@Test(dependsOnMethods = "testWalletRename", enabled = true)
 	public void testShelleyWalletDeletion() {
 		List<Error> errors = new ArrayList<>();
 		deleteTestWallet(shelleyWallet, errors);
@@ -168,33 +186,6 @@ public class TestRemoteServer {
 		} catch (Error e) {
 			errors.add(e);
 		}
-	}
-
-	@Test
-	public void testWalletRename() {
-		rename(shelleyWallet);
-		rename(byronWallet);
-		rename(icarusWallet);
-	}
-
-	private void rename(Wallet wallet) {
-		String originalName = wallet.name();
-		wallet.rename("UPDATED-" + originalName);
-		assertEquals(wallet.name(), "UPDATED-" + originalName);
-		assertEquals(server.wallets().getById(wallet.id()).name(), "UPDATED-" + originalName);
-
-		wallet.rename(originalName);
-		assertEquals(wallet.name(), originalName);
-		assertEquals(server.wallets().getById(wallet.id()).name(), originalName);
-	}
-
-	@Test(dependsOnMethods = "testWalletListing")
-	public void testByronWalletDeletion() {
-		String walletId = byronWallet.id();
-		byronWallet.delete();
-
-		Wallet wallet = server.wallets().getById(walletId);
-		assertNull(wallet);
 	}
 
 //	public static void main(String... args) {
