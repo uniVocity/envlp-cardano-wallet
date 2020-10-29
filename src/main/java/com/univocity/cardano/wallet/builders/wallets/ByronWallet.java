@@ -85,6 +85,14 @@ public class ByronWallet extends Wrapper<AbstractByronWalletResponse> implements
 	}
 
 	@Override
+	public void rename(String newWalletName) {
+		PutByronWalletRequest request = new PutByronWalletRequest();
+		request.setName(newWalletName);
+		PutByronWalletResponse response = api.sync().putByronWallet(this.id(), request);
+		this.original.setName(response.getName());
+	}
+
+	@Override
 	public int hashCode() {
 		return id().hashCode();
 	}

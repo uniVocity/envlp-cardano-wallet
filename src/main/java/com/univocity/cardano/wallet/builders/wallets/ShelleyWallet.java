@@ -85,6 +85,14 @@ public class ShelleyWallet extends Wrapper<AbstractWalletResponse> implements Wa
 	}
 
 	@Override
+	public void rename(String newWalletName) {
+		PutWalletRequest request = new PutWalletRequest();
+		request.setName(newWalletName);
+		PutWalletResponse response = api.sync().putWallet(this.id(), request);
+		this.original.setName(response.getName());
+	}
+
+	@Override
 	public int hashCode() {
 		return id().hashCode();
 	}

@@ -170,6 +170,24 @@ public class TestRemoteServer {
 		}
 	}
 
+	@Test
+	public void testWalletRename() {
+		rename(shelleyWallet);
+		rename(byronWallet);
+		rename(icarusWallet);
+	}
+
+	private void rename(Wallet wallet) {
+		String originalName = wallet.name();
+		wallet.rename("UPDATED-" + originalName);
+		assertEquals(wallet.name(), "UPDATED-" + originalName);
+		assertEquals(server.wallets().getById(wallet.id()).name(), "UPDATED-" + originalName);
+
+		wallet.rename(originalName);
+		assertEquals(wallet.name(), originalName);
+		assertEquals(server.wallets().getById(wallet.id()).name(), originalName);
+	}
+
 	@Test(dependsOnMethods = "testWalletListing")
 	public void testByronWalletDeletion() {
 		String walletId = byronWallet.id();

@@ -36,6 +36,8 @@ public interface Wallet extends Comparable<Wallet>{
 
 	UTxOStatistics utxoStatistics();
 
+	void rename(String newWalletName);
+
 	@Override
 	default int compareTo(Wallet o) {
 		return this.id().compareTo(o.id());
