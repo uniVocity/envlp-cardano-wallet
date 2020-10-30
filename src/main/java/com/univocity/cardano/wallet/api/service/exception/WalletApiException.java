@@ -21,10 +21,19 @@ public class WalletApiException extends RuntimeException {
 			if (message.contains("would yield a wallet with")) {
 				String id = StringUtils.substringBetween(message, "id: ", " ");
 				if (StringUtils.isNotBlank(id)) {
-					return new DuplicateWalletException(error, id);
+					return new DuplicateWalletException(error, id.trim());
 				}
 			}
-
+			if (message.contains("passphrase doesn't match")) {
+				String id = StringUtils.substringAfter(message, "wallet: ");
+				id = StringUtils.isBlank(id) ? null : id.trim();
+				throw new InvalidWalletPasswordException(error, id);
+			}
+			if (message.contains("couldn't find a wallet")) {
+				String id = StringUtils.substringAfter(message, "id: ");
+				id = StringUtils.isBlank(id) ? null : id.trim();
+				throw new WalletNotFoundException(error, id);
+			}
 		}
 		return new WalletApiException(error);
 	}

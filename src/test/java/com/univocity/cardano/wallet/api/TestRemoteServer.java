@@ -1,19 +1,23 @@
 package com.univocity.cardano.wallet.api;
 
+import com.univocity.cardano.wallet.api.service.exception.*;
 import com.univocity.cardano.wallet.builders.server.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
+import com.univocity.cardano.wallet.builders.wallets.addresses.*;
 import org.testng.annotations.*;
 
+import java.time.*;
 import java.util.*;
 
 import static org.testng.Assert.*;
 
 public class TestRemoteServer {
 
+	static final String PASSWORD = "qwertyqwerty";
 
 	RemoteWalletServer server;
 	Wallet shelleyWallet;
-	Wallet byronWallet;
+	ByronWallet byronWallet;
 	Wallet icarusWallet;
 	Wallet ledgerWallet;
 	Wallet trezorWallet;
@@ -50,7 +54,7 @@ public class TestRemoteServer {
 		testWallet(shelleyWallet = server.wallets().createOrGet("shelleyWallet").shelley()
 				.fromSeed(shelleySeed)
 				.secondFactor(shelleyFactor)
-				.password("qwertyqwerty"));
+				.password(PASSWORD));
 	}
 
 	@Test(dependsOnMethods = "testShelleyWalletCreation")
@@ -64,14 +68,14 @@ public class TestRemoteServer {
 		byronSeed = "when mosquito raccoon current resource shuffle shine bubble secret thumb fee pumpkin";//Seed.generateEnglishSeedPhrase(12);
 		testWallet(byronWallet = server.wallets().createOrGet("byronWallet").byron()
 				.fromSeed(byronSeed)
-				.password("qwertyqwerty"));
+				.password(PASSWORD));
 	}
 
 	@Test(dependsOnMethods = "testByronWalletCreationFromSeed")
 	public void testByronWalletCreationFromPrivateKey() {
 		testWallet(byronWalletFromPrivateKey = server.wallets().createOrGet("byronWalletFromPrivateKey").byron()
 				.fromPrivateKey("invalid") //TODO
-				.password("qwertyqwerty"));
+				.password(PASSWORD));
 	}
 
 	@Test
@@ -79,7 +83,7 @@ public class TestRemoteServer {
 		icarusSeed = "traffic fortune weapon strong renew edit snack glow infant super sadness repair spend dwarf arrange";//Seed.generateEnglishSeedPhrase(15);
 		testWallet(icarusWallet = server.wallets().createOrGet("icarusWallet").icarus()
 				.fromSeed(icarusSeed)
-				.password("qwertyqwerty"));
+				.password(PASSWORD));
 	}
 
 	@Test(dependsOnMethods = "testIcarusWalletCreation")
@@ -93,7 +97,7 @@ public class TestRemoteServer {
 		ledgerSeed = "retreat ill gold funny rent alpha swear fiber just spawn action maple business snake junior atom noise convince";//Seed.generateEnglishSeedPhrase(18);
 		testWallet(ledgerWallet = server.wallets().createOrGet("ledgerWallet").ledger()
 				.fromSeed(ledgerSeed)
-				.password("qwertyqwerty"));
+				.password(PASSWORD));
 	}
 
 	@Test(dependsOnMethods = "testLedgerWalletCreation")
@@ -107,7 +111,7 @@ public class TestRemoteServer {
 		trezorSeed = "census dolphin follow cactus result vital beach zoo claw suffer drift ability voice ladder wedding sustain stomach kick mechanic save host trim cable arrest";//Seed.generateEnglishSeedPhrase(24);
 		testWallet(trezorWallet = server.wallets().createOrGet("trezorWallet").trezor()
 				.fromSeed(trezorSeed)
-				.password("qwertyqwerty"));
+				.password(PASSWORD));
 	}
 
 	@Test(dependsOnMethods = "testTrezorWalletCreation")
@@ -153,7 +157,65 @@ public class TestRemoteServer {
 		assertEquals(server.wallets().getById(wallet.id()).name(), originalName);
 	}
 
-	@Test(dependsOnMethods = "testWalletRename", enabled = true)
+	@Test(dependsOnMethods = "testWalletListing")
+	public void testWalletPasswordUpdate() {
+		updatePassword(shelleyWallet);
+		updatePassword(byronWallet);
+		updatePassword(icarusWallet);
+		updatePassword(trezorWallet);
+	}
+
+	private void updatePassword(Wallet wallet) {
+		long lastChangeTime = wallet.lastPasswordChange().toInstant(ZoneOffset.UTC).toEpochMilli();
+
+		try {
+			wallet.updatePassword(PASSWORD, "1234512345");
+		} catch (InvalidWalletPasswordException e) {
+			wallet.delete();
+			return;
+		}
+		long changeTime = wallet.lastPasswordChange().toInstant(ZoneOffset.UTC).toEpochMilli();
+		assertTrue(changeTime > lastChangeTime);
+
+		wallet.updatePassword("1234512345", PASSWORD);
+		lastChangeTime = wallet.lastPasswordChange().toInstant(ZoneOffset.UTC).toEpochMilli();
+		assertTrue(lastChangeTime > changeTime);
+	}
+
+	@Test(dependsOnMethods = "testWalletListing")
+	public void testNonByronRandomWalletAddresses() {
+		testNonRandomWalletAddresses(shelleyWallet);
+		testNonRandomWalletAddresses(icarusWallet);
+		testNonRandomWalletAddresses(ledgerWallet);
+		testNonRandomWalletAddresses(trezorWallet);
+	}
+
+	@Test(dependsOnMethods = "testWalletListing")
+	public void testByronRandomWalletAddresses() {
+		Address address = byronWallet.addresses().next(PASSWORD);
+
+		List<Address> addresses = byronWallet.addresses().all();
+		assertTrue(addresses.contains(address));
+
+		assertTrue(byronWallet.addresses().unused().contains(address));
+		assertFalse(byronWallet.addresses().used().contains(address));
+	}
+
+	private void testNonRandomWalletAddresses(Wallet wallet) {
+		List<Address> unused = wallet.addresses().unused();
+		List<Address> used = wallet.addresses().used();
+		List<Address> all = wallet.addresses().all();
+
+		assertFalse(all.isEmpty());
+		assertFalse(unused.isEmpty());
+		assertTrue(all.containsAll(unused));
+		if (!used.isEmpty()) {
+			assertTrue(all.containsAll(unused));
+			used.forEach(u -> assertFalse(unused.contains(u)));
+		}
+	}
+
+	@Test(dependsOnMethods = "testWalletRename", enabled = false)
 	public void testShelleyWalletDeletion() {
 		List<Error> errors = new ArrayList<>();
 		deleteTestWallet(shelleyWallet, errors);
@@ -191,9 +253,6 @@ public class TestRemoteServer {
 //	public static void main(String... args) {
 //		try {
 //
-////		wallet.rename("new wallet name");
-////		wallet.updatePassword("old", "new");
-////
 ////		wallet.addresses().unused().list();
 ////		wallet.addresses().used().list();
 ////		wallet.addresses().all().list();

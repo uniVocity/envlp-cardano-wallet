@@ -137,7 +137,7 @@ public class Utils {
 		return okhttp3.RequestBody.create(requestBody.toString(), MediaType.parse("application/json"));
 	}
 
-	public static <O extends Wrapper<I>, I> List<O> convertList(List<? extends I> in, Function<? extends I, ? extends O> converter) {
+	public static <O, I> List<O> convertList(List<? extends I> in, Function<? extends I, ? extends O> converter) {
 		List<O> out = new ArrayList<>(in.size());
 		Function conv = converter;
 		for (Object original : in) {

@@ -3,15 +3,19 @@ package com.univocity.cardano.wallet.builders.wallets;
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
 import com.univocity.cardano.wallet.builders.network.*;
+import com.univocity.cardano.wallet.builders.wallets.addresses.*;
 import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
 import java.time.*;
 
-public class ShelleyWallet extends Wrapper<AbstractWalletResponse> implements Wallet {
+public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> implements Wallet {
+
+	private final Addresses addresses;
 
 	public ShelleyWallet(AbstractWalletResponse original, WalletApi api) {
 		super(original, api);
+		this.addresses = new ShelleyAddresses(this, api);
 	}
 
 	@Override
@@ -26,7 +30,7 @@ public class ShelleyWallet extends Wrapper<AbstractWalletResponse> implements Wa
 
 	@Override
 	public LocalDateTime lastPasswordChange() {
-		return LocalDateTime.parse(original.getPassphrase().getLastUpdatedAt());
+		return toDateTime(original.getPassphrase().getLastUpdatedAt());
 	}
 
 	@Override
@@ -93,15 +97,16 @@ public class ShelleyWallet extends Wrapper<AbstractWalletResponse> implements Wa
 	}
 
 	@Override
-	public int hashCode() {
-		return id().hashCode();
+	public void updatePassword(String currentPassword, String newPassword) {
+		PutWalletPassphraseRequest request = new PutWalletPassphraseRequest();
+		request.setOldPassphrase(currentPassword);
+		request.setNewPassphrase(newPassword);
+		api.sync().putWalletPassphrase(this.id(), request);
+		original.setPassphrase(api.sync().getWallet(id()).getPassphrase());
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof ShelleyWallet) {
-			return id().equals(((ShelleyWallet) o).id());
-		}
-		return false;
+	public Addresses addresses() {
+		return addresses;
 	}
 }

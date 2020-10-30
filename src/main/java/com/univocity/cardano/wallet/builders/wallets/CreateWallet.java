@@ -42,53 +42,53 @@ public class CreateWallet implements WalletType {
 	}
 
 	@Override
-	public ByronWalletRestoration byron() {
+	public ByronWalletRestoration<ByronWallet> byron() {
 		walletFormat = WalletFormat.byron;
-		return new WalletBuilder();
+		return new WalletBuilder<>();
 	}
 
 	@Override
-	public WalletRestoration icarus() {
+	public WalletRestoration<ByronWallet> icarus() {
 		walletFormat = WalletFormat.icarus;
-		return new WalletBuilder();
+		return new WalletBuilder<>();
 	}
 
 	@Override
-	public WalletRestoration ledger() {
+	public WalletRestoration<ByronWallet> ledger() {
 		walletFormat = WalletFormat.ledger;
-		return new WalletBuilder();
+		return new WalletBuilder<>();
 	}
 
 	@Override
-	public WalletRestoration trezor() {
+	public WalletRestoration<ByronWallet> trezor() {
 		walletFormat = WalletFormat.trezor;
-		return new WalletBuilder();
+		return new WalletBuilder<>();
 	}
 
-	private class WalletBuilder implements WalletPassword, ByronWalletRestoration, WalletRestoration {
+	private class WalletBuilder<T extends Wallet> implements WalletPassword<T>, ByronWalletRestoration<T>, WalletRestoration<T> {
 
 		@Override
-		public WalletPassword fromPrivateKey(String privateKey) {
+		public WalletPassword<T> fromPrivateKey(String privateKey) {
 			return setPrivateKey(this, privateKey);
 		}
 
 		@Override
-		public WalletPassword fromSeed(String seedPhrase) {
+		public WalletPassword<T> fromSeed(String seedPhrase) {
 			return setSeed(this, seedPhrase);
 		}
 
 		@Override
-		public Wallet fromPublicKey(String publicKey) {
-			return setPublicKey(publicKey);
+		public T fromPublicKey(String publicKey) {
+			return (T) setPublicKey(publicKey);
 		}
 
 		@Override
-		public Wallet password(String walletPassword) {
-			return setPassword(walletPassword);
+		public T password(String walletPassword) {
+			return (T) setPassword(walletPassword);
 		}
 	}
 
-	private class ShelleyWalletBuilder extends WalletBuilder implements ShelleyWalletRestorationOptions, ShelleyWalletPassword {
+	private class ShelleyWalletBuilder extends WalletBuilder<ShelleyWallet> implements ShelleyWalletRestorationOptions, ShelleyWalletPassword {
 
 		@Override
 		public ShelleyWalletRestoration addressPoolGap(int gap) {
@@ -97,7 +97,7 @@ public class CreateWallet implements WalletType {
 		}
 
 		@Override
-		public WalletPassword secondFactor(String secondFactorPhrase) {
+		public WalletPassword<ShelleyWallet> secondFactor(String secondFactorPhrase) {
 			Utils.notBlank(secondFactorPhrase, "Second factor phrase");
 			CreateWallet.this.mnemonicSecondFactor = new ArrayList<>(Arrays.asList(secondFactorPhrase.split(" ")));
 			return this;
@@ -109,13 +109,13 @@ public class CreateWallet implements WalletType {
 		}
 
 		@Override
-		public Wallet fromPublicKey(String publicKey) {
-			return setPublicKey(publicKey);
+		public ShelleyWallet fromPublicKey(String publicKey) {
+			return (ShelleyWallet) setPublicKey(publicKey);
 		}
 
 		@Override
-		public Wallet password(String walletPassword) {
-			return setPassword(walletPassword);
+		public ShelleyWallet password(String walletPassword) {
+			return (ShelleyWallet) setPassword(walletPassword);
 		}
 	}
 
@@ -147,7 +147,7 @@ public class CreateWallet implements WalletType {
 			return createWallet();
 		} catch (DuplicateWalletException e) {
 			if (onDuplicateGet) {
-				if(walletFormat == WalletFormat.shelley){
+				if (walletFormat == WalletFormat.shelley) {
 					return new ShelleyWallet(api.sync().getWallet(e.getWalletId()), api);
 				} else {
 					return new ByronWallet(api.sync().getByronWallet(e.getWalletId()), api);

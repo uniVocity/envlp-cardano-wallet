@@ -1,10 +1,10 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
 
-public interface WalletRestoration {
+public interface WalletRestoration<T extends Wallet> {
 
-	WalletPassword fromSeed(String fromSeed);
+	WalletPassword<T> fromSeed(String fromSeed);
 
-	Wallet fromPublicKey(String publicKey);
+	T fromPublicKey(String publicKey);
 
 }

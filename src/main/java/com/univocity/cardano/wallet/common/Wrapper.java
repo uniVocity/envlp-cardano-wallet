@@ -5,6 +5,7 @@ import com.univocity.cardano.wallet.api.generated.common.*;
 
 import java.math.*;
 import java.text.*;
+import java.time.*;
 import java.util.function.*;
 
 public abstract class Wrapper<T> {
@@ -21,6 +22,14 @@ public abstract class Wrapper<T> {
 
 	public final T unwrap() {
 		return original;
+	}
+
+	protected Instant toInstant(String value){
+		return Instant.parse(value);
+	}
+
+	protected LocalDateTime toDateTime(String value){
+		return LocalDateTime.ofInstant(toInstant(value), ZoneId.systemDefault());
 	}
 
 	protected static double toPercentage(Double value) {

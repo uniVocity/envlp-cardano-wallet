@@ -1,14 +1,13 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
 import com.univocity.cardano.wallet.builders.network.*;
-import org.jetbrains.annotations.*;
+import com.univocity.cardano.wallet.builders.wallets.addresses.*;
+import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
 import java.time.*;
 
-public interface Wallet extends Comparable<Wallet>{
-
-	String id();
+public interface Wallet extends ObjectWithId {
 
 	String name();
 
@@ -38,8 +37,7 @@ public interface Wallet extends Comparable<Wallet>{
 
 	void rename(String newWalletName);
 
-	@Override
-	default int compareTo(Wallet o) {
-		return this.id().compareTo(o.id());
-	}
+	void updatePassword(String currentPassword, String newPassword);
+
+	Addresses addresses();
 }

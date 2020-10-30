@@ -23,7 +23,7 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 						" --host-addr 0.0.0.0" +
 						" --port " + config.nodePort +
 						" --config " + config.nodeConfigurationFile);
-		nodeManager.startProcess();
+
 
 		walletManager = new CardanoWalletManager(cardanoTools, config.walletOutputConsumer);
 		walletManager.setStartupCommand(
@@ -33,7 +33,7 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 						" --node-socket " + socketPath +
 						" --port " + config.walletPort
 		);
-		walletManager.startProcess();
+
 	}
 
 	public CardanoNodeManager getNodeManager() {
@@ -42,5 +42,26 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 
 	public CardanoWalletManager getWalletManager() {
 		return walletManager;
+	}
+
+	public void start() {
+		nodeManager.startProcess();
+		walletManager.startProcess();
+	}
+
+	public void stop() {
+		try {
+			walletManager.stopProcess();
+		} finally {
+			nodeManager.stopProcess();
+		}
+	}
+
+	public void waitForServerToStop() {
+		try {
+			nodeManager.waitForProcess();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+		}
 	}
 }

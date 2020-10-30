@@ -1,6 +1,6 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
-public interface WalletPassword {
+public interface WalletPassword<T extends Wallet> {
 
-	Wallet password(String password);
+	T password(String password);
 }

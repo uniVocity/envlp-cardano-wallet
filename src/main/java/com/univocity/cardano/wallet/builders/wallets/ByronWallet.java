@@ -3,15 +3,19 @@ package com.univocity.cardano.wallet.builders.wallets;
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.byronwallets.*;
 import com.univocity.cardano.wallet.builders.network.*;
+import com.univocity.cardano.wallet.builders.wallets.addresses.*;
 import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
 import java.time.*;
 
-public class ByronWallet extends Wrapper<AbstractByronWalletResponse> implements Wallet {
+public class ByronWallet extends WrapperWithId<AbstractByronWalletResponse> implements Wallet {
+
+	private final ByronAddresses addresses;
 
 	ByronWallet(AbstractByronWalletResponse original, WalletApi api) {
 		super(original, api);
+		this.addresses = new ByronAddresses(this, api);
 	}
 
 	@Override
@@ -26,7 +30,7 @@ public class ByronWallet extends Wrapper<AbstractByronWalletResponse> implements
 
 	@Override
 	public LocalDateTime lastPasswordChange() {
-		return LocalDateTime.parse(original.getPassphrase().getLastUpdatedAt());
+		return toDateTime(original.getPassphrase().getLastUpdatedAt());
 	}
 
 	@Override
@@ -93,15 +97,16 @@ public class ByronWallet extends Wrapper<AbstractByronWalletResponse> implements
 	}
 
 	@Override
-	public int hashCode() {
-		return id().hashCode();
+	public void updatePassword(String currentPassword, String newPassword) {
+		PutByronWalletPassphraseRequest request = new PutByronWalletPassphraseRequest();
+		request.setOldPassphrase(currentPassword);
+		request.setNewPassphrase(newPassword);
+		api.sync().putByronWalletPassphrase(this.id(), request);
+		original.setPassphrase(api.sync().getByronWallet(this.id()).getPassphrase());
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof ByronWallet) {
-			return id().equals(((ByronWallet) o).id());
-		}
-		return false;
+	public ByronAddresses addresses() {
+		return addresses;
 	}
 }

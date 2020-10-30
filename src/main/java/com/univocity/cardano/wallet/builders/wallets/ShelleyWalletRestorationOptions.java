@@ -1,7 +1,7 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
-public interface ShelleyWalletRestorationOptions extends ShelleyWalletRestoration{
+public interface ShelleyWalletRestorationOptions extends ShelleyWalletRestoration<ShelleyWallet>{
 
-	ShelleyWalletRestoration addressPoolGap(int gap);
+	ShelleyWalletRestoration<ShelleyWallet> addressPoolGap(int gap);
 
 }

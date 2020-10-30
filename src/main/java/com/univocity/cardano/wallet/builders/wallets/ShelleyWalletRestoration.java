@@ -1,10 +1,10 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
 
-public interface ShelleyWalletRestoration {
+public interface ShelleyWalletRestoration<T extends Wallet> {
 
 	ShelleyWalletPassword fromSeed(String seedPhrase);
 
-	Wallet fromPublicKey(String publicKey);
+	T fromPublicKey(String publicKey);
 
 }

@@ -1,7 +1,7 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
-public interface ShelleyWalletPassword extends WalletPassword {
+public interface ShelleyWalletPassword extends WalletPassword<ShelleyWallet> {
 
-	WalletPassword secondFactor(String secondFactorPhrase);
+	WalletPassword<ShelleyWallet> secondFactor(String secondFactorPhrase);
 
 }
