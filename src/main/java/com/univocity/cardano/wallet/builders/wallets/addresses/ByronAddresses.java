@@ -2,6 +2,7 @@ package com.univocity.cardano.wallet.builders.wallets.addresses;
 
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.byronaddresses.*;
+import com.univocity.cardano.wallet.api.service.exception.*;
 import com.univocity.cardano.wallet.builders.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
 import com.univocity.cardano.wallet.common.*;
@@ -34,6 +35,14 @@ public class ByronAddresses extends ApiWrapper implements Addresses {
 
 	private List<Address> listAddresses(String state) {
 		return Utils.convertList(api.sync().listByronAddresses(wallet.id(), state), (e) -> new ByronAddress(e, api));
+	}
+
+	public Address next() {
+		List<Address> unused = unused();
+		if(unused.isEmpty()){
+			throw new NoMoreAddressesAvailableException(wallet.id(), wallet.name());
+		}
+		return unused().get(0);
 	}
 
 	public Address next(String walletPassword) {

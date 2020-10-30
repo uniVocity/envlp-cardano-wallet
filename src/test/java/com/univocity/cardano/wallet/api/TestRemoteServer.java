@@ -252,10 +252,6 @@ public class TestRemoteServer {
 
 //	public static void main(String... args) {
 //		try {
-//
-////		wallet.addresses().unused().list();
-////		wallet.addresses().used().list();
-////		wallet.addresses().all().list();
 ////
 ////		wallet.stakePool().quit();
 ////		wallet.stakePool().join(stakePool);
