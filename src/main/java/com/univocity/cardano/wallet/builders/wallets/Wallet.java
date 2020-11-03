@@ -2,6 +2,7 @@ package com.univocity.cardano.wallet.builders.wallets;
 
 import com.univocity.cardano.wallet.builders.network.*;
 import com.univocity.cardano.wallet.builders.wallets.addresses.*;
+import com.univocity.cardano.wallet.builders.wallets.transactions.*;
 import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
@@ -40,4 +41,6 @@ public interface Wallet extends ObjectWithId {
 	void updatePassword(String currentPassword, String newPassword);
 
 	Addresses addresses();
+
+	Payee<?> transfer();
 }

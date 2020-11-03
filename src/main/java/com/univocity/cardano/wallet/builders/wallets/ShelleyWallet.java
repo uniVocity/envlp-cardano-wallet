@@ -4,6 +4,7 @@ import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
 import com.univocity.cardano.wallet.builders.network.*;
 import com.univocity.cardano.wallet.builders.wallets.addresses.*;
+import com.univocity.cardano.wallet.builders.wallets.transactions.*;
 import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
@@ -108,5 +109,10 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 	@Override
 	public Addresses addresses() {
 		return addresses;
+	}
+
+	@Override
+	public ShelleyPayee transfer(){
+		return null;
 	}
 }

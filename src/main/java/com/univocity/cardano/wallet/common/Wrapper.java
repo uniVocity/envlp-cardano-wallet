@@ -65,6 +65,11 @@ public abstract class Wrapper<T> {
 		return new BigDecimal(amount.getQuantity());
 	}
 
+	public static BigInteger adaToLovelace(BigDecimal amountInAda){
+		BigInteger amountInLovelace = amountInAda.multiply(new BigDecimal(ONE_ADA_IN_LOVELACE)).toBigInteger();
+		return amountInLovelace;
+	}
+
 	public String safeGet(Supplier<String> supplier){
 		try {
 			return supplier.get();

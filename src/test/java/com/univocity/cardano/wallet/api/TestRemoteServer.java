@@ -4,8 +4,10 @@ import com.univocity.cardano.wallet.api.service.exception.*;
 import com.univocity.cardano.wallet.builders.server.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
 import com.univocity.cardano.wallet.builders.wallets.addresses.*;
+import com.univocity.cardano.wallet.builders.wallets.transactions.*;
 import org.testng.annotations.*;
 
+import java.math.*;
 import java.time.*;
 import java.util.*;
 
@@ -16,7 +18,7 @@ public class TestRemoteServer {
 	static final String PASSWORD = "qwertyqwerty";
 
 	RemoteWalletServer server;
-	Wallet shelleyWallet;
+	ShelleyWallet shelleyWallet;
 	ByronWallet byronWallet;
 	Wallet icarusWallet;
 	Wallet ledgerWallet;
@@ -248,6 +250,12 @@ public class TestRemoteServer {
 		} catch (Error e) {
 			errors.add(e);
 		}
+	}
+
+	@Test(dependsOnMethods = "testWalletRename")
+	public void transferTest() {
+		ShelleyTransaction shelleyTransaction = shelleyWallet.transfer().to(byronWallet.addresses().next(), new BigDecimal("1")).withMetadata("cardano", 1, "object[]").authorize(PASSWORD);
+		ByronTransaction byronTransaction = byronWallet.transfer().to(shelleyWallet, new BigInteger("1000000")).authorize(PASSWORD);
 	}
 
 //	public static void main(String... args) {

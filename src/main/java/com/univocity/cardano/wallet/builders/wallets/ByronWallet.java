@@ -4,6 +4,7 @@ import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.byronwallets.*;
 import com.univocity.cardano.wallet.builders.network.*;
 import com.univocity.cardano.wallet.builders.wallets.addresses.*;
+import com.univocity.cardano.wallet.builders.wallets.transactions.*;
 import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
@@ -108,5 +109,11 @@ public class ByronWallet extends WrapperWithId<AbstractByronWalletResponse> impl
 	@Override
 	public ByronAddresses addresses() {
 		return addresses;
+	}
+
+
+	@Override
+	public ByronPayee transfer(){
+		return null;
 	}
 }
