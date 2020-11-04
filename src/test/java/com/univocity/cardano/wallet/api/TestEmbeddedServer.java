@@ -14,7 +14,7 @@ public class TestEmbeddedServer {
 
 		EmbeddedWalletServer server = WalletServer.embedded()
 				.binariesIn(DOWNLOADS + "/cardano-wallet-2020.10.13/")
-				.node()
+				.mainnetNode()
 				.configuration(CONFIGS + "mainnet-config.json")
 				.topology(CONFIGS + "mainnet-topology.json")
 				.storeBlockchainIn(HOME + "/Downloads/blockchain")

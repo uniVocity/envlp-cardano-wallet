@@ -82,7 +82,7 @@ public abstract class ProcessManager extends CardanoToolWrapper {
 		if (process == null && !stopped) {
 			log.info("Starting {} process", toolName);
 
-			if(command == null){
+			if (command == null) {
 				throw new IllegalStateException("No startup command defined for " + toolName);
 			}
 			this.command.getParameterValues().forEach((k, v) -> Utils.notNull(v, k));
@@ -146,6 +146,14 @@ public abstract class ProcessManager extends CardanoToolWrapper {
 
 	public Set<String> getCommandParameters() {
 		return command.getParameters();
+	}
+
+	public String getStartupCommandParameter(String parameterName) {
+		Object out = command.get(parameterName);
+		if (out == null) {
+			return null;
+		}
+		return out.toString();
 	}
 
 	public void setCommandParameter(String parameter, Object value) {

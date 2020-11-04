@@ -11,26 +11,30 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 		super(config);
 
 		String cardanoTools = config.cardanoToolsDir.getAbsolutePath();
-		String blockchainPath = config.blockchainDir.getAbsolutePath();
-		String socketPath = config.blockchainDir.toPath().resolve("node.socket").toFile().getAbsolutePath();
 
-		nodeManager = new CardanoNodeManager(cardanoTools, config.nodeOutputConsumer);
-		nodeManager.setStartupCommand(
-				"run" +
-						" --topology " + config.nodeTopologyFile.getAbsolutePath() +
-						" --database-path " + blockchainPath +
-						" --socket-path " + socketPath +
-						" --host-addr 0.0.0.0" +
-						" --port " + config.nodePort +
-						" --config " + config.nodeConfigurationFile);
+		if (config.buildTemporaryBlockchain) {
+			nodeManager = new CardanoCliManager(cardanoTools).createTemporaryShelleyNetwork(config.testnetMagic, config.nodePort, config.nodeOutputConsumer);
+		} else {
+			String blockchainPath = config.blockchainDir.getAbsolutePath();
+			String socketPath = config.blockchainDir.toPath().resolve("node.socket").toFile().getAbsolutePath();
 
+			nodeManager = new CardanoNodeManager(cardanoTools, config.nodeOutputConsumer);
+			nodeManager.setStartupCommand(
+					"run" +
+							" --topology " + config.nodeTopologyFile.getAbsolutePath() +
+							" --database-path " + blockchainPath +
+							" --socket-path " + socketPath +
+							" --host-addr 0.0.0.0" +
+							" --port " + config.nodePort +
+							" --config " + config.nodeConfigurationFile);
+		}
 
 		walletManager = new CardanoWalletManager(cardanoTools, config.walletOutputConsumer);
 		walletManager.setStartupCommand(
-				"serve" +
-						" --mainnet" +
-						" --database " + blockchainPath +
-						" --node-socket " + socketPath +
+				"serve " +
+						config.networkIdentifierString() +
+						" --database " + nodeManager.getBlockchainDirPath() +
+						" --node-socket " + nodeManager.getSocketPath() +
 						" --port " + config.walletPort
 		);
 

@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.builders.server;
 
 import java.io.*;
+import java.util.*;
 import java.util.function.*;
 
 public class WalletServer {
@@ -24,8 +25,23 @@ public class WalletServer {
 		File nodeTopologyFile;
 		Consumer<String> walletOutputConsumer;
 		Consumer<String> nodeOutputConsumer;
+		long testnetMagic;
+		boolean isTestnet;
+		boolean buildTemporaryBlockchain;
+
+		String networkIdentifierString(){
+			if(isTestnet){
+				return "--testnet-magic " + testnetMagic;
+			} else {
+				return "--mainnet";
+			}
+		}
 
 		class NodeServerBuilder implements NodeConfig, BlockchainConfig, TopologyConfig, PortConfig<WalletBuilder>, ProcessOutput<WalletBuilder>, WalletBuilder {
+			NodeServerBuilder(long testnetMagicCode){
+				testnetMagic = testnetMagicCode;
+			}
+
 			@Override
 			public TopologyConfig configuration(String pathToNodeConfiguration) {
 				nodeConfigurationFile = toValidatedFile(pathToNodeConfiguration, false);
@@ -87,8 +103,21 @@ public class WalletServer {
 			}
 		}
 
-		public NodeConfig node() {
-			return new NodeServerBuilder();
+		public NodeConfig mainnetNode() {
+			isTestnet = false;
+			return new NodeServerBuilder(-1);
+		}
+
+		public NodeConfig testnetNode(long testnetMagicCode) {
+			isTestnet = true;
+			return new NodeServerBuilder(testnetMagicCode);
+		}
+
+		@Override
+		public PortConfig<WalletBuilder> temporaryBlockchainNode() {
+			isTestnet = true;
+			buildTemporaryBlockchain = true;
+			return new NodeServerBuilder(Math.abs(new Random().nextLong()));
 		}
 
 		public WalletServerConfig(String host) {

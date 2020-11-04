@@ -13,7 +13,7 @@ public class CardanoToolWrapper {
 
 	protected final String toolName;
 	private final String executableName;
-	private final File toolDir;
+	protected final File toolDir;
 
 	public CardanoToolWrapper(String toolDirectoryPath, String toolName) {
 		this.toolName = toolName;
@@ -66,21 +66,36 @@ public class CardanoToolWrapper {
 		return commandExecution.apply(fullCommand.toString());
 	}
 
+	protected boolean executeExpectingNoOutput(String action, String input, String command) {
+		return StringUtils.isBlank(execute(action, input, command, true, false));
+	}
+
 	protected String execute(String action, String input, String command, boolean printOutput) {
+		return execute(action, input, command, printOutput, true);
+	}
+
+	private String execute(String action, String input, String command, boolean printOutput, boolean outputExpected) {
 		String output = execute(action, input, command, (fullCommand) -> CommandLineHelper.executeAndReturnOutput(toolDir, fullCommand));
 		if (StringUtils.isBlank(output)) {
-			log.warn("Could not {}.", action);
-			return null;
-		} else {
-			output = output.trim();
-			if (printOutput) {
-				if (output.indexOf('\n') > 0) {
-					log.info("Result: \n{}", output);
-				} else {
-					log.info("Result: '{}'", output);
-				}
+			if (outputExpected) {
+				log.warn("Could not {}.", action);
+				return null;
 			}
-			return output;
 		}
+
+		output = output.trim();
+		if (!outputExpected) {
+			log.warn("Could not {}:\n{}", action, output);
+			return null;
+		}
+		if (printOutput) {
+			if (output.indexOf('\n') > 0) {
+				log.info("Result: \n{}", output);
+			} else {
+				log.info("Result: '{}'", output);
+			}
+		}
+		return output;
+
 	}
 }

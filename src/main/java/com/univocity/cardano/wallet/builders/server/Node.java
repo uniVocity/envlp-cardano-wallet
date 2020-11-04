@@ -2,5 +2,9 @@ package com.univocity.cardano.wallet.builders.server;
 
 public interface Node {
 
-	NodeConfig node();
+	NodeConfig mainnetNode();
+
+	NodeConfig testnetNode(long testnetMagicCode);
+
+	PortConfig<WalletBuilder> temporaryBlockchainNode();
 }
