@@ -74,7 +74,7 @@ public class CardanoCliManager extends ProcessManager {
 		} catch (Exception e) {
 			throw new IllegalStateException("Unable to create topology file: " + topologyFile.getAbsolutePath(), e);
 		}
-		return shelleyGenesisDir;
+		return topologyFile;
 	}
 
 	public CardanoNodeManager createTemporaryShelleyNetwork(long testnetMagicCode, BigInteger lovelaceSupply, File rootDir, long port, Consumer<String> nodeOutputConsumer) {
@@ -92,6 +92,9 @@ public class CardanoCliManager extends ProcessManager {
 
 			File nodeDb = buildFile(nodeDir, "db");
 			File nodeSocket = buildFile(nodeDb, "node.socket");
+
+			setEnvironmentVariable("CARDANO_NODE_SOCKET_PATH", nodeSocket.getAbsolutePath());
+
 			File vrfKey = buildFile(shelleyGenesisDir, "delegate-keys", "delegate1.vrf.skey");
 
 			File nodeConfigurationFile = getNodeConfigurationFile(shelleyGenesisDir, genesisFile, nodeSocket);
@@ -113,13 +116,121 @@ public class CardanoCliManager extends ProcessManager {
 			nodeManager.setStartupCommand(command);
 			nodeManager.startProcess();
 
+			try {
+				Thread.sleep(30_000);
+			} catch (Exception e) {
+				Thread.currentThread().interrupt();
+				throw new IllegalStateException("Error waiting 30 seconds until genesis start time", e);
+			}
+
+			File utxo1VKey = buildFile(shelleyGenesisDir, "utxo-keys", "utxo1.vkey");
+			String utxo1Address = getPaymentAddressFromVKey(utxo1VKey, testnetMagicCode);
+			String utxo1TxHash = getTxHash(utxo1Address, testnetMagicCode);
+			String genesisTransactionHash = getGenesisTransactionHash(utxo1VKey, testnetMagicCode);
+
 			File[] paymentFiles = generatePaymentAddressFiles(shelleyGenesisDir, "payment");
 			File paymentVKey = paymentFiles[0];
 			File paymentSKey = paymentFiles[1];
+			String paymentAddress = getPaymentAddressFromVKey(paymentVKey, testnetMagicCode);
 
+			File transactionDraft = buildTransaction(genesisTransactionHash, paymentAddress, lovelaceSupply, BigInteger.ZERO);
 
+			File utxo1SKey = buildFile(shelleyGenesisDir, "utxo-keys", "utxo1.skey");
+			File signedTransaction = signTransaction(transactionDraft, utxo1SKey, testnetMagicCode);
+			submitTransaction(signedTransaction, testnetMagicCode);
+			return nodeManager;
 		}
 		throw new IllegalStateException("Unable to initialize temporary shelley network configuration");
+	}
+
+	private File createTempFile(String prefix) {
+		try {
+			return File.createTempFile(prefix, ".tmp", tempDir);
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	public File buildTransaction(String transactionIn, String transactionOut, BigInteger lovelaceAmount, BigInteger lovelaceFee) {
+		File tmpTransaction = createTempFile("rawtx");
+		String command = "" +
+				"shelley transaction build-raw" +
+				" --tx-in " + transactionIn +
+				" --tx-out " + transactionOut + "+" + lovelaceAmount +
+				" --ttl 3600" +
+				" --fee " + lovelaceFee +
+				" --tx-body-file " + tmpTransaction.getAbsolutePath();
+
+		if (executeExpectingNoOutput("Build transaction", null, command)) {
+			return tmpTransaction;
+		}
+		throw new IllegalStateException("Unable to build draft transaction file");
+	}
+
+	public File signTransaction(File draftTransaction, File signingKey, long testnetMagicCode) {
+		File signedTransaction = createTempFile("signed");
+		String command = "" +
+				"shelley transaction sign" +
+				" --tx-body-file " + draftTransaction.getAbsolutePath() +
+				" --signing-key-file " + signingKey.getAbsolutePath() +
+				networkIdentifierString(testnetMagicCode) +
+				" --tx-file " + signedTransaction.getAbsolutePath();
+
+		if (executeExpectingNoOutput("Sign transaction", null, command)) {
+			return signedTransaction;
+		}
+		throw new IllegalStateException("Unable to sign draft transaction file " + draftTransaction.getAbsolutePath());
+	}
+
+	public void submitTransaction(File signedTransactionFile, long testnetMagicCode) {
+		String command = "" +
+				"shelley transaction submit" +
+				" --tx-file " + signedTransactionFile.getAbsolutePath() +
+				networkIdentifierString(testnetMagicCode) +
+				" --shelley-mode";
+
+		if (!executeExpectingNoOutput("Sign transaction", null, command)) {
+			throw new IllegalStateException("Unable to sign draft transaction file " + signedTransactionFile.getAbsolutePath());
+		}
+	}
+
+	public String getGenesisTransactionHash(File utxoVKey, long testnetMagicCode) {
+		String command = "" +
+				"shelley genesis initial-txin" +
+				" --verification-key-file " + utxoVKey.getAbsolutePath() +
+				networkIdentifierString(testnetMagicCode);
+		return execute("Get genesis transaction hash", null, command, false);
+	}
+
+	public String getTxHash(String address, long testnetMagicCode) {
+		String output = getTransactions(address, testnetMagicCode);
+		String[] lines = output.trim().split("\n");
+		String lastLine = lines[lines.length - 1];
+		String hash = StringUtils.substringBefore(lastLine, " ");
+		return hash;
+	}
+
+	public String getTransactions(String address, long testnetMagicCode) {
+		String command = "shelley query utxo" +
+				networkIdentifierString(testnetMagicCode) +
+				" --shelley-mode" +
+				" --address " + address;
+
+		String output = execute("Get transactions from address", null, command, false);
+		String lower = output.toLowerCase();
+		if (lower.contains("error") || lower.contains(toolName)) {
+			throw new IllegalStateException(output);
+		}
+		return output;
+	}
+
+	public String getPaymentAddressFromVKey(File vKey, long testnetMagicCode) {
+		String command = "" +
+				"shelley address build" +
+				" --payment-verification-key-file " + vKey.getAbsolutePath() +
+				networkIdentifierString(testnetMagicCode);
+
+		return execute("Payment address from vkey", null, command, false);
 	}
 
 	public File issueOperationalCertificate(File certificateFile, File kesVkey, long kesPeriod, File coldSigningKeyFile, File operationalCertificateIssueCounter) {
@@ -158,7 +269,7 @@ public class CardanoCliManager extends ProcessManager {
 	public boolean createShelleyGenesis(long testnetMagicCode, BigInteger lovelaceSupply, File targetDir) {
 		String command = "" +
 				"shelley genesis create" +
-				" --testnet-magic " + testnetMagicCode +
+				networkIdentifierString(testnetMagicCode) +
 				" --gen-genesis-keys 1" +
 				" --gen-utxo-keys 1" +
 				" --supply " + lovelaceSupply +
@@ -197,5 +308,11 @@ public class CardanoCliManager extends ProcessManager {
 		return files;
 	}
 
-
+	public static String networkIdentifierString(long testnetMagic) {
+		if (testnetMagic > 0) {
+			return " --testnet-magic " + testnetMagic;
+		} else {
+			return " --mainnet";
+		}
+	}
 }

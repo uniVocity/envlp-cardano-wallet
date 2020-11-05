@@ -11,11 +11,14 @@ public class CardanoToolWrapper {
 
 	private static final Logger log = LoggerFactory.getLogger(CardanoToolWrapper.class);
 
+	private final CommandLineHelper commandLineHelper;
+
 	protected final String toolName;
 	private final String executableName;
 	protected final File toolDir;
 
 	public CardanoToolWrapper(String toolDirectoryPath, String toolName) {
+		this.commandLineHelper = new CommandLineHelper();
 		this.toolName = toolName;
 		this.toolDir = new File(toolDirectoryPath);
 		String executableName = toolName;
@@ -35,12 +38,16 @@ public class CardanoToolWrapper {
 		this.executableName = executableName;
 	}
 
+	public void setEnvironmentVariable(String variable, String value) {
+		commandLineHelper.setEnvironmentVariable(variable, value);
+	}
+
 	protected String executeNoInput(String action, String command, boolean printOutput) {
 		return execute(action, null, command, printOutput);
 	}
 
 	protected Process startProcess(String action, String command) {
-		return execute(action, null, command, (fullCommand) -> CommandLineHelper.startProcess(toolDir, fullCommand));
+		return execute(action, null, command, (fullCommand) -> commandLineHelper.startProcess(toolDir, fullCommand));
 	}
 
 	protected <V> V execute(String action, String input, String command, Function<String, V> commandExecution) {
@@ -75,12 +82,12 @@ public class CardanoToolWrapper {
 	}
 
 	private String execute(String action, String input, String command, boolean printOutput, boolean outputExpected) {
-		String output = execute(action, input, command, (fullCommand) -> CommandLineHelper.executeAndReturnOutput(toolDir, fullCommand));
+		String output = execute(action, input, command, (fullCommand) -> commandLineHelper.executeAndReturnOutput(toolDir, fullCommand));
 		if (StringUtils.isBlank(output)) {
 			if (outputExpected) {
 				log.warn("Could not {}.", action);
-				return null;
 			}
+			return null;
 		}
 
 		output = output.trim();

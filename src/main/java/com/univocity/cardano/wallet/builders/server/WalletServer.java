@@ -1,5 +1,7 @@
 package com.univocity.cardano.wallet.builders.server;
 
+import com.univocity.cardano.wallet.embedded.services.*;
+
 import java.io.*;
 import java.util.*;
 import java.util.function.*;
@@ -29,16 +31,12 @@ public class WalletServer {
 		boolean isTestnet;
 		boolean buildTemporaryBlockchain;
 
-		String networkIdentifierString(){
-			if(isTestnet){
-				return "--testnet-magic " + testnetMagic;
-			} else {
-				return "--mainnet";
-			}
+		public String networkIdentifierString() {
+			return CardanoCliManager.networkIdentifierString(testnetMagic);
 		}
 
 		class NodeServerBuilder implements NodeConfig, BlockchainConfig, TopologyConfig, PortConfig<WalletBuilder>, ProcessOutput<WalletBuilder>, WalletBuilder {
-			NodeServerBuilder(long testnetMagicCode){
+			NodeServerBuilder(long testnetMagicCode) {
 				testnetMagic = testnetMagicCode;
 			}
 

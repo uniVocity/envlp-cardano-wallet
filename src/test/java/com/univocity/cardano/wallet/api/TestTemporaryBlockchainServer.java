@@ -34,7 +34,7 @@ public class TestTemporaryBlockchainServer {
      ./cardano-cli shelley query protocol-parameters --testnet-magic 777 --shelley-mode
 
      # Check UTxO (TODO: addresses to be updated)
-     ./cardano-cli --shelley address build --payment-verification-key-file /tmp/shelley/utxo-keys/utxo1.vkey --testnet-magic 777
+     ./cardano-cli shelley address build --payment-verification-key-file /tmp/shelley/utxo-keys/utxo1.vkey --testnet-magic 777
      ./cardano-cli shelley query utxo --testnet-magic 777 --shelley-mode --address addr_test1vz9vqpp232vpgh9w7m86qwy48a0e2c99thvqkp6jvatutecfngfmt
 
      # Transfer out of this first UTxO (gets a special hash):
