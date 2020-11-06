@@ -3,6 +3,7 @@ package com.univocity.cardano.wallet.builders.wallets.transactions;
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.byrontransactions.*;
 import com.univocity.cardano.wallet.api.generated.common.*;
+import com.univocity.cardano.wallet.api.generated.common.Payment;
 import com.univocity.cardano.wallet.builders.wallets.*;
 
 import java.math.*;

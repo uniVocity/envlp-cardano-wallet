@@ -113,6 +113,6 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 
 	@Override
 	public ShelleyPayee transfer(){
-		return null;
+		return new ShelleyPayee(this, api);
 	}
 }

@@ -19,7 +19,7 @@ public class CardanoNodeManager extends ProcessManager {
 	}
 
 	public String getBlockchainDirPath() {
-		return getParameterValue("database");
+		return getParameterValue("database-path");
 	}
 
 	public String getSocketPath() {
@@ -27,7 +27,7 @@ public class CardanoNodeManager extends ProcessManager {
 	}
 
 	private String getParameterValue(String param) {
-		String str = StringUtils.substringAfter(getStartupCommand(), "--" + param);
+		String str = StringUtils.substringAfter(getStartupCommand(), "--" + param + " ");
 		if (StringUtils.isBlank(str)) {
 			return null;
 		}

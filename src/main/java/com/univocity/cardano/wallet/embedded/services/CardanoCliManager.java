@@ -1,22 +1,22 @@
 package com.univocity.cardano.wallet.embedded.services;
 
-import com.univocity.cardano.wallet.common.*;
 import org.apache.commons.io.*;
 import org.apache.commons.lang3.*;
 import org.slf4j.*;
 
 import java.io.*;
 import java.math.*;
-import java.nio.charset.*;
 import java.nio.file.*;
-import java.util.*;
-import java.util.function.*;
+import java.time.*;
+import java.time.format.*;
+
+import static java.time.temporal.ChronoUnit.*;
 
 public class CardanoCliManager extends ProcessManager {
 
 	private static final Logger log = LoggerFactory.getLogger(CardanoCliManager.class);
 
-	private File tempDir;
+	protected File tempDir;
 
 	public CardanoCliManager(String toolDirPath) {
 		super(toolDirPath, "cardano-cli", System.out::println);
@@ -28,15 +28,7 @@ public class CardanoCliManager extends ProcessManager {
 		}
 	}
 
-	public CardanoNodeManager createTemporaryShelleyNetwork(long testnetMagicCode, long port, Consumer<String> nodeOutputConsumer) {
-		return createTemporaryShelleyNetwork(testnetMagicCode, new BigInteger("1000000000"), tempDir, port, nodeOutputConsumer);
-	}
-
-	public CardanoNodeManager createTemporaryShelleyNetwork(long testnetMagicCode, BigInteger lovelaceSupply, long port, Consumer<String> nodeOutputConsumer) {
-		return createTemporaryShelleyNetwork(testnetMagicCode, lovelaceSupply, tempDir, port, nodeOutputConsumer);
-	}
-
-	private File createDir(File root, String subDir) {
+	protected File createDir(File root, String subDir) {
 		File out = root.toPath().resolve(subDir).toFile();
 		try {
 			FileUtils.forceMkdir(out);
@@ -46,7 +38,7 @@ public class CardanoCliManager extends ProcessManager {
 		return out;
 	}
 
-	private File buildFile(File root, String... path) {
+	protected File buildFile(File root, String... path) {
 		Path tmp = root.toPath();
 		for (int i = 0; i < path.length; i++) {
 			tmp = tmp.resolve(path[i]);
@@ -54,94 +46,6 @@ public class CardanoCliManager extends ProcessManager {
 		return tmp.toFile();
 	}
 
-	private File getNodeConfigurationFile(File shelleyGenesisDir, File genesisFile, File nodeSocket) {
-		String nodeConfigYaml = Utils.readTextFromResource("test-node-configuration.yaml", StandardCharsets.UTF_8);
-		nodeConfigYaml = StringUtils.replace(nodeConfigYaml, "path_to_genesis_file", genesisFile.getAbsolutePath());
-		nodeConfigYaml = StringUtils.replace(nodeConfigYaml, "path_to_node_socket_file", nodeSocket.getAbsolutePath());
-		File nodeConfigurationFile = buildFile(shelleyGenesisDir, "node-configuration.yaml");
-		try {
-			FileUtils.write(nodeConfigurationFile, nodeConfigYaml, StandardCharsets.UTF_8);
-		} catch (Exception e) {
-			throw new IllegalStateException("Unable to create topology file: " + nodeConfigurationFile.getAbsolutePath(), e);
-		}
-		return nodeConfigurationFile;
-	}
-
-	private File getTopologyFile(File shelleyGenesisDir) {
-		File topologyFile = buildFile(shelleyGenesisDir, "node-topology.json");
-		try {
-			FileUtils.write(topologyFile, "{\"Producers\": []}", StandardCharsets.UTF_8);
-		} catch (Exception e) {
-			throw new IllegalStateException("Unable to create topology file: " + topologyFile.getAbsolutePath(), e);
-		}
-		return topologyFile;
-	}
-
-	public CardanoNodeManager createTemporaryShelleyNetwork(long testnetMagicCode, BigInteger lovelaceSupply, File rootDir, long port, Consumer<String> nodeOutputConsumer) {
-		File shelleyGenesisDir = createDir(rootDir, "shelley-" + UUID.randomUUID());
-		if (createShelleyGenesis(testnetMagicCode, lovelaceSupply, shelleyGenesisDir)) {
-			File coldSigningKeyFile = buildFile(shelleyGenesisDir, "delegate-keys", "delegate1.skey");
-			File operationalCertificateIssueCounter = buildFile(shelleyGenesisDir, "delegate-keys", "delegate1.counter");
-			File genesisFile = buildFile(shelleyGenesisDir, "genesis.json");
-
-			File nodeDir = createDir(shelleyGenesisDir, "node");
-			File[] kesKeys = createKesKeys(nodeDir, "kes");
-			File kesVkey = kesKeys[0];
-			File kesSkey = kesKeys[1];
-			File operationalCertificate = issueOperationalCertificate(buildFile(nodeDir, "op.cert"), kesVkey, 0L, coldSigningKeyFile, operationalCertificateIssueCounter);
-
-			File nodeDb = buildFile(nodeDir, "db");
-			File nodeSocket = buildFile(nodeDb, "node.socket");
-
-			setEnvironmentVariable("CARDANO_NODE_SOCKET_PATH", nodeSocket.getAbsolutePath());
-
-			File vrfKey = buildFile(shelleyGenesisDir, "delegate-keys", "delegate1.vrf.skey");
-
-			File nodeConfigurationFile = getNodeConfigurationFile(shelleyGenesisDir, genesisFile, nodeSocket);
-			File topologyFile = getTopologyFile(shelleyGenesisDir);
-
-			String command = "" +
-					"run" +
-					" --config " + nodeConfigurationFile.getAbsolutePath() +
-					" --topology " + topologyFile.getAbsolutePath() +
-					" --database-path " + nodeDb.getAbsolutePath() +
-					" --socket-path " + nodeSocket.getAbsolutePath() +
-					" --shelley-kes-key " + kesSkey.getAbsolutePath() +
-					" --shelley-vrf-key " + vrfKey.getAbsolutePath() +
-					" --shelley-operational-certificate " + operationalCertificate.getAbsolutePath() +
-					" --port " + port;
-
-
-			CardanoNodeManager nodeManager = new CardanoNodeManager(toolDir.getAbsolutePath(), nodeOutputConsumer);
-			nodeManager.setStartupCommand(command);
-			nodeManager.startProcess();
-
-			try {
-				Thread.sleep(30_000);
-			} catch (Exception e) {
-				Thread.currentThread().interrupt();
-				throw new IllegalStateException("Error waiting 30 seconds until genesis start time", e);
-			}
-
-			File utxo1VKey = buildFile(shelleyGenesisDir, "utxo-keys", "utxo1.vkey");
-			String utxo1Address = getPaymentAddressFromVKey(utxo1VKey, testnetMagicCode);
-			String utxo1TxHash = getTxHash(utxo1Address, testnetMagicCode);
-			String genesisTransactionHash = getGenesisTransactionHash(utxo1VKey, testnetMagicCode);
-
-			File[] paymentFiles = generatePaymentAddressFiles(shelleyGenesisDir, "payment");
-			File paymentVKey = paymentFiles[0];
-			File paymentSKey = paymentFiles[1];
-			String paymentAddress = getPaymentAddressFromVKey(paymentVKey, testnetMagicCode);
-
-			File transactionDraft = buildTransaction(genesisTransactionHash, paymentAddress, lovelaceSupply, BigInteger.ZERO);
-
-			File utxo1SKey = buildFile(shelleyGenesisDir, "utxo-keys", "utxo1.skey");
-			File signedTransaction = signTransaction(transactionDraft, utxo1SKey, testnetMagicCode);
-			submitTransaction(signedTransaction, testnetMagicCode);
-			return nodeManager;
-		}
-		throw new IllegalStateException("Unable to initialize temporary shelley network configuration");
-	}
 
 	private File createTempFile(String prefix) {
 		try {
@@ -267,9 +171,12 @@ public class CardanoCliManager extends ProcessManager {
 	}
 
 	public boolean createShelleyGenesis(long testnetMagicCode, BigInteger lovelaceSupply, File targetDir) {
+		String startTime = LocalDateTime.now().plus(2, SECONDS).atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss'Z'"));
+
 		String command = "" +
 				"shelley genesis create" +
 				networkIdentifierString(testnetMagicCode) +
+				" --start-time " + startTime +
 				" --gen-genesis-keys 1" +
 				" --gen-utxo-keys 1" +
 				" --supply " + lovelaceSupply +

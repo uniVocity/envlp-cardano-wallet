@@ -29,6 +29,9 @@ public abstract class Wrapper<T> {
 	}
 
 	protected LocalDateTime toDateTime(String value){
+		if(value == null){
+			return null;
+		}
 		return LocalDateTime.ofInstant(toInstant(value), ZoneId.systemDefault());
 	}
 
@@ -70,7 +73,7 @@ public abstract class Wrapper<T> {
 		return amountInLovelace;
 	}
 
-	public String safeGet(Supplier<String> supplier){
+	protected <O> O safeGet(Supplier<O> supplier){
 		try {
 			return supplier.get();
 		} catch (Exception e){

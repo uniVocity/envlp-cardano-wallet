@@ -1,10 +1,10 @@
 package com.univocity.cardano.wallet.builders.wallets.transactions;
 
 import com.univocity.cardano.wallet.api.*;
-import com.univocity.cardano.wallet.api.generated.byrontransactions.*;
 import com.univocity.cardano.wallet.api.generated.common.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
+import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
 import java.util.*;
@@ -16,12 +16,12 @@ public class ShelleyPayee implements Payee<ShelleyAuthorization> {
 	private final ArrayList<PaymentsPayment> payments = new ArrayList<>();
 	private final Map<String, Object> metadata = new LinkedHashMap<>();
 
-	private class Builder implements ShelleyAuthorization{
+	private class Builder implements ShelleyAuthorization {
 		@Override
 		public ShelleyTransaction authorize(String password) {
 			PostTransactionPaymentRequest request = new PostTransactionPaymentRequest();
 			request.setPayments(payments);
-			if(!metadata.isEmpty()){
+			if (!metadata.isEmpty()) {
 				request.setMetadata(metadata);
 			}
 			request.setPassphrase(password);
@@ -29,10 +29,17 @@ public class ShelleyPayee implements Payee<ShelleyAuthorization> {
 		}
 
 		@Override
-		public Authorization<ShelleyTransaction> withMetadata(Object... metadata) {
-			for(int i = 0; i < metadata.length;i++){
-				ShelleyPayee.this.metadata.put(String.valueOf(i), metadata);
+		public Authorization<ShelleyTransaction> withMetadata(Object[] metadata) {
+			for (int i = 0; i < metadata.length; i++) {
+				ShelleyPayee.this.metadata.put(String.valueOf(i), metadata[i]);
 			}
+			return this;
+		}
+
+		@Override
+		public Authorization<ShelleyTransaction> withMetadata(Map<Long, Object> metadata) {
+			Utils.notNull(metadata, "Transaction metadata");
+			metadata.forEach((k, v) -> ShelleyPayee.this.metadata.put(String.valueOf(k), v));
 			return this;
 		}
 	}

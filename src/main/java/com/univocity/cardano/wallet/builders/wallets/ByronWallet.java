@@ -114,6 +114,6 @@ public class ByronWallet extends WrapperWithId<AbstractByronWalletResponse> impl
 
 	@Override
 	public ByronPayee transfer(){
-		return null;
+		return new ByronPayee(this, api);
 	}
 }

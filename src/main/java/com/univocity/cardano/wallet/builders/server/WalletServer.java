@@ -31,10 +31,6 @@ public class WalletServer {
 		boolean isTestnet;
 		boolean buildTemporaryBlockchain;
 
-		public String networkIdentifierString() {
-			return CardanoCliManager.networkIdentifierString(testnetMagic);
-		}
-
 		class NodeServerBuilder implements NodeConfig, BlockchainConfig, TopologyConfig, PortConfig<WalletBuilder>, ProcessOutput<WalletBuilder>, WalletBuilder {
 			NodeServerBuilder(long testnetMagicCode) {
 				testnetMagic = testnetMagicCode;

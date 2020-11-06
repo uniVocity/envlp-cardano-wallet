@@ -3,7 +3,6 @@ package com.univocity.cardano.wallet.api;
 import com.univocity.cardano.wallet.builders.server.*;
 import org.testng.annotations.*;
 
-@Ignore
 public class TestTemporaryBlockchainServer {
 
 /*   # create shelley network:
@@ -66,11 +65,15 @@ public class TestTemporaryBlockchainServer {
        --testnet-magic 777 \
        --shelley-mode
 
+	 ./cardano-cli shelley address build --payment-verification-key-file /tmp/shelley-516af7d7-ba7e-41d6-886c-fe65fd9e20f5/payment.vkey --testnet-magic 6158513407646238242
+
+	  export CARDANO_NODE_SOCKET_PATH=/tmp/shelley-516af7d7-ba7e-41d6-886c-fe65fd9e20f5/node/db/node.socket
+*
      # Confirm payment went through (TODO: addresses to be updated):
       ./cardano-cli shelley query utxo \
-      --testnet-magic 777 \
+      --testnet-magic 6158513407646238242 \
       --shelley-mode \
-      --address addr_test1vpey5rkex4vzxad0du30sls8ry7jvjtrulrwynl4rx69ezgrl9n9a
+      --address addr_test1vpmj0wljksmrvwsdr6tmf39lt8wcyr37fy5707050pdcxdskpmy08
  */
 
 	public static void main(String... args) throws InterruptedException {

@@ -1,13 +1,10 @@
 package com.univocity.cardano.wallet.builders.wallets.transactions;
 
 import com.univocity.cardano.wallet.api.*;
-import com.univocity.cardano.wallet.api.generated.common.*;
-import com.univocity.cardano.wallet.common.*;
 
-public class ShelleyTransaction  extends Wrapper<AbstractTransaction> implements Transaction {
+public class ShelleyTransaction extends AbstractTransaction {
 
-	public ShelleyTransaction(AbstractTransaction original, WalletApi api) {
+	public ShelleyTransaction(com.univocity.cardano.wallet.api.generated.common.AbstractTransaction original, WalletApi api) {
 		super(original, api);
 	}
-
 }

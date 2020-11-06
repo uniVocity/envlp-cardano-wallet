@@ -186,4 +186,30 @@ public class Utils {
 
 		return common;
 	}
+
+	public static Map<Long, Object> toMetadata(Map in) {
+		if (in == null || in.isEmpty()) {
+			return Collections.emptyMap();
+		}
+		Map<Long, Object> out = new TreeMap<>();
+
+		in.forEach((k, v) -> out.put(Long.valueOf(k.toString()), toMetadata(v)));
+
+		return out;
+	}
+
+	public static Object toMetadata(Object o) {
+		if (o instanceof Map) {
+			Map out = new HashMap();
+			((Map<?, ?>) o).forEach((k, v) -> {
+				out.put(k, toMetadata(v));
+			});
+			o = out;
+		} else if (o instanceof Collection) {
+			List out = new ArrayList();
+			((List<?>) o).forEach(e -> out.add(toMetadata(e)));
+			o = out;
+		}
+		return o;
+	}
 }

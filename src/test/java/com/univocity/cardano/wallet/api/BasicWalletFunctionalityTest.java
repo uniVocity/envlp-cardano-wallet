@@ -4,16 +4,19 @@ import com.univocity.cardano.wallet.api.service.exception.*;
 import com.univocity.cardano.wallet.builders.server.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
 import com.univocity.cardano.wallet.builders.wallets.addresses.*;
-import com.univocity.cardano.wallet.builders.wallets.transactions.*;
 import org.testng.annotations.*;
 
-import java.math.*;
 import java.time.*;
 import java.util.*;
 
 import static org.testng.Assert.*;
 
-public class TestRemoteServer {
+/**
+ * Basic wallet functionality tests running against the embedded server started in class
+ * {@link TestEmbeddedServer}. Need to wait a while until it syncs with the blockchain
+ * and allows the wallet to connect.
+ */
+public class BasicWalletFunctionalityTest {
 
 	static final String PASSWORD = "qwertyqwerty";
 
@@ -45,7 +48,7 @@ public class TestRemoteServer {
 
 	@AfterClass
 	public void exit() {
-		System.exit(0);
+
 	}
 
 	@Test
@@ -251,32 +254,4 @@ public class TestRemoteServer {
 			errors.add(e);
 		}
 	}
-
-	@Test(dependsOnMethods = "testWalletRename")
-	public void transferTest() {
-		ShelleyTransaction shelleyTransaction = shelleyWallet.transfer().to(byronWallet.addresses().next(), new BigDecimal("1")).withMetadata("cardano", 1, "object[]").authorize(PASSWORD);
-		ByronTransaction byronTransaction = byronWallet.transfer().to(shelleyWallet, new BigInteger("1000000")).authorize(PASSWORD);
-	}
-
-//	public static void main(String... args) {
-//		try {
-////
-////		wallet.stakePool().quit();
-////		wallet.stakePool().join(stakePool);
-////
-////		Transaction transaction = wallet.transfer().to("address", 50000L).andTo("address 2", 25000L).withMetadata("cardano", 1, "object[]").authorize("password");
-////
-////		wallet.transactions().from("date").to("date").ascending().list();
-////		wallet.transactions().from("date").to("date").descending().minWithdrawal(100L).list();
-////
-////		Transaction transaction = wallet.transactions().get("id hex");
-////		transaction.forget();
-//
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			System.exit(0);
-//		}
-//	}
 }

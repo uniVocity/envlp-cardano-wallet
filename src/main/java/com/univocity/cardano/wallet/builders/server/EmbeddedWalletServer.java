@@ -10,10 +10,14 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 	public EmbeddedWalletServer(WalletServer.WalletServerConfig config) {
 		super(config);
 
+		String networkParam = "--mainnet";
+
 		String cardanoTools = config.cardanoToolsDir.getAbsolutePath();
 
 		if (config.buildTemporaryBlockchain) {
-			nodeManager = new CardanoCliManager(cardanoTools).createTemporaryShelleyNetwork(config.testnetMagic, config.nodePort, config.nodeOutputConsumer);
+			TemporaryBlockchainHelper tmp = new TemporaryBlockchainHelper(cardanoTools);
+			nodeManager = tmp.createTemporaryShelleyNetwork(config.testnetMagic, config.nodePort, config.nodeOutputConsumer);
+			networkParam = "--testnet " + tmp.getGenesisFile().getAbsolutePath();
 		} else {
 			String blockchainPath = config.blockchainDir.getAbsolutePath();
 			String socketPath = config.blockchainDir.toPath().resolve("node.socket").toFile().getAbsolutePath();
@@ -30,9 +34,10 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 		}
 
 		walletManager = new CardanoWalletManager(cardanoTools, config.walletOutputConsumer);
+
 		walletManager.setStartupCommand(
 				"serve " +
-						config.networkIdentifierString() +
+						networkParam +
 						" --database " + nodeManager.getBlockchainDirPath() +
 						" --node-socket " + nodeManager.getSocketPath() +
 						" --port " + config.walletPort
