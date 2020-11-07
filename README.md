@@ -241,6 +241,8 @@ ByronWallet wallet = server.wallets()
     .password("qwerty12345")
 ```
 
+### Wallet operations:
+
 List wallets:
 ```java
 List<Wallet> wallets = server.wallets().list();
@@ -260,6 +262,8 @@ Delete wallet:
 ```java
 wallet.delete();
 ```
+
+### Addresses
 
 List addresses (Shelley/Icarus/Ledger/Trezor):
 
@@ -289,6 +293,8 @@ addresses = byronWallet.addresses().all();
 Address nextUnusedAddress = byronWallet.addresses().next();
 ```
 
+### Balances
+
 Wallet balances (in ADA):
 
 ```java
@@ -296,6 +302,8 @@ BigDecimal totalBalance = wallet.totalBalance();
 BigDecimal availableBalance = wallet.availableBalance();
 BigDecimal rewardsBalance = wallet.rewardsBalance();
 ```
+
+### Transactions
 
 Send money:
 
