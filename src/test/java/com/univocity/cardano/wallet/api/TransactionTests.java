@@ -212,7 +212,12 @@ public class TransactionTests {
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
 		BigDecimal payeeBalance = emptyShelleyWallet.totalBalance();
 
-		ShelleyTransaction transaction = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).withMetadata(new Object[]{"cardano", 1}).authorize(PASSWORD);
+//		ShelleyTransaction transaction = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).withMetadata(new Object[]{"cardano", 1}).authorize(PASSWORD);
+//		System.out.println(transaction);
+
+		String transactionId = "fcaf4d9ec5f272b6fdf7fae1107e4d9536922ca0a9bc77387e0a445cf839d07e";
+		ShelleyTransaction transaction = undelegatedShelleyWallet.transactions().get(transactionId);;
+
 		System.out.println(transaction);
 
 //		ByronTransaction byronTransaction = byronWallet.transfer().to(shelleyWallet, new BigInteger(1000000)).authorize(PASSWORD);

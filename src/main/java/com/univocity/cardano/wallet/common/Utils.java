@@ -3,6 +3,7 @@ package com.univocity.cardano.wallet.common;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import okhttp3.*;
+import org.apache.commons.codec.binary.*;
 import org.apache.commons.io.*;
 
 import java.io.*;
@@ -200,22 +201,45 @@ public class Utils {
 		return out;
 	}
 
-	public static Object toMetadata(Object o) {
-		if (o instanceof Map) {
-			Map out = new HashMap();
-			((Map<?, ?>) o).forEach((k, v) -> {
-				out.put(k, toMetadata(v));
-			});
-			o = out;
-		} else if (o instanceof Collection) {
-			List out = new ArrayList();
-			((List<?>) o).forEach(e -> out.add(toMetadata(e)));
-			o = out;
+	public static Map toMetadata(Object o) {
+		Map out = new HashMap();
+		if (o instanceof String) {
+			out.put("string", o);
+		} else if (o instanceof Number) {
+			out.put("int", o);
+		} else if (o instanceof byte[]) {
+			out.put("bytes", Hex.encodeHexString((byte[]) o));
+		} else if (o instanceof Map) {
+			out.put("map", toKeyValueList((Map) o));
+		} else if(o instanceof Collection){
+			out.put("list", toValueList((Collection)o));
 		}
-		return o;
+		return out;
 	}
 
-	public static DateTimeFormatter iso8601DateFormatter(){
+	private static List<Map> toValueList(Collection values) {
+		List<Map> out = new ArrayList<>(values.size());
+
+		for(Object v : values){
+			out.add(toMetadata(v));
+		}
+		return out;
+	}
+
+	private static List<Map> toKeyValueList(Map map) {
+		List<Map> out = new ArrayList<>(map.size());
+
+		map.forEach((k, v) -> {
+			Map entry = new LinkedHashMap();
+			entry.put("k", toMetadata(k));
+			entry.put("v", toMetadata(v));
+			out.add(entry);
+		});
+
+		return out;
+	}
+
+	public static DateTimeFormatter iso8601DateFormatter() {
 		return DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss'Z'");
 	}
 

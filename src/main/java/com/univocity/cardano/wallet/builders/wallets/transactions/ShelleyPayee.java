@@ -22,7 +22,7 @@ public class ShelleyPayee implements Payee<ShelleyAuthorization> {
 			PostTransactionPaymentRequest request = new PostTransactionPaymentRequest();
 			request.setPayments(payments);
 			if (!metadata.isEmpty()) {
-				request.setMetadata(metadata);
+				request.setMetadata(Utils.toMetadata(metadata));
 			}
 			request.setPassphrase(password);
 			return new ShelleyTransaction(api.sync().postTransaction(wallet.id(), request), api);
