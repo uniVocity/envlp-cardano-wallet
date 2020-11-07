@@ -7,13 +7,13 @@ import java.util.*;
 public interface Transaction {
 
 	enum Status {
-		pending,
-		in_ledger
+		PENDING,
+		IN_LEDGER
 	}
 
 	enum Direction {
-		outgoing,
-		incoming
+		OUTGOING,
+		INCOMING
 	}
 
 	String id();

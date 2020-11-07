@@ -66,7 +66,7 @@ public class ByronWallet extends WrapperWithId<AbstractByronWalletResponse> impl
 
 	@Override
 	public SynchronizationStatus synchronizationStatus() {
-		return SynchronizationStatus.valueOf(original.getState().getStatus());
+		return SynchronizationStatus.valueOf(original.getState().getStatus().toUpperCase());
 	}
 
 	@Override
@@ -115,5 +115,10 @@ public class ByronWallet extends WrapperWithId<AbstractByronWalletResponse> impl
 	@Override
 	public ByronPayee transfer(){
 		return new ByronPayee(this, api);
+	}
+
+	@Override
+	public Transactions<ByronTransaction> transactions() {
+		return new ByronTransactions(this, api);
 	}
 }

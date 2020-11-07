@@ -15,18 +15,18 @@ public class NetworkInformation extends Wrapper<GetNetworkInformationResponse> {
 	}
 
 	public SynchronizationStatus synchronizationStatus() {
-		return SynchronizationStatus.valueOf(original.getSyncProgress().getStatus());
+		return SynchronizationStatus.valueOf(original.getSyncProgress().getStatus().toUpperCase());
 	}
 
 	public double synchronizationProgressPercentage() {
-		if (synchronizationStatus() == syncing) {
+		if (synchronizationStatus() == SYNCING) {
 			return toPercentage(original.getSyncProgress().getProgress().getQuantity());
 		}
 		return Double.NaN;
 	}
 
 	public String formattedSynchronizationProgressPercentage() {
-		if (synchronizationStatus() == syncing) {
+		if (synchronizationStatus() == SYNCING) {
 			return toFormattedPercentage(original.getSyncProgress().getProgress().getQuantity());
 		}
 		return "N/A";

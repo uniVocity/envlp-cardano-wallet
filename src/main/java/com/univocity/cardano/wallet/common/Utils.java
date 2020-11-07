@@ -7,6 +7,8 @@ import org.apache.commons.io.*;
 
 import java.io.*;
 import java.nio.charset.*;
+import java.time.*;
+import java.time.format.*;
 import java.util.*;
 import java.util.function.*;
 
@@ -211,5 +213,16 @@ public class Utils {
 			o = out;
 		}
 		return o;
+	}
+
+	public static DateTimeFormatter iso8601DateFormatter(){
+		return DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss'Z'");
+	}
+
+	public static String toFormattedISO8601Date(LocalDateTime date) {
+		if (date == null) {
+			return null;
+		}
+		return iso8601DateFormatter().format(date);
 	}
 }

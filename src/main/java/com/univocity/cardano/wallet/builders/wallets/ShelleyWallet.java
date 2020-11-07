@@ -66,7 +66,7 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 
 	@Override
 	public SynchronizationStatus synchronizationStatus() {
-		return SynchronizationStatus.valueOf(original.getState().getStatus());
+		return SynchronizationStatus.valueOf(original.getState().getStatus().toUpperCase());
 	}
 
 	@Override
@@ -114,5 +114,10 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 	@Override
 	public ShelleyPayee transfer(){
 		return new ShelleyPayee(this, api);
+	}
+
+	@Override
+	public Transactions<ShelleyTransaction> transactions() {
+		return new ShelleyTransactions(this, api);
 	}
 }

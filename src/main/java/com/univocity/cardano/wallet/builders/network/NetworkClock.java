@@ -10,7 +10,7 @@ public class NetworkClock extends Wrapper<GetNetworkClockResponse> {
 	}
 
 	public ClockStatus status() {
-		return ClockStatus.valueOf(original.getStatus());
+		return ClockStatus.valueOf(original.getStatus().toUpperCase());
 	}
 
 	public long offsetInMicroseconds() {

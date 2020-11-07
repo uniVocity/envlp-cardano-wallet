@@ -11,7 +11,7 @@ import java.util.*;
 public class CreateWallet implements WalletType {
 
 	private enum WalletFormat {
-		shelley, byron, icarus, trezor, ledger;
+		SHELLEY, BYRON, ICARUS, TREZOR, LEDGER;
 	}
 
 	private final WalletApi api;
@@ -37,31 +37,31 @@ public class CreateWallet implements WalletType {
 
 	@Override
 	public ShelleyWalletRestorationOptions shelley() {
-		walletFormat = WalletFormat.shelley;
+		walletFormat = WalletFormat.SHELLEY;
 		return new ShelleyWalletBuilder();
 	}
 
 	@Override
 	public ByronWalletRestoration<ByronWallet> byron() {
-		walletFormat = WalletFormat.byron;
+		walletFormat = WalletFormat.BYRON;
 		return new WalletBuilder<>();
 	}
 
 	@Override
 	public WalletRestoration<ByronWallet> icarus() {
-		walletFormat = WalletFormat.icarus;
+		walletFormat = WalletFormat.ICARUS;
 		return new WalletBuilder<>();
 	}
 
 	@Override
 	public WalletRestoration<ByronWallet> ledger() {
-		walletFormat = WalletFormat.ledger;
+		walletFormat = WalletFormat.LEDGER;
 		return new WalletBuilder<>();
 	}
 
 	@Override
 	public WalletRestoration<ByronWallet> trezor() {
-		walletFormat = WalletFormat.trezor;
+		walletFormat = WalletFormat.TREZOR;
 		return new WalletBuilder<>();
 	}
 
@@ -147,7 +147,7 @@ public class CreateWallet implements WalletType {
 			return createWallet();
 		} catch (DuplicateWalletException e) {
 			if (onDuplicateGet) {
-				if (walletFormat == WalletFormat.shelley) {
+				if (walletFormat == WalletFormat.SHELLEY) {
 					return new ShelleyWallet(api.sync().getWallet(e.getWalletId()), api);
 				} else {
 					return new ByronWallet(api.sync().getByronWallet(e.getWalletId()), api);
@@ -161,7 +161,7 @@ public class CreateWallet implements WalletType {
 	private Wallet createWallet() {
 		if (mnemonicSentence != null) {
 			switch (walletFormat) {
-				case shelley: {
+				case SHELLEY: {
 					PostWalletShelleyRequest req = new PostWalletShelleyRequest();
 					req.setName(walletName);
 					req.setMnemonicSentence(mnemonicSentence);
@@ -170,7 +170,7 @@ public class CreateWallet implements WalletType {
 					req.setAddressPoolGap(addressPoolGap);
 					return new ShelleyWallet(api.sync().postWallet(req), api);
 				}
-				case byron: {
+				case BYRON: {
 					PostByronWalletRandomRequest req = new PostByronWalletRandomRequest();
 					req.setStyle("random");
 					req.setName(walletName);
@@ -178,7 +178,7 @@ public class CreateWallet implements WalletType {
 					req.setPassphrase(walletPassword);
 					return new ByronWallet(api.sync().postByronWallet(req), api);
 				}
-				case trezor: {
+				case TREZOR: {
 					PostByronWalletTrezorRequest req = new PostByronWalletTrezorRequest();
 					req.setStyle("trezor");
 					req.setName(walletName);
@@ -186,7 +186,7 @@ public class CreateWallet implements WalletType {
 					req.setPassphrase(walletPassword);
 					return new ByronWallet(api.sync().postByronWallet(req), api);
 				}
-				case ledger: {
+				case LEDGER: {
 					PostByronWalletLedgerRequest req = new PostByronWalletLedgerRequest();
 					req.setStyle("ledger");
 					req.setName(walletName);
@@ -194,7 +194,7 @@ public class CreateWallet implements WalletType {
 					req.setPassphrase(walletPassword);
 					return new ByronWallet(api.sync().postByronWallet(req), api);
 				}
-				case icarus: {
+				case ICARUS: {
 					PostByronWalletIcarusRequest req = new PostByronWalletIcarusRequest();
 					req.setStyle("icarus");
 					req.setName(walletName);
@@ -205,16 +205,16 @@ public class CreateWallet implements WalletType {
 			}
 		} else if (publicKey != null) {
 			switch (walletFormat) {
-				case shelley: {
+				case SHELLEY: {
 					PostWalletShelleyFromXpubRequest req = new PostWalletShelleyFromXpubRequest();
 					req.setName(walletName);
 					req.setAccountPublicKey(publicKey);
 					req.setAddressPoolGap(addressPoolGap);
 					return new ShelleyWallet(api.sync().postWallet(req), api);
 				}
-				case icarus:
-				case ledger:
-				case trezor: { //TODO: this doesn't look right (no style parameter plus address pool gap).
+				case ICARUS:
+				case LEDGER:
+				case TREZOR: { //TODO: this doesn't look right (no style parameter plus address pool gap).
 					PostByronWalletIcarusTrezorLedgerFromXpubRequest req = new PostByronWalletIcarusTrezorLedgerFromXpubRequest();
 					req.setName(walletName);
 					req.setAccountPublicKey(publicKey);
@@ -224,7 +224,7 @@ public class CreateWallet implements WalletType {
 			}
 		} else if (privateKey != null) {
 			switch (walletFormat) {
-				case byron: {
+				case BYRON: {
 					PostByronWalletRandomFromXprvRequest req = new PostByronWalletRandomFromXprvRequest();
 					req.setStyle("random");
 					req.setName(walletName);

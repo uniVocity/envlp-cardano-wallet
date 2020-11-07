@@ -8,8 +8,8 @@ import java.io.*;
 import java.math.*;
 import java.nio.file.*;
 import java.time.*;
-import java.time.format.*;
 
+import static com.univocity.cardano.wallet.common.Utils.*;
 import static java.time.temporal.ChronoUnit.*;
 
 public class CardanoCliManager extends ProcessManager {
@@ -171,7 +171,7 @@ public class CardanoCliManager extends ProcessManager {
 	}
 
 	public boolean createShelleyGenesis(long testnetMagicCode, BigInteger lovelaceSupply, File targetDir) {
-		String startTime = LocalDateTime.now().plus(2, SECONDS).atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss'Z'"));
+		String startTime = LocalDateTime.now().plus(2, SECONDS).atOffset(ZoneOffset.UTC).format(iso8601DateFormatter());
 
 		String command = "" +
 				"shelley genesis create" +

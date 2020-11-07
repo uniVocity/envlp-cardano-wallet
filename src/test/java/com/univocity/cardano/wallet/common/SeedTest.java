@@ -5,6 +5,8 @@ import org.apache.commons.codec.*;
 import org.apache.commons.codec.binary.*;
 import org.testng.annotations.*;
 
+import java.util.*;
+
 import static org.testng.Assert.*;
 
 public class SeedTest {
@@ -15,6 +17,23 @@ public class SeedTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals(e.getMessage(), message);
 		}
+	}
+
+	@Test
+	public void seedGenerationDemo(){
+		String seed = Seed.generateEnglishSeedPhrase(24);
+		System.out.println(seed);
+
+
+		List<String> words = Seed.toMnemonicList(seed);
+		System.out.println(words);
+
+		byte[] entropy = Seed.checkEnglishSeedPhrase(seed);
+		String entropyHex = Hex.encodeHexString(entropy);
+		System.out.println(entropyHex);
+
+		String seedFromEntropy = Seed.generateEnglishSeedPhrase(entropy);
+		System.out.println(seedFromEntropy);
 	}
 
 	@Test

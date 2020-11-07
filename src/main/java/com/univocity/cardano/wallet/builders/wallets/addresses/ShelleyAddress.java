@@ -10,7 +10,7 @@ public class ShelleyAddress extends WrapperWithId<ListAddressesResponseItem> imp
 
 	public ShelleyAddress(ListAddressesResponseItem original, WalletApi api) {
 		super(original, api);
-		state = State.valueOf(original.getState());
+		state = State.valueOf(original.getState().toUpperCase());
 	}
 
 	@Override

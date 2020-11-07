@@ -7,7 +7,7 @@ import java.math.*;
 import java.time.*;
 import java.util.*;
 
-class AbstractTransaction extends Wrapper<com.univocity.cardano.wallet.api.generated.common.AbstractTransaction> implements Transaction {
+class AbstractTransaction extends WrapperWithId<com.univocity.cardano.wallet.api.generated.common.AbstractTransaction> implements Transaction {
 
 	private Map<Long, Object> metadata = null;
 
@@ -57,7 +57,7 @@ class AbstractTransaction extends Wrapper<com.univocity.cardano.wallet.api.gener
 
 	@Override
 	public Direction direction() {
-		return Direction.valueOf(original.getDirection());
+		return Direction.valueOf(original.getDirection().toUpperCase());
 	}
 
 	@Override
@@ -77,7 +77,7 @@ class AbstractTransaction extends Wrapper<com.univocity.cardano.wallet.api.gener
 
 	@Override
 	public Status status() {
-		return Status.valueOf(original.getStatus());
+		return Status.valueOf(original.getStatus().toUpperCase());
 	}
 
 	@Override

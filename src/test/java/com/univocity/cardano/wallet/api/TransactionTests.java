@@ -6,6 +6,9 @@ import com.univocity.cardano.wallet.builders.wallets.transactions.*;
 import org.testng.annotations.*;
 
 import java.math.*;
+import java.util.*;
+
+import static org.testng.Assert.*;
 
 /**
  * All tests in this class work based on fees, transfers and anything that involves transfer of value.
@@ -133,8 +136,70 @@ public class TransactionTests {
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
 		BigDecimal payeeBalance = emptyShelleyWallet.totalBalance();
 
-		ShelleyTransaction transaction = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).authorize(PASSWORD);
+		ShelleyTransaction transaction;/* = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).authorize(PASSWORD);
+		assertEquals(transaction.status(), Transaction.Status.PENDING);
+		System.out.println(transaction);*/
+
+		String transactionId = "2b1633ba62ee3bfc553f69579ae308614ed5c6a425844a6dbf4ba0629ab82ecf";
+		transaction = undelegatedShelleyWallet.transactions().get(transactionId);
+
 		System.out.println(transaction);
+		List<ShelleyTransaction> transactions = undelegatedShelleyWallet.transactions().list();
+		assertTrue(transactions.contains(transaction));
+		System.out.println(transactions);
+
+		//transaction.update();
+
+//		{
+//			"id" : "2b1633ba62ee3bfc553f69579ae308614ed5c6a425844a6dbf4ba0629ab82ecf",
+//				"amount" : {
+//			"quantity" : 1129800,
+//					"unit" : "lovelace"
+//		},
+//			"inserted_at" : null,
+//				"pending_since" : {
+//			"time" : "2020-11-06T15:32:53.6Z",
+//					"block" : {
+//				"slot_number" : 88,
+//						"epoch_number" : 876,
+//						"height" : {
+//					"quantity" : 87290,
+//							"unit" : "block"
+//				},
+//				"absolute_slot_number" : 175168
+//			}
+//		},
+//			"depth" : null,
+//				"direction" : "outgoing",
+//				"inputs" : [ {
+//			"address" : "addr1vyuxc75xmzzy7sy955pyz4tqg0ycgttjcv2u39ay929q2yq8h7umy",
+//					"amount" : {
+//				"quantity" : 100000000000,
+//						"unit" : "lovelace"
+//			},
+//			"id" : "8284950bf30f2b94f1f9f85b9b0a81f5ab6b9862679c9aa2bd21675fcd156a45",
+//					"index" : 51
+//		} ],
+//			"outputs" : [ {
+//			"address" : "addr1q9p3npvyc00t9elvzyh5mqacle625hxt3x8ym9xds25h8wdwzdq65lps4pmtz6e5gwqsurydjrkc04vn82uwgsnpd0nsyk9frg",
+//					"amount" : {
+//				"quantity" : 1000000,
+//						"unit" : "lovelace"
+//			}
+//		}, {
+//			"address" : "addr1q95t40ycd5gzu9fqf5xvy7k3keld8afzsujy5fhelcmla7e59kkfl90wf7f9vlm99fek6e9l5zh65td8jhw63hn9skqqndny3f",
+//					"amount" : {
+//				"quantity" : 99998870200,
+//						"unit" : "lovelace"
+//			}
+//		} ],
+//			"withdrawals" : [ ],
+//			"status" : "pending",
+//				"metadata" : null
+//		}
+
+
+//		undelegatedShelleyWallet.transfer().
 
 //		ByronTransaction byronTransaction = byronWallet.transfer().to(shelleyWallet, new BigInteger(1000000)).authorize(PASSWORD);
 	}
@@ -142,7 +207,7 @@ public class TransactionTests {
 	@Test
 	public void transferTestShelleyToShelleyWithMetadata() {
 		//FIXME need to encode metadata as CBOR
-		
+
 		BigDecimal payerBalance = undelegatedShelleyWallet.totalBalance();
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
 		BigDecimal payeeBalance = emptyShelleyWallet.totalBalance();

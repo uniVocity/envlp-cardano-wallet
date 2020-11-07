@@ -10,7 +10,7 @@ public class ByronAddress extends WrapperWithId<AbstractAddress> implements Addr
 
 	public ByronAddress(AbstractAddress original, WalletApi api) {
 		super(original, api);
-		state = Address.State.valueOf(original.getState());
+		state = Address.State.valueOf(original.getState().toUpperCase());
 	}
 
 	@Override

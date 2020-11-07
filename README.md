@@ -33,6 +33,12 @@ accessible using classes that map to the raw API of the cardano-wallet. All of
 these are meant to be used internally by a nicer-to use programming API which
 is being built here.
 
+The `cardano-wallet` backend built by IOG was not designed to be exposed as a 
+public web service. The use case for it is close to 1 server <-> 1 client 
+(or a few clients). If should be fine for utility APIs such as listing
+stake pools, epoch information, among other things. Don't try creating and 
+managing wallets if it's not running locally.
+
 ## Installation
 
 We are releasing new snapshots to maven central whenever there's any relevant
@@ -167,6 +173,173 @@ The [full API](https://input-output-hk.github.io/cardano-wallet/api/edge/) of th
 is supported. We generate this code automatically so there's no reason to lag 
 behind updates to the official cardano-wallet.
 
+## Useful operations
+
+Here is what is working:
+
+### Seed phrases
+
+```java
+//seed phrase using 24 English words
+String seed = Seed.generateEnglishSeedPhrase(24);
+System.out.println(seed);
+
+Output:
+ >> swallow prefer target profit reopen minute state size isolate squirrel scrub table outer proud hint fire fossil behave clutch fragile juice weapon february cause
+```
+
+```java
+//convert phrase into list of words
+List<String> words = Seed.toMnemonicList(seed);
+System.out.println(words);
+
+Output:
+ >> [swallow, prefer, target, profit, reopen, minute, state, size, isolate, squirrel, scrub, table, outer, proud, hint, fire, fossil, behave, clutch, fragile, juice, weapon, february, cause]
+```
+
+```java
+//print entropy of seed phrase in hexadecimal
+byte[] entropy = Seed.checkEnglishSeedPhrase(seed);
+String entropyHex = Hex.encodeHexString(entropy);
+System.out.println(entropyHex);
+
+Output:
+ >> db153b77d5eb671ab5364f769a77076e79d5599af2b95be28cb22e378df09511
+```
+
+```java
+//restore or generate seed phrase from entropy
+String seedFromEntropy = Seed.generateEnglishSeedPhrase(entropy);
+System.out.println(seedFromEntropy);
+
+Output:
+ >> swallow prefer target profit reopen minute state size isolate squirrel scrub table outer proud hint fire fossil behave clutch fragile juice weapon february cause
+```
+
+### Wallet restoration
+
+
+Create or restore a Shelley wallet:
+```java
+String seed = Seed.generateEnglishSeedPhrase(24);
+
+ShelleyWallet wallet = server.wallets()
+    .createOrGet("testing")
+    .shelley()
+    .fromSeed(seed)
+    .password("qwerty12345")
+```
+
+Create or restore a Byron wallet:
+```java
+String seed = Seed.generateEnglishSeedPhrase(12);
+
+ByronWallet wallet = server.wallets()
+    .createOrGet("testing")
+    .byron()
+    .fromSeed(seed)
+    .password("qwerty12345")
+```
+
+List wallets:
+```java
+List<Wallet> wallets = server.wallets().list();
+```
+
+Rename wallet:
+```java
+wallet.rename("my new name");
+```
+
+Update wallet password:
+```java
+wallet.updatePassword("qwerty12345", "myNewPassword");
+```
+
+Delete wallet:
+```java
+wallet.delete();
+```
+
+List addresses (Shelley/Icarus/Ledger/Trezor):
+
+```java
+List<Address> addresses;
+addresses = shelleyWallet.addresses().unused();
+addresses = shelleyWallet.addresses().used();
+addresses = shelleyWallet.addresses().all();
+
+Address nextUnusedAddress = shelleyWallet.addresses().next();
+```
+
+List addresses (Byron):
+
+```java
+
+//byron wallet requires you to create addresses manually:
+Address address1 = byronWallet.addresses().next("qwerty12345");
+Address address2 = byronWallet.addresses().next("qwerty12345");
+Address address3 = byronWallet.addresses().next("qwerty12345");
+
+List<Address> addresses;
+addresses = byronWallet.addresses().unused();
+addresses = byronWallet.addresses().used();
+addresses = byronWallet.addresses().all();
+
+Address nextUnusedAddress = byronWallet.addresses().next();
+```
+
+Wallet balances (in ADA):
+
+```java
+BigDecimal totalBalance = wallet.totalBalance();
+BigDecimal availableBalance = wallet.availableBalance();
+BigDecimal rewardsBalance = wallet.rewardsBalance();
+```
+
+Send money:
+
+```java
+String recipientAddress = "addr1qy77cfgccmcfe9h936qunl4u36hyrwryrmzj6duug9sm73tdd0sqyslnjxvce9syyw4ktnrh0n7ct60zrs29wnef3jqq202748";
+BigDecimal amount = new BigDecimal("100000.54321")
+
+ShelleyTransaction transaction = wallet.transfer()
+    .to(recipientAddress, amount)
+    .authorize("qwerty12345");
+
+```
+
+Fetch transaction:
+
+```java
+String transactionId = "2b1633ba62ee3bfc553f69579ae308614ed5c6a425844a6dbf4ba0629ab82ecf";
+ShelleyTransaction transaction = shelleyWallet.transactions().get(transactionId);
+
+String transactionId = "1b1644ba62ee3bfc653f6978ae308614ed5c6a425844a6dbf4ba0629ab82abc";
+ByronTransaction transaction = byronWallet.transactions().get(transactionId);
+```
+
+List all wallet transactions:
+
+```java
+List<ShelleyTransaction> transactions = shelleyWallet.transactions().list();
+
+List<ByronTransaction> byronTransactions = byronWallet.transactions().list();
+```
+
+List wallet transactions within a date range, asynchronously:
+
+```java
+LocalDateTime fromDate = LocalDateTime.of(2020, Month.JANUARY, 1, 0, 0);
+LocalDateTime toDate = LocalDateTime.of(2020, Month.JUNE, 30, 23, 59);
+
+Future<List<ByronTransaction>> transactionsLoading = byronWallet
+                                                    .transactions()
+                                                    .listAsync(fromDate, toDate);
+
+List<ByronTransaction> transactions = transactionsLoading.get();
+```
+
 ## Running an embedded cardano-wallet process
 
 If you are interested in running the cardano-wallet binary along with your program,
@@ -281,8 +454,8 @@ is made available on their API.
 ## TODO LIST
  
  * Finalize all code builders that wrap around the generated classes and hide the REST API from you.
+ * Transaction metadata.
  * Enable HTTPS on embedded mode.
- * Support testnet.
  * Ensure embedded server runs on Windows/Mac/Linux.
  * Document all source code files.
  * Automatically generate unit test code for REST API classes.
