@@ -211,8 +211,8 @@ public class Utils {
 			out.put("bytes", Hex.encodeHexString((byte[]) o));
 		} else if (o instanceof Map) {
 			out.put("map", toKeyValueList((Map) o));
-		} else if(o instanceof Collection){
-			out.put("list", toValueList((Collection)o));
+		} else if (o instanceof Collection) {
+			out.put("list", toValueList((Collection) o));
 		}
 		return out;
 	}
@@ -220,7 +220,7 @@ public class Utils {
 	private static List<Map> toValueList(Collection values) {
 		List<Map> out = new ArrayList<>(values.size());
 
-		for(Object v : values){
+		for (Object v : values) {
 			out.add(toMetadata(v));
 		}
 		return out;
@@ -237,6 +237,60 @@ public class Utils {
 		});
 
 		return out;
+	}
+
+	public static Map<Long, Object> fromMetadata(Object o) {
+		if (o == null) {
+			return Collections.emptyMap();
+		}
+		Map<Long, Object> out = new LinkedHashMap<>();
+		Map metadata = (Map) o;
+
+		metadata.forEach((k, v) -> out.put(Long.parseLong(k.toString()), toMetadataValue(v)));
+
+		return out;
+	}
+
+	private static Object toMetadataValue(Object o) {
+		if (o == null) {
+			return null;
+		}
+		if (o instanceof Map) {
+			Set<Map.Entry> entries = ((Map) o).entrySet();
+			if (entries.size() > 1) {
+				throw new IllegalStateException("Unexpected metadata element with multiple entries: " + entries);
+			}
+			for (Map.Entry e : entries) {
+				String type = e.getKey().toString();
+				switch (type) {
+					case "string":
+					case "int":
+						return e.getValue();
+					case "bytes":
+						try {
+							return Hex.decodeHex((String) e.getValue());
+						} catch (Exception ex) {
+							return e.getValue();
+						}
+					case "list":
+						Collection values = (Collection) e.getValue();
+						List out = new ArrayList();
+						values.forEach(v -> out.add(toMetadataValue(v)));
+						return out;
+					case "map":
+						Collection keyValuePairs = (Collection) e.getValue();
+						Map map = new LinkedHashMap();
+						keyValuePairs.forEach(v -> {
+							Map item = ((Map) v);
+							map.put(toMetadataValue(item.get("k")), toMetadataValue(item.get("v")));
+						});
+						return map;
+					default:
+						throw new IllegalStateException("Unable to handle metadata entry: " + e);
+				}
+			}
+		}
+		throw new IllegalStateException("Unable to process metadata value: " + o);
 	}
 
 	public static DateTimeFormatter iso8601DateFormatter() {

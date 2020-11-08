@@ -7,7 +7,7 @@ import java.math.*;
 import java.time.*;
 import java.util.*;
 
-class AbstractTransaction extends WrapperWithId<com.univocity.cardano.wallet.api.generated.common.AbstractTransaction> implements Transaction {
+abstract class AbstractTransaction extends WrapperWithId<com.univocity.cardano.wallet.api.generated.common.AbstractTransaction> implements Transaction {
 
 	private Map<Long, Object> metadata = null;
 
@@ -83,12 +83,7 @@ class AbstractTransaction extends WrapperWithId<com.univocity.cardano.wallet.api
 	@Override
 	public Map<Long, Object> metadata() {
 		if (this.metadata == null) {
-			Map metadata = (Map) original.getMetadata();
-			if (metadata == null) {
-				this.metadata = Collections.emptyMap();
-			} else {
-				this.metadata = Utils.toMetadata(metadata);
-			}
+			this.metadata = Collections.unmodifiableMap(Utils.fromMetadata(original.getMetadata()));
 		}
 		return this.metadata;
 	}

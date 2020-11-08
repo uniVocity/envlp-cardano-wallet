@@ -206,8 +206,6 @@ public class TransactionTests {
 
 	@Test
 	public void transferTestShelleyToShelleyWithMetadata() {
-		//FIXME need to encode metadata as CBOR
-
 		BigDecimal payerBalance = undelegatedShelleyWallet.totalBalance();
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
 		BigDecimal payeeBalance = emptyShelleyWallet.totalBalance();

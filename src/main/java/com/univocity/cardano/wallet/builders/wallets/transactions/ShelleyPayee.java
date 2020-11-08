@@ -14,7 +14,7 @@ public class ShelleyPayee implements Payee<ShelleyAuthorization> {
 	private final ShelleyWallet wallet;
 	private final WalletApi api;
 	private final ArrayList<PaymentsPayment> payments = new ArrayList<>();
-	private final Map<String, Object> metadata = new LinkedHashMap<>();
+	private final Map<Long, Object> metadata = new LinkedHashMap<>();
 
 	private class Builder implements ShelleyAuthorization {
 		@Override
@@ -31,7 +31,7 @@ public class ShelleyPayee implements Payee<ShelleyAuthorization> {
 		@Override
 		public Authorization<ShelleyTransaction> withMetadata(Object[] metadata) {
 			for (int i = 0; i < metadata.length; i++) {
-				ShelleyPayee.this.metadata.put(String.valueOf(i), metadata[i]);
+				ShelleyPayee.this.metadata.put((long)i, metadata[i]);
 			}
 			return this;
 		}
@@ -39,7 +39,7 @@ public class ShelleyPayee implements Payee<ShelleyAuthorization> {
 		@Override
 		public Authorization<ShelleyTransaction> withMetadata(Map<Long, Object> metadata) {
 			Utils.notNull(metadata, "Transaction metadata");
-			metadata.forEach((k, v) -> ShelleyPayee.this.metadata.put(String.valueOf(k), v));
+			metadata.forEach(ShelleyPayee.this.metadata::put);
 			return this;
 		}
 	}
