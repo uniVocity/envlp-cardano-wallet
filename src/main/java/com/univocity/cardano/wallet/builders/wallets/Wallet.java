@@ -45,4 +45,6 @@ public interface Wallet extends ObjectWithId {
 	Payee<?> transfer();
 
 	Transactions<?> transactions();
+
+	Wallet update();
 }

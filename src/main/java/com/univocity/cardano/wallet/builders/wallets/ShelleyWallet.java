@@ -112,12 +112,16 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 	}
 
 	@Override
-	public ShelleyPayee transfer(){
+	public ShelleyPayee transfer() {
 		return new ShelleyPayee(this, api);
 	}
 
 	@Override
 	public Transactions<ShelleyTransaction> transactions() {
 		return new ShelleyTransactions(this, api);
+	}
+
+	public ShelleyWallet update() {
+		return new ShelleyWallet(api.sync().getWallet(id()), api);
 	}
 }

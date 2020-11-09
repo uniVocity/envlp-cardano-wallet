@@ -23,7 +23,7 @@ public class ShelleyTransactions implements Transactions<ShelleyTransaction> {
 
 	@Override
 	public ShelleyTransaction get(String transactionId) {
-		return new ShelleyTransaction(api.sync().getTransaction(wallet.id(), transactionId), api);
+		return new ShelleyTransaction(wallet, api.sync().getTransaction(wallet.id(), transactionId), api);
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class ShelleyTransactions implements Transactions<ShelleyTransaction> {
 		return new AsyncCallbackHandler<List<ListTransactionsResponseItem>, List<ShelleyTransaction>>(
 				Collections.emptyList(),
 				callback -> api.async().listTransactions(wallet.id(), start, end, order, minWithdrawal, callback),
-				result -> Utils.convertList(result, (r) -> new ShelleyTransaction(r, api))
+				result -> Utils.convertList(result, (r) -> new ShelleyTransaction(wallet, r, api))
 		).getAsync();
 	}
 }

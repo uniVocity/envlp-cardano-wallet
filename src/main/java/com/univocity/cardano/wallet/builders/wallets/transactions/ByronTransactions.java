@@ -22,7 +22,7 @@ public class ByronTransactions implements Transactions<ByronTransaction> {
 
 	@Override
 	public ByronTransaction get(String transactionId) {
-		return new ByronTransaction(api.sync().getTransaction(wallet.id(), transactionId), api);
+		return new ByronTransaction(wallet, api.sync().getTransaction(wallet.id(), transactionId), api);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class ByronTransactions implements Transactions<ByronTransaction> {
 		return new AsyncCallbackHandler<List<ListByronTransactionsResponseItem>, List<ByronTransaction>>(
 				Collections.emptyList(),
 				callback -> api.async().listByronTransactions(wallet.id(), start, end, order, callback),
-				result -> Utils.convertList(result, (r) -> new ByronTransaction(r, api))
+				result -> Utils.convertList(result, (r) -> new ByronTransaction(wallet, r, api))
 		).getAsync();
 	}
 }

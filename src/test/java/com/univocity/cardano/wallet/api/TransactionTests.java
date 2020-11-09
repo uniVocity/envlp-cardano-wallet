@@ -3,6 +3,7 @@ package com.univocity.cardano.wallet.api;
 import com.univocity.cardano.wallet.builders.server.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
 import com.univocity.cardano.wallet.builders.wallets.transactions.*;
+import org.apache.commons.lang3.*;
 import org.testng.annotations.*;
 
 import java.math.*;
@@ -205,8 +206,27 @@ public class TransactionTests {
 	}
 
 	@Test
+	public void estimateFeeShelleyToShelleyWithMetadata() {
+//		99997.735900
+
+		BigDecimal payerBalance = undelegatedShelleyWallet.totalBalance();
+		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
+		BigDecimal payeeBalance = emptyShelleyWallet.totalBalance();
+
+		Fees fees = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).withMetadata(new Object[]{"cardano", 1}).estimateFees();
+		System.out.println(fees.maximum());
+
+		fees = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).estimateFees();
+		System.out.println(fees.maximum());
+
+		fees = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(99997)).withMetadata(new Object[]{StringUtils.repeat("LOL", 20)}).estimateFees();
+		System.out.println(fees.minimum() + " to " + fees.maximum());
+	}
+
+	@Test
 	public void transferTestShelleyToShelleyWithMetadata() {
 		BigDecimal payerBalance = undelegatedShelleyWallet.totalBalance();
+		System.out.println(payerBalance);
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
 		BigDecimal payeeBalance = emptyShelleyWallet.totalBalance();
 
@@ -214,9 +234,20 @@ public class TransactionTests {
 //		System.out.println(transaction);
 
 		String transactionId = "fcaf4d9ec5f272b6fdf7fae1107e4d9536922ca0a9bc77387e0a445cf839d07e";
-		ShelleyTransaction transaction = undelegatedShelleyWallet.transactions().get(transactionId);;
+		ShelleyTransaction transaction = undelegatedShelleyWallet.transactions().get(transactionId);
+
+		transaction = transaction.update();
 
 		System.out.println(transaction);
+
+		List<ShelleyTransaction> transactions = emptyShelleyWallet.transactions().list();
+		for (ShelleyTransaction t : transactions) {
+			System.out.println("=====================================");
+			System.out.println(t);
+		}
+
+		System.out.println(emptyShelleyWallet.totalBalance());
+
 
 //		ByronTransaction byronTransaction = byronWallet.transfer().to(shelleyWallet, new BigInteger(1000000)).authorize(PASSWORD);
 	}

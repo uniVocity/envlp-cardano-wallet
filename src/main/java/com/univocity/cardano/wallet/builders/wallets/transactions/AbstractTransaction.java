@@ -1,18 +1,21 @@
 package com.univocity.cardano.wallet.builders.wallets.transactions;
 
 import com.univocity.cardano.wallet.api.*;
+import com.univocity.cardano.wallet.builders.wallets.*;
 import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
 import java.time.*;
 import java.util.*;
 
-abstract class AbstractTransaction extends WrapperWithId<com.univocity.cardano.wallet.api.generated.common.AbstractTransaction> implements Transaction {
+abstract class AbstractTransaction<W extends Wallet, T extends AbstractTransaction<W, T>> extends WrapperWithId<com.univocity.cardano.wallet.api.generated.common.AbstractTransaction> implements Transaction {
 
 	private Map<Long, Object> metadata = null;
+	private final W wallet;
 
-	public AbstractTransaction(com.univocity.cardano.wallet.api.generated.common.AbstractTransaction original, WalletApi api) {
+	public AbstractTransaction(W wallet, com.univocity.cardano.wallet.api.generated.common.AbstractTransaction original, WalletApi api) {
 		super(original, api);
+		this.wallet = wallet;
 	}
 
 	@Override
@@ -87,4 +90,14 @@ abstract class AbstractTransaction extends WrapperWithId<com.univocity.cardano.w
 		}
 		return this.metadata;
 	}
+
+	public final W getWallet() {
+		return wallet;
+	}
+
+	public final T update() {
+		return (T) wallet.transactions().get(this.id());
+	}
+
+	public abstract void forget();
 }

@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.builders.wallets.transactions;
 
 import com.univocity.cardano.wallet.api.*;
+import com.univocity.cardano.wallet.api.generated.byrontransactions.*;
 import com.univocity.cardano.wallet.api.generated.common.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
@@ -25,7 +26,7 @@ public class ShelleyPayee implements Payee<ShelleyAuthorization> {
 				request.setMetadata(Utils.toMetadata(metadata));
 			}
 			request.setPassphrase(password);
-			return new ShelleyTransaction(api.sync().postTransaction(wallet.id(), request), api);
+			return new ShelleyTransaction(wallet, api.sync().postTransaction(wallet.id(), request), api);
 		}
 
 		@Override
@@ -41,6 +42,16 @@ public class ShelleyPayee implements Payee<ShelleyAuthorization> {
 			Utils.notNull(metadata, "Transaction metadata");
 			metadata.forEach(ShelleyPayee.this.metadata::put);
 			return this;
+		}
+
+		@Override
+		public Fees estimateFees() {
+			PostTransactionFeePaymentRequest request = new PostTransactionFeePaymentRequest();
+			request.setPayments(payments);
+			if (!metadata.isEmpty()) {
+				request.setMetadata(Utils.toMetadata(metadata));
+			}
+			return new Fees(api.sync().postTransactionFee(wallet.id(), request), api);
 		}
 	}
 
