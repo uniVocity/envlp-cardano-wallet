@@ -213,15 +213,47 @@ public class TransactionTests {
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
 		BigDecimal payeeBalance = emptyShelleyWallet.totalBalance();
 
-		Fees fees = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).withMetadata(new Object[]{"cardano", 1}).estimateFees();
-		System.out.println(fees.maximum());
 
-		fees = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).estimateFees();
-		System.out.println(fees.maximum());
+		Fees<ShelleyTransaction> fees = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).estimateFees();
+		System.out.println(fees.average());
 
-		fees = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(99997)).withMetadata(new Object[]{StringUtils.repeat("LOL", 20)}).estimateFees();
-		System.out.println(fees.minimum() + " to " + fees.maximum());
+		Transaction transaction = fees.authorize(PASSWORD);
+		System.out.println(transaction);
 	}
+
+	@Test
+	public void testTransferFromShelleyToByron() {
+//		99997.735900
+
+		BigDecimal payerBalance = emptyShelleyWallet.totalBalance();
+		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
+		BigDecimal payeeBalance = byronWallet.totalBalance();
+
+
+		Fees<ShelleyTransaction> fees = emptyShelleyWallet.transfer().to(byronWallet.addresses().next(), new BigDecimal(1)).withMetadata(new Object[]{"testing"}).estimateFees();
+		System.out.println(fees.average());
+
+		Transaction transaction = fees.authorize(PASSWORD);
+		System.out.println(transaction);
+	}
+
+	@Test
+	public void testTransferFromByronToByron() {
+//		99997.735900
+
+		BigDecimal payerBalance = icarusWallet.totalBalance();
+		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
+		BigDecimal payeeBalance = byronWallet.totalBalance();
+
+
+		Fees<ByronTransaction> fees = icarusWallet.transfer().to(byronWallet.addresses().next(), new BigDecimal(1)).withMetadata(new Object[]{"testing"}).estimateFees();
+		System.out.println(fees.average());
+
+		Transaction transaction = fees.authorize(PASSWORD);
+		System.out.println(transaction);
+	}
+
+
 
 	@Test
 	public void transferTestShelleyToShelleyWithMetadata() {

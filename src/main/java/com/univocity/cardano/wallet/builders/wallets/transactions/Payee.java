@@ -7,27 +7,27 @@ import java.math.*;
 
 import static com.univocity.cardano.wallet.common.Wrapper.*;
 
-public interface Payee<T extends Authorization<?>> {
+public interface Payee<T extends Transaction> {
 
-	default T to(Wallet wallet, BigDecimal amountInAda){
+	default Authorization<T> to(Wallet wallet, BigDecimal amountInAda){
 		return to(wallet.addresses().next(), amountInAda);
 	}
 
-	default T to(Address address, BigDecimal amountInAda){
+	default Authorization<T> to(Address address, BigDecimal amountInAda){
 		return to(address.id(), amountInAda);
 	}
 
-	default T to(String address, BigDecimal amountInAda){
+	default Authorization<T> to(String address, BigDecimal amountInAda){
 		return to(address, adaToLovelace(amountInAda));
 	}
 
-	default T to(Wallet wallet, BigInteger amountInLovelace){
+	default Authorization<T> to(Wallet wallet, BigInteger amountInLovelace){
 		return to(wallet.addresses().next(), amountInLovelace);
 	}
 
-	default T to(Address address, BigInteger amountInLovelace){
+	default Authorization<T> to(Address address, BigInteger amountInLovelace){
 		return to(address.id(), amountInLovelace);
 	}
 
-	T to(String address, BigInteger amountInLovelace);
+	Authorization<T> to(String address, BigInteger amountInLovelace);
 }

@@ -22,6 +22,9 @@ public final class PostByronTransactionRequest {
 	@JsonProperty("passphrase")
 	private String passphrase;
 
+	@JsonProperty("metadata")
+	private Object metadata;
+
 	/**
 	 * Returns the list of target outputs.
 	 * - Minimum number of elements: {@code 1}.
@@ -89,4 +92,11 @@ public final class PostByronTransactionRequest {
 		return printObject(this);
 	}
 
+	public Object getMetadata() {
+		return metadata;
+	}
+
+	public void setMetadata(Object metadata) {
+		this.metadata = metadata;
+	}
 }

@@ -10,14 +10,14 @@ import com.univocity.cardano.wallet.common.*;
 import java.math.*;
 import java.util.*;
 
-public class ShelleyPayee implements Payee<ShelleyAuthorization> {
+public class ShelleyPayee implements Payee<ShelleyTransaction> {
 
 	private final ShelleyWallet wallet;
 	private final WalletApi api;
 	private final ArrayList<PaymentsPayment> payments = new ArrayList<>();
 	private final Map<Long, Object> metadata = new LinkedHashMap<>();
 
-	private class Builder implements ShelleyAuthorization {
+	private class Builder implements Authorization<ShelleyTransaction> {
 		@Override
 		public ShelleyTransaction authorize(String password) {
 			PostTransactionPaymentRequest request = new PostTransactionPaymentRequest();
@@ -45,13 +45,13 @@ public class ShelleyPayee implements Payee<ShelleyAuthorization> {
 		}
 
 		@Override
-		public Fees estimateFees() {
+		public Fees<ShelleyTransaction> estimateFees() {
 			PostTransactionFeePaymentRequest request = new PostTransactionFeePaymentRequest();
 			request.setPayments(payments);
 			if (!metadata.isEmpty()) {
 				request.setMetadata(Utils.toMetadata(metadata));
 			}
-			return new Fees(api.sync().postTransactionFee(wallet.id(), request), api);
+			return new Fees<>(api.sync().postTransactionFee(wallet.id(), request), api, this::authorize);
 		}
 	}
 
@@ -65,7 +65,7 @@ public class ShelleyPayee implements Payee<ShelleyAuthorization> {
 	}
 
 	@Override
-	public ShelleyAuthorization to(String address, BigInteger amountInLovelace) {
+	public Authorization<ShelleyTransaction> to(String address, BigInteger amountInLovelace) {
 		PaymentsPayment payment = new PaymentsPayment();
 		payment.setAddress(address);
 
