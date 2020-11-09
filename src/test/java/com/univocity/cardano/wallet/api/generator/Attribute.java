@@ -12,9 +12,10 @@ public class Attribute {
 
 	private final String name;
 	private String type;
-	private final String format;
+	private String format;
 	private String example;
 	private final Number maxLength;
+	private final String pattern;
 	private final Number minLength;
 	private final Number maxItems;
 	private final Number minItems;
@@ -22,13 +23,15 @@ public class Attribute {
 	private final Number maximum;
 	private final Object defaultValue;
 	private final Attribute itemType;
-	private final Boolean required;
-	private final String description;
+	private Boolean required;
+	private String description;
 	private final JsonSchema nested;
 	private final List<String> acceptedValues = new ArrayList<>();
 	private final String arrayElementType;
 	private Stack<Object> stack;
 	private boolean isJavaObject;
+	private Boolean deprecated;
+	private final String additionalPropertiesType;
 
 	public Attribute(String name, Map properties, Boolean required, Stack<Object> path) {
 		this.name = name;
@@ -46,6 +49,7 @@ public class Attribute {
 		}
 		properties.remove("type");
 		this.description = (String) properties.remove("description");
+		this.pattern = (String) properties.remove("pattern");
 		String format = (String) properties.remove("format");
 		this.maxLength = (Number) properties.remove("maxLength");
 		this.minLength = (Number) properties.remove("minLength");
@@ -54,6 +58,9 @@ public class Attribute {
 		this.minimum = (Number) properties.remove("minimum");
 		this.maximum = (Number) properties.remove("maximum");
 		this.defaultValue = properties.remove("default");
+		this.deprecated = (Boolean)properties.remove("deprecated");
+
+		additionalPropertiesType = JsonSchema.extractAdditionalPropertiesType(properties);
 
 		if ("number".equalsIgnoreCase(type) && maximum != null && !maximum.equals(100)) {
 			if (!String.valueOf(maximum).contains(".") && (example == null || !example.contains("."))) {
@@ -79,17 +86,51 @@ public class Attribute {
 				itemType = new Attribute((String) items.get("type"), items, Boolean.TRUE, path);
 			}
 			items.remove("type");
+			if (items.containsKey("description")) {
+				String s = (String) items.remove("description");
+				if(StringUtils.isNotBlank(s)){
+					description = s;
+				}
+			}
 			if (!items.isEmpty()) {
 				throw new IllegalStateException("Properties not fully processed: " + items.keySet());
 			}
 		}
 
 		this.format = format;
+		Boolean nullable = (Boolean) properties.remove("nullable");
+		if(this.required == null){
+			this.required = nullable;
+		}
 
 		List enumItems = (List) properties.remove("enum");
 		if (enumItems != null) {
 			enumItems.forEach(e -> acceptedValues.add(String.valueOf(e)));
 		}
+
+		List oneOf = (List)properties.remove("oneOf");
+		if(oneOf != null){
+			type = "string";
+			//we just ignore attribute items here.
+		}
+
+		if(type == null){
+			if(additionalPropertiesType != null){
+				type = "string";
+				if(format == null){
+					format = StringUtils.substringAfterLast(additionalPropertiesType, "/");
+					if(StringUtils.isBlank(format)){
+						this.format = additionalPropertiesType;
+					}
+				}
+			}
+
+		}
+
+		if(type== null){
+			throw new IllegalStateException("Attribute type cannot be null");
+		}
+
 		if (!properties.isEmpty()) {
 			throw new IllegalStateException("Properties not fully processed: " + properties.keySet());
 		}
@@ -295,6 +336,9 @@ public class Attribute {
 		if (format != null) {
 			out.append("\n\t * - Format: {@code ").append(format).append("}.");
 		}
+		if (pattern != null) {
+			out.append("\n\t * - Pattern: {@code ").append(pattern).append("}.");
+		}
 		if (minimum != null && maximum != null) {
 			out.append("\n\t * - Value range from {@code ").append(minimum).append("}").append(" to {@code ").append(maximum).append("}.");
 		} else {
@@ -344,6 +388,11 @@ public class Attribute {
 		appendDocumentation(out, true);
 		out.append("\n\t * \n\t * ").append("@return ");
 		appendDescriptionOrName(out, true);
+
+		if(deprecated != null){
+			out.append("\n\t * @Deprecated");
+		}
+
 		out.append("\n\t */");
 		out.append("\n\tpublic ").append(getTypeOrClassName(true)).append(" get").append(StringUtils.capitalize(getJavaName())).append("(){\n");
 		out.append("\t\treturn ").append(getJavaName()).append(";\n");
@@ -392,7 +441,7 @@ public class Attribute {
 		}
 	}
 
-	String getJavaType(){
+	String getJavaType() {
 		try {
 			return getType(type, maximum);
 		} catch (Exception e) {

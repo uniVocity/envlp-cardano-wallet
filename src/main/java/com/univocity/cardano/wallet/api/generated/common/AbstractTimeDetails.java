@@ -6,23 +6,20 @@ import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
 
-public abstract class AbstractSlotDetails {
+public abstract class AbstractTimeDetails {
 
 
 	@JsonProperty("absolute_slot_number")
 	private BigInteger absoluteSlotNumber;
 
-	@JsonProperty("slot_number")
-	private BigInteger slotNumber;
-
 	@JsonProperty("epoch_number")
 	private BigInteger epochNumber;
 
+	@JsonProperty("slot_number")
+	private BigInteger slotNumber;
+
 	@JsonProperty("time")
 	private String time;
-
-	@JsonProperty("height")
-	private Height height;
 
 	/**
 	 * Returns the 0-based slot index starting from genesis of the blockchain.
@@ -56,40 +53,6 @@ public abstract class AbstractSlotDetails {
 		}
 
 		this.absoluteSlotNumber = absoluteSlotNumber;
-	}
-
-	/**
-	 * Returns the zero-based slot index within an epoch.
-	 * - Minimum value: {@code 0}.
-	 * 
-	 * - Example: 
-	 *   <pre>{@code 1337}</pre>
-	 * 
-	 * @return the zero-based slot index within an epoch.
-	 */
-	public BigInteger getSlotNumber(){
-		return slotNumber;
-	}
-
-	/**
-	 * Defines the zero-based slot index within an epoch.
-	 * - Minimum value: {@code 0}.
-	 * 
-	 * - Example: 
-	 *   <pre>{@code 1337}</pre>
-	 * 
-	 * @param slotNumber the zero-based slot index within an epoch.
-	 */
-	public void setSlotNumber(BigInteger slotNumber){
-		if (slotNumber == null) {
-			throw new IllegalArgumentException("Value of slotNumber cannot be null");
-		}
-
-		if (slotNumber.compareTo(new BigInteger("0")) < 0){
-			throw new IllegalArgumentException("'" + slotNumber + "': value of slotNumber cannot be less than 0");
-		}
-
-		this.slotNumber = slotNumber;
 	}
 
 	/**
@@ -127,6 +90,40 @@ public abstract class AbstractSlotDetails {
 	}
 
 	/**
+	 * Returns the zero-based slot index within an epoch.
+	 * - Minimum value: {@code 0}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code 1337}</pre>
+	 * 
+	 * @return the zero-based slot index within an epoch.
+	 */
+	public BigInteger getSlotNumber(){
+		return slotNumber;
+	}
+
+	/**
+	 * Defines the zero-based slot index within an epoch.
+	 * - Minimum value: {@code 0}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code 1337}</pre>
+	 * 
+	 * @param slotNumber the zero-based slot index within an epoch.
+	 */
+	public void setSlotNumber(BigInteger slotNumber){
+		if (slotNumber == null) {
+			throw new IllegalArgumentException("Value of slotNumber cannot be null");
+		}
+
+		if (slotNumber.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + slotNumber + "': value of slotNumber cannot be less than 0");
+		}
+
+		this.slotNumber = slotNumber;
+	}
+
+	/**
 	 * Returns the time.
 	 * - Format: {@code iso-8601-date-and-time}.
 	 * 
@@ -154,28 +151,6 @@ public abstract class AbstractSlotDetails {
 		}
 
 		this.time = time;
-	}
-
-	/**
-	 * Returns the height.
-	 * 
-	 * @return the height
-	 */
-	public Height getHeight(){
-		return height;
-	}
-
-	/**
-	 * Defines the height.
-	 * 
-	 * @param height the height
-	 */
-	public void setHeight(Height height){
-		if (height == null) {
-			throw new IllegalArgumentException("Value of height cannot be null");
-		}
-
-		this.height = height;
 	}
 
 	@Override

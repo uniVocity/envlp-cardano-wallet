@@ -81,7 +81,7 @@ public class TestTemporaryBlockchainServer {
 		final String DOWNLOADS = HOME + "/Downloads";
 
 		EmbeddedWalletServer server = WalletServer.embedded()
-				.binariesIn(DOWNLOADS + "/cardano-wallet-2020.10.13/")
+				.binariesIn(DOWNLOADS + "/cardano-wallet-linux64/")
 				.temporaryBlockchainNode()
 				.port(5555)
 				.consumeOutput(System.out::println)

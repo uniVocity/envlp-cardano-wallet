@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.*;
 
 
 /**
- * A reference to a particular block.
+ * A reference to a particular time slot, and the block height at that point.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class Tip extends AbstractSlotDetails {

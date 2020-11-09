@@ -28,16 +28,31 @@ public class JsonSchema {
 		Map attributes = (Map) properties.remove("properties");
 		if (attributes != null) {
 			attributes.forEach((k, v) -> this.attributes.add(new Attribute((String) k, (Map) v, required != null && required.contains(k), path)));
+		} else if (!"object".equalsIgnoreCase(type)) {
+			properties.put("type", type);
+			this.attributes.add(new Attribute("result", properties, true, path));
 		}
 
-		Object additionalProperties = properties.remove("additionalProperties");
+		this.additionalPropertiesType = extractAdditionalPropertiesType(properties);
 
+		this.example = ApiGenerator.serializeMapToJson(properties, "example");
+		this.nullable = (Boolean) properties.remove("nullable");
+
+		if (!properties.isEmpty()) {
+			throw new IllegalStateException("Properties not fully processed: " + properties.keySet());
+		}
+		path.pop();
+	}
+
+	static String extractAdditionalPropertiesType(Map properties) {
+		Object additionalProperties = properties.remove("additionalProperties");
+		String out = null;
 		if (additionalProperties != null) {
 			if (additionalProperties instanceof Map) {
 				Map additionalPropertiesMap = (Map) additionalProperties;
-				additionalPropertiesType = (String) additionalPropertiesMap.remove("type");
-				if (additionalPropertiesType == null) {
-					additionalPropertiesType = (String) additionalPropertiesMap.remove("$ref");
+				out = (String) additionalPropertiesMap.remove("type");
+				if (out == null) {
+					out = (String) additionalPropertiesMap.remove("$ref");
 				}
 				if (!additionalPropertiesMap.isEmpty()) {
 					throw new IllegalStateException("Properties not fully processed: " + additionalPropertiesMap.keySet());
@@ -50,18 +65,10 @@ public class JsonSchema {
 				}
 			}
 		} else {
-			additionalPropertiesType = null;
+			out = null;
 		}
-
-		this.example = ApiGenerator.serializeMapToJson(properties, "example");
-		this.nullable = (Boolean) properties.remove("nullable");
-
-		if (!properties.isEmpty()) {
-			throw new IllegalStateException("Properties not fully processed: " + properties.keySet());
-		}
-		path.pop();
+		return out;
 	}
-
 
 	public boolean createClass(String methodSignature, File packageDir, String packageName, String className, Map<String, ClassRef> classes, ClassRef parent) {
 		if (attributes.isEmpty()) {
@@ -127,7 +134,7 @@ public class JsonSchema {
 		for (Attribute attribute : attributes) {
 			attribute.appendAttributeDeclaration(out);
 
-			if("BigInteger".equals(attribute.getJavaType())){
+			if ("BigInteger".equals(attribute.getJavaType())) {
 				insertImport(out, "java.math.*");
 			}
 		}

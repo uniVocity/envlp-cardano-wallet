@@ -16,9 +16,15 @@ public abstract class AbstractCoinSelectionResponse {
 	@JsonProperty("outputs")
 	private ArrayList<Output> outputs;
 
+	@JsonProperty("change")
+	private ArrayList<Change> change;
+
+	@JsonProperty("certificates")
+	private ArrayList<Certificate> certificates;
+
 	/**
 	 * Returns the list of transaction inputs.
-	 * - Minimum number of elements: {@code 0}.
+	 * - Minimum number of elements: {@code 1}.
 	 * 
 	 * @return the list of transaction inputs
 	 */
@@ -28,7 +34,7 @@ public abstract class AbstractCoinSelectionResponse {
 
 	/**
 	 * Defines a list of transaction inputs.
-	 * - Minimum number of elements: {@code 0}.
+	 * - Minimum number of elements: {@code 1}.
 	 * 
 	 * @param inputs a list of transaction inputs
 	 */
@@ -42,7 +48,7 @@ public abstract class AbstractCoinSelectionResponse {
 
 	/**
 	 * Returns the list of target outputs.
-	 * - Minimum number of elements: {@code 1}.
+	 * - Minimum number of elements: {@code 0}.
 	 * 
 	 * @return the list of target outputs
 	 */
@@ -52,7 +58,7 @@ public abstract class AbstractCoinSelectionResponse {
 
 	/**
 	 * Defines a list of target outputs.
-	 * - Minimum number of elements: {@code 1}.
+	 * - Minimum number of elements: {@code 0}.
 	 * 
 	 * @param outputs a list of target outputs
 	 */
@@ -62,6 +68,53 @@ public abstract class AbstractCoinSelectionResponse {
 		}
 
 		this.outputs = outputs;
+	}
+
+	/**
+	 * Returns the list of transaction change outputs.
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @return the list of transaction change outputs.
+	 */
+	public ArrayList<Change> getChange(){
+		return change;
+	}
+
+	/**
+	 * Defines a list of transaction change outputs.
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @param change a list of transaction change outputs.
+	 */
+	public void setChange(ArrayList<Change> change){
+		if (change == null) {
+			throw new IllegalArgumentException("Value of change cannot be null");
+		}
+
+		this.change = change;
+	}
+
+	/**
+	 * Returns the certificates (optional).
+	 * 
+	 * @return the certificates
+	 */
+	public ArrayList<Certificate> getCertificates(){
+		return certificates;
+	}
+
+	/**
+	 * Defines the certificates (optional).
+	 * 
+	 * @param certificates the certificates
+	 */
+	public void setCertificates(ArrayList<Certificate> certificates){
+		if (certificates == null) {
+			this.certificates = certificates;
+			return;
+		}
+
+		this.certificates = certificates;
 	}
 
 	@Override

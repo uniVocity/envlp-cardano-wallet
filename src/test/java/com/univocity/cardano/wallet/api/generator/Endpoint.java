@@ -61,10 +61,22 @@ public class Endpoint {
 	}
 
 	public void generateAsynchronousApi(StringBuilder out) {
-		methods.forEach(m -> m.generateAsynchronousApi(out, endpoint));
+		methods.forEach(m -> {
+			StringBuilder tmp = new StringBuilder();
+			m.generateAsynchronousApi(tmp, endpoint);
+			if(out.indexOf(tmp.toString()) < 0){
+				out.append(tmp);
+			}
+		});
 	}
 
 	public void generateSynchronousApi(StringBuilder out) {
-		methods.forEach(m -> m.generateSynchronousApi(out, endpoint));
+		methods.forEach(m -> {
+			StringBuilder tmp = new StringBuilder();
+			m.generateSynchronousApi(tmp, endpoint);
+			if(out.indexOf(tmp.toString()) < 0){
+				out.append(tmp);
+			}
+		});
 	}
 }

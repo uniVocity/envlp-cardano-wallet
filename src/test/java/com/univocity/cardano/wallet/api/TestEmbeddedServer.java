@@ -13,7 +13,7 @@ public class TestEmbeddedServer {
 		final String DOWNLOADS = HOME + "/Downloads";
 
 		EmbeddedWalletServer server = WalletServer.embedded()
-				.binariesIn(DOWNLOADS + "/cardano-wallet-2020.10.13/")
+				.binariesIn(DOWNLOADS + "/cardano-wallet-linux64/")
 				.mainnetNode()
 				.configuration(CONFIGS + "mainnet-config.json")
 				.topology(CONFIGS + "mainnet-topology.json")

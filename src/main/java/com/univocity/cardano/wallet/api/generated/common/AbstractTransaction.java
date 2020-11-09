@@ -20,6 +20,9 @@ public abstract class AbstractTransaction {
 	@JsonProperty("inserted_at")
 	private InsertedAt insertedAt;
 
+	@JsonProperty("expires_at")
+	private ExpiresAt expiresAt;
+
 	@JsonProperty("pending_since")
 	private PendingSince pendingSince;
 
@@ -134,6 +137,29 @@ public abstract class AbstractTransaction {
 	}
 
 	/**
+	 * Returns the expires at (optional).
+	 * 
+	 * @return the expires at
+	 */
+	public ExpiresAt getExpiresAt(){
+		return expiresAt;
+	}
+
+	/**
+	 * Defines the expires at (optional).
+	 * 
+	 * @param expiresAt the expires at
+	 */
+	public void setExpiresAt(ExpiresAt expiresAt){
+		if (expiresAt == null) {
+			this.expiresAt = expiresAt;
+			return;
+		}
+
+		this.expiresAt = expiresAt;
+	}
+
+	/**
 	 * Returns the pending since (optional).
 	 * 
 	 * @return the pending since
@@ -229,7 +255,7 @@ public abstract class AbstractTransaction {
 
 	/**
 	 * Returns the list of target outputs.
-	 * - Minimum number of elements: {@code 1}.
+	 * - Minimum number of elements: {@code 0}.
 	 * 
 	 * @return the list of target outputs
 	 */
@@ -239,7 +265,7 @@ public abstract class AbstractTransaction {
 
 	/**
 	 * Defines a list of target outputs.
-	 * - Minimum number of elements: {@code 1}.
+	 * - Minimum number of elements: {@code 0}.
 	 * 
 	 * @param outputs a list of target outputs
 	 */
@@ -280,9 +306,11 @@ public abstract class AbstractTransaction {
 	 * 
 	 * Current transaction status.
 	 *   ```
-	 *          *---------*
-	 *          |         |
-	 *   -------> PENDING <----------------*
+	 *          *---------*          *-----------*
+	 *          |         |---------->  EXPIRED  |
+	 *          |         |  (ttl)   *-----------*
+	 *   -------> PENDING |
+	 *          |         <----------------*
 	 *          |         |                |
 	 *          *---------*            (rollback)
 	 *               |                     |
@@ -293,7 +321,7 @@ public abstract class AbstractTransaction {
 	 *                               *-----------*
 	 *   ```
 	 * 
-	 * - Accepted values: {@code [pending, in_ledger]}.
+	 * - Accepted values: {@code [pending, in_ledger, expired]}.
 	 * 
 	 * @return the status
 	 */
@@ -306,9 +334,11 @@ public abstract class AbstractTransaction {
 	 * 
 	 * Current transaction status.
 	 *   ```
-	 *          *---------*
-	 *          |         |
-	 *   -------> PENDING <----------------*
+	 *          *---------*          *-----------*
+	 *          |         |---------->  EXPIRED  |
+	 *          |         |  (ttl)   *-----------*
+	 *   -------> PENDING |
+	 *          |         <----------------*
 	 *          |         |                |
 	 *          *---------*            (rollback)
 	 *               |                     |
@@ -319,7 +349,7 @@ public abstract class AbstractTransaction {
 	 *                               *-----------*
 	 *   ```
 	 * 
-	 * - Accepted values: {@code [pending, in_ledger]}.
+	 * - Accepted values: {@code [pending, in_ledger, expired]}.
 	 * 
 	 * @param status the status
 	 */

@@ -40,8 +40,15 @@ public class Response {
 
 					this.jsonSchemas.add(new JsonSchema(m, path));
 				}
-
+			} else {
+				schema = (Map)content.remove("application/octet-stream");
+				if(schema != null){
+					contentType = "application/octet-stream";
+					schema = (Map) schema.remove("schema");
+					this.jsonSchemas.add(new JsonSchema(schema, path));
+				}
 			}
+
 		} else {
 			contentType = "N/A";
 		}

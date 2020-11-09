@@ -76,25 +76,12 @@ public class BasicWalletFunctionalityTest {
 				.password(PASSWORD));
 	}
 
-	@Test(dependsOnMethods = "testByronWalletCreationFromSeed")
-	public void testByronWalletCreationFromPrivateKey() {
-		testWallet(byronWalletFromPrivateKey = server.wallets().createOrGet("byronWalletFromPrivateKey").byron()
-				.fromPrivateKey("invalid") //TODO
-				.password(PASSWORD));
-	}
-
 	@Test
 	public void testIcarusWalletCreation() {
 		icarusSeed = "traffic fortune weapon strong renew edit snack glow infant super sadness repair spend dwarf arrange";//Seed.generateEnglishSeedPhrase(15);
 		testWallet(icarusWallet = server.wallets().createOrGet("icarusWallet").icarus()
 				.fromSeed(icarusSeed)
 				.password(PASSWORD));
-	}
-
-	@Test(dependsOnMethods = "testIcarusWalletCreation")
-	public void testIcarusReadOnlyWallet() {
-		testWallet(icarusReadOnlyWallet = server.wallets().createOrGet("icarusReadOnlyWallet").icarus()
-				.fromPublicKey("invalid"));//TODO
 	}
 
 	@Test
@@ -105,24 +92,12 @@ public class BasicWalletFunctionalityTest {
 				.password(PASSWORD));
 	}
 
-	@Test(dependsOnMethods = "testLedgerWalletCreation")
-	public void testLedgerReadOnlyWalletCreation() {
-		testWallet(ledgerReadOnlyWallet = server.wallets().createOrGet("ledgerReadOnlyWallet").ledger()
-				.fromPublicKey("invalid"));//TODO
-	}
-
 	@Test
 	public void testTrezorWalletCreation() {
 		trezorSeed = "census dolphin follow cactus result vital beach zoo claw suffer drift ability voice ladder wedding sustain stomach kick mechanic save host trim cable arrest";//Seed.generateEnglishSeedPhrase(24);
 		testWallet(trezorWallet = server.wallets().createOrGet("trezorWallet").trezor()
 				.fromSeed(trezorSeed)
 				.password(PASSWORD));
-	}
-
-	@Test(dependsOnMethods = "testTrezorWalletCreation")
-	public void testTrezorReadOnlyWalletCreation() {
-		testWallet(trezorReadOnlyWallet = server.wallets().createOrGet("trezorReadOnlyWallet").trezor()
-				.fromPublicKey("invalid"));//TODO
 	}
 
 	private void testWallet(Wallet wallet) {

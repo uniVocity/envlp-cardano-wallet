@@ -40,17 +40,17 @@ abstract class AbstractTransaction<W extends Wallet, T extends AbstractTransacti
 
 	@Override
 	public BigInteger pendingSinceSlot() {
-		return safeGet(() -> original.getPendingSince().getBlock().getSlotNumber());
+		return safeGet(() -> original.getPendingSince().getSlotNumber());
 	}
 
 	@Override
 	public BigInteger pendingSinceEpoch() {
-		return safeGet(() -> original.getPendingSince().getBlock().getEpochNumber());
+		return safeGet(() -> original.getPendingSince().getEpochNumber());
 	}
 
 	@Override
 	public BigInteger pendingSinceSlotAbsolute() {
-		return safeGet(() -> original.getPendingSince().getBlock().getAbsoluteSlotNumber());
+		return safeGet(() -> original.getPendingSince().getAbsoluteSlotNumber());
 	}
 
 	@Override

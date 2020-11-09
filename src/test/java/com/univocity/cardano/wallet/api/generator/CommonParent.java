@@ -32,7 +32,9 @@ public class CommonParent {
 	static {
 		put("AbstractPercentage", "ActiveSlotCoefficient", "DecentralizationLevel", "Margin", "Progress", "RelativeStake");
 		put("AbstractAmount", "Amount", "Available", "ControlledStake", "Cost", "EstimatedMax", "EstimatedMin", "Leftovers", "MigrationCost", "MinimumUtxoValue", "NonMyopicMemberRewards", "Pledge", "Reward", "Total");
-		put("AbstractSlotDetails", "Block", "NodeTip", "Tip");
+		put("AbstractSlotDetails", "InsertedAt","NodeTip","PendingSince","Tip");
+		put("AbstractTimeDetails", "ExpiresAt","NetworkTip");
+		put("AbstractLengthDetails", "SlotLength","TimeToLive");
 		put("AbstractCoinSelectionRequest", "ByronSelectCoinsRequest", "PostByronTransactionFeeRequest", "SelectCoinsRequest");
 		put("AbstractCoinSelectionResponse", "ByronSelectCoinsResponse", "SelectCoinsResponse");
 		put("AbstractSchedule", "ChangesAt", "HardforkAt", "NextEpoch", "Retirement");
@@ -45,7 +47,6 @@ public class CommonParent {
 		put("AbstractFeeResponse", "GetDelegationFeeResponse", "PostByronTransactionFeeResponse", "PostTransactionFeeResponse");
 		put("AbstractWalletResponse", "GetWalletResponse", "ListWalletsResponseItem", "PostWalletResponse", "PutByronWalletResponse", "PutWalletResponse");
 		put("AbstractInput", "Input", "InputsDelete");
-		put("AbstractDate", "InsertedAt", "PendingSince");
 		put("AbstractStakePoolRequest", "JoinStakePoolRequest", "QuitStakePoolRequest");
 		put("AbstractPayment", "Output", "OutputsDelete", "Payment", "PaymentsPayment", "PaymentsRedemption");
 		put("AbstractWalletFromPublicKey","PostByronWalletIcarusTrezorLedgerFromXpubRequest","PostWalletShelleyFromXpubRequest");
@@ -127,6 +128,14 @@ public class CommonParent {
 					if (tmp.indexOf(commonSet) == -1) {
 						tmp.append("\n\t\t").append("put(\"\",").append(commonSet).append(");");
 					}
+
+//					for(String s : v){
+//						for (ClassRef ref1 : classes) {
+//							if(ref1.name.equalsIgnoreCase(s)){
+//								System.out.println(ref1.code);
+//							}
+//						}
+//					}
 				}
 			});
 

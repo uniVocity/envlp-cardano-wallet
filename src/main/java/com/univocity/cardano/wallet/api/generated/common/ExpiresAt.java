@@ -9,10 +9,10 @@ import com.fasterxml.jackson.annotation.*;
 
 /**
  * 
- * The point in time at which a transaction became pending.
- * {@code if: status == pending}
+ * Absolute time and slot at which the pending transaction TTL (time to live) will lapse.
+ * {@code if: status == pending OR status == expired}
  * 
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class PendingSince extends AbstractSlotDetails {
+public final class ExpiresAt extends AbstractTimeDetails {
 }

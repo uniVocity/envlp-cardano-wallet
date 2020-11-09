@@ -24,7 +24,7 @@ public final class PostTransactionFeeRedemptionRequest {
 
 	/**
 	 * Returns the list of target outputs.
-	 * - Minimum number of elements: {@code 1}.
+	 * - Minimum number of elements: {@code 0}.
 	 * 
 	 * @return the list of target outputs
 	 */
@@ -34,7 +34,7 @@ public final class PostTransactionFeeRedemptionRequest {
 
 	/**
 	 * Defines a list of target outputs.
-	 * - Minimum number of elements: {@code 1}.
+	 * - Minimum number of elements: {@code 0}.
 	 * 
 	 * @param payments a list of target outputs
 	 */

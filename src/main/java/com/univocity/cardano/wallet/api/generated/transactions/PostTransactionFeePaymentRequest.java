@@ -25,9 +25,12 @@ public final class PostTransactionFeePaymentRequest {
 	@JsonProperty("metadata")
 	private Object metadata;
 
+	@JsonProperty("time_to_live")
+	private TimeToLive timeToLive;
+
 	/**
 	 * Returns the list of target outputs.
-	 * - Minimum number of elements: {@code 1}.
+	 * - Minimum number of elements: {@code 0}.
 	 * 
 	 * @return the list of target outputs
 	 */
@@ -37,7 +40,7 @@ public final class PostTransactionFeePaymentRequest {
 
 	/**
 	 * Defines a list of target outputs.
-	 * - Minimum number of elements: {@code 1}.
+	 * - Minimum number of elements: {@code 0}.
 	 * 
 	 * @param payments a list of target outputs
 	 */
@@ -199,6 +202,29 @@ public final class PostTransactionFeePaymentRequest {
 		}
 
 		this.metadata = metadata;
+	}
+
+	/**
+	 * Returns the time to live (optional).
+	 * 
+	 * @return the time to live
+	 */
+	public TimeToLive getTimeToLive(){
+		return timeToLive;
+	}
+
+	/**
+	 * Defines the time to live (optional).
+	 * 
+	 * @param timeToLive the time to live
+	 */
+	public void setTimeToLive(TimeToLive timeToLive){
+		if (timeToLive == null) {
+			this.timeToLive = timeToLive;
+			return;
+		}
+
+		this.timeToLive = timeToLive;
 	}
 
 	@Override

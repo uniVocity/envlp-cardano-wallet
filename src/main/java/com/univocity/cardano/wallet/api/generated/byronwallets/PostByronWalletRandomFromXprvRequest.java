@@ -10,7 +10,7 @@ import com.univocity.cardano.wallet.api.generated.*;
 /**
  * 
  * Request body definition for 
- * {@link InternalWalletApiService#postByronWallet(okhttp3.RequestBody)}.
+ * {@link InternalWalletApiService#postByronWallet(okhttp3.RequestBody)}.patate
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class PostByronWalletRandomFromXprvRequest {
@@ -103,6 +103,7 @@ public final class PostByronWalletRandomFromXprvRequest {
 	 * - Length must be exactly {@code 256}.
 	 * 
 	 * @return the encrypted root private key
+	 * @Deprecated
 	 */
 	public String getEncryptedRootPrivateKey(){
 		return encryptedRootPrivateKey;
@@ -155,6 +156,7 @@ public final class PostByronWalletRandomFromXprvRequest {
 	 *   <pre>{@code 31347c387c317c574342652b796362417576356c2b4258676a344a314c6343675375414c2f5653393661364e576a2b7550766655513d3d7c2f376738486c59723174734e394f6e4e753253302b6a65515a6b5437316b45414941366a515867386539493d}</pre>
 	 * 
 	 * @return the passphrase hash
+	 * @Deprecated
 	 */
 	public String getPassphraseHash(){
 		return passphraseHash;

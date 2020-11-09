@@ -11,9 +11,12 @@ import com.univocity.cardano.wallet.api.generated.byronmigrations.*;
 import com.univocity.cardano.wallet.api.generated.byrontransactions.*;
 import com.univocity.cardano.wallet.api.generated.byronwallets.*;
 import com.univocity.cardano.wallet.api.generated.coinselections.*;
+import com.univocity.cardano.wallet.api.generated.experimental.*;
+import com.univocity.cardano.wallet.api.generated.keys.*;
 import com.univocity.cardano.wallet.api.generated.migrations.*;
 import com.univocity.cardano.wallet.api.generated.network.*;
 import com.univocity.cardano.wallet.api.generated.proxy.*;
+import com.univocity.cardano.wallet.api.generated.settings.*;
 import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
 import com.univocity.cardano.wallet.api.generated.utils.*;
@@ -35,6 +38,36 @@ public class AsynchronousWalletApi {
 		this.api = api;
 	}
 
+
+	/**
+	 * 
+	 * **⚠️ WARNING ⚠️**
+	 * This endpoint is experimental and for internal use in the Catalyst project. This
+	 * functionality will be refined in the forthcoming future and the interface is likely
+	 * to change in **NON-BACKWARD COMPATIBLE WAYS**.
+	 * Note: Only `Soft` indexes are supported by this endpoint.
+	 * {@code status: experimental}
+	 * 
+	 * @param walletId the walletId.
+	 * - Format: {@code hex}.
+	 * - Length must be exactly {@code 40}.
+	 * @param role the role.
+	 * - Accepted values: {@code [utxo_external, utxo_internal, mutable_account, multisig_script]}.
+	 * @param index the index.
+	 * 
+	 * An individual segment within a derivation path.
+	 * Indexes without `H` suffix are called `Soft`.
+	 * Indexes with `H` suffix are called `Hardened`.
+	 * 
+	 * 
+	 * - Example: 
+	 *   <pre>{@code 1852H}</pre>
+	 * @param requestBody a request body containing the json representation of {@link SignMetadataRequest}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link SignMetadataResponse}
+	 */
+	public void signMetadata(String walletId, String role, String index, SignMetadataRequest requestBody, WalletApiCallback<SignMetadataResponse> callback){
+		api.signMetadata(walletId, role, index, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
 
 	/**
 	 * 
@@ -292,6 +325,32 @@ public class AsynchronousWalletApi {
 
 	/**
 	 * 
+	 * Return a public key for a given role and derivation index.
+	 * Note: Only `Soft` indexes are supported by this endpoint.
+	 * {@code status: stable}
+	 * 
+	 * @param walletId the walletId.
+	 * - Format: {@code hex}.
+	 * - Length must be exactly {@code 40}.
+	 * @param role the role.
+	 * - Accepted values: {@code [utxo_external, utxo_internal, mutable_account, multisig_script]}.
+	 * @param index the index.
+	 * 
+	 * An individual segment within a derivation path.
+	 * Indexes without `H` suffix are called `Soft`.
+	 * Indexes with `H` suffix are called `Hardened`.
+	 * 
+	 * 
+	 * - Example: 
+	 *   <pre>{@code 1852H}</pre>
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link GetWalletKeyResponse}
+	 */
+	public void getWalletKey(String walletId, String role, String index, WalletApiCallback<GetWalletKeyResponse> callback){
+		api.getWalletKey(walletId, role, index).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
 	 * List all known stake pools ordered by descending `non_myopic_member_rewards`.
 	 * The `non_myopic_member_rewards` — and thus the ordering — depends on the `?stake` query
 	 * parameter.
@@ -419,7 +478,10 @@ public class AsynchronousWalletApi {
 
 	/**
 	 * 
-	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key (deprecated).
+	 *   **⚠️ WARNING ⚠️**
+	 *   The construction of random wallet in itself is **deprecated**, in particular the restoration from an encrypted root private key.
+	 *   These endpoints exist to ease migrations from legacy software such as `cardano-sl` but should be avoided by new applications.
 	 * {@code status: stable}
 	 * 
 	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRandomRequest}
@@ -431,19 +493,10 @@ public class AsynchronousWalletApi {
 
 	/**
 	 * 
-	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
-	 * {@code status: stable}
-	 * 
-	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRandomFromXprvRequest}
-	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronWalletResponse}
-	 */
-	public void postByronWallet(PostByronWalletRandomFromXprvRequest requestBody, WalletApiCallback<PostByronWalletResponse> callback){
-		api.postByronWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
-	}
-
-	/**
-	 * 
-	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key (deprecated).
+	 *   **⚠️ WARNING ⚠️**
+	 *   The construction of random wallet in itself is **deprecated**, in particular the restoration from an encrypted root private key.
+	 *   These endpoints exist to ease migrations from legacy software such as `cardano-sl` but should be avoided by new applications.
 	 * {@code status: stable}
 	 * 
 	 * @param requestBody a request body containing the json representation of {@link PostByronWalletIcarusRequest}
@@ -455,7 +508,10 @@ public class AsynchronousWalletApi {
 
 	/**
 	 * 
-	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key (deprecated).
+	 *   **⚠️ WARNING ⚠️**
+	 *   The construction of random wallet in itself is **deprecated**, in particular the restoration from an encrypted root private key.
+	 *   These endpoints exist to ease migrations from legacy software such as `cardano-sl` but should be avoided by new applications.
 	 * {@code status: stable}
 	 * 
 	 * @param requestBody a request body containing the json representation of {@link PostByronWalletTrezorRequest}
@@ -467,7 +523,10 @@ public class AsynchronousWalletApi {
 
 	/**
 	 * 
-	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key (deprecated).
+	 *   **⚠️ WARNING ⚠️**
+	 *   The construction of random wallet in itself is **deprecated**, in particular the restoration from an encrypted root private key.
+	 *   These endpoints exist to ease migrations from legacy software such as `cardano-sl` but should be avoided by new applications.
 	 * {@code status: stable}
 	 * 
 	 * @param requestBody a request body containing the json representation of {@link PostByronWalletLedgerRequest}
@@ -479,13 +538,31 @@ public class AsynchronousWalletApi {
 
 	/**
 	 * 
-	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key.
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key (deprecated).
+	 *   **⚠️ WARNING ⚠️**
+	 *   The construction of random wallet in itself is **deprecated**, in particular the restoration from an encrypted root private key.
+	 *   These endpoints exist to ease migrations from legacy software such as `cardano-sl` but should be avoided by new applications.
 	 * {@code status: stable}
 	 * 
 	 * @param requestBody a request body containing the json representation of {@link PostByronWalletIcarusTrezorLedgerFromXpubRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronWalletResponse}
 	 */
 	public void postByronWallet(PostByronWalletIcarusTrezorLedgerFromXpubRequest requestBody, WalletApiCallback<PostByronWalletResponse> callback){
+		api.postByronWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Restore a Byron wallet from a mnemonic sentence or encrypted root private key (deprecated).
+	 *   **⚠️ WARNING ⚠️**
+	 *   The construction of random wallet in itself is **deprecated**, in particular the restoration from an encrypted root private key.
+	 *   These endpoints exist to ease migrations from legacy software such as `cardano-sl` but should be avoided by new applications.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostByronWalletRandomFromXprvRequest}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostByronWalletResponse}
+	 */
+	public void postByronWallet(PostByronWalletRandomFromXprvRequest requestBody, WalletApiCallback<PostByronWalletResponse> callback){
 		api.postByronWallet(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
@@ -746,6 +823,7 @@ public class AsynchronousWalletApi {
 	 * Select coins to cover the given set of payments.
 	 * Uses the 
 	 * Random-Improve coin selection algorithm.
+	 * Note:  Not supported for Byron random wallets.
 	 * {@code status: stable}
 	 * 
 	 * @param walletId the walletId.
@@ -848,5 +926,40 @@ public class AsynchronousWalletApi {
 	 */
 	public void inspectAddress(String addressId, WalletApiCallback<InspectAddressResponse> callback){
 		api.inspectAddress(addressId).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Construct any address by specyfying credential for payment or stake.
+	 * {@code status: unstable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostAnyAddressRequest}
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link PostAnyAddressResponse}
+	 */
+	public void postAnyAddress(PostAnyAddressRequest requestBody, WalletApiCallback<PostAnyAddressResponse> callback){
+		api.postAnyAddress(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Overwrite current settings.
+	 * {@code status: stable}
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PutSettingsRequest}
+	 * @param callback code to be executed once a response is available. No response body is expected.
+	 */
+	public void putSettings(PutSettingsRequest requestBody, WalletApiCallback<Void> callback){
+		api.putSettings(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Return the current settings.
+	 * {@code status: stable}
+	 * 
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link GetSettingsResponse}
+	 */
+	public void getSettings(WalletApiCallback<GetSettingsResponse> callback){
+		api.getSettings().enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 }
