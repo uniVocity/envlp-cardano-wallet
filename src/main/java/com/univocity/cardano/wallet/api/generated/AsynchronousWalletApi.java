@@ -367,6 +367,26 @@ public class AsynchronousWalletApi {
 		api.listStakePools(stake).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
+	/**Returns the current status of the stake pools maintenance actions.
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link GetMaintenanceActionsResponse}
+	 */
+	public void getMaintenanceActions(WalletApiCallback<GetMaintenanceActionsResponse> callback){
+		api.getMaintenanceActions().enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**
+	 * 
+	 * Performs maintenance actions on stake pools, such
+	 * as triggering metadata garbage collection.
+	 * Actions may not be instantaneous.
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostMaintenanceActionRequest}
+	 * @param callback code to be executed once a response is available. No response body is expected.
+	 */
+	public void postMaintenanceAction(PostMaintenanceActionRequest requestBody, WalletApiCallback<Void> callback){
+		api.postMaintenanceAction(Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
 	/**
 	 * 
 	 * Estimate fee for joining or leaving a stake pool. Note that it is an

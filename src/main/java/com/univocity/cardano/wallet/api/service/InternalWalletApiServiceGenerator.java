@@ -23,6 +23,14 @@ public class InternalWalletApiServiceGenerator {
 	private static final Converter.Factory converterFactory;
 	private static final Converter<ResponseBody, WalletApiError> errorBodyConverter;
 
+	private static final Interceptor interceptor = chain -> {
+		Request request = chain.request();
+		Request.Builder builder = request.newBuilder().addHeader("Cache-Control", "no-cache");
+		request = builder.build();
+		return chain.proceed(request);
+	};
+
+
 	static {
 		Dispatcher dispatcher = new Dispatcher();
 		dispatcher.setMaxRequestsPerHost(500);
@@ -32,6 +40,8 @@ public class InternalWalletApiServiceGenerator {
 
 		sharedClient = new OkHttpClient.Builder()
 				.dispatcher(dispatcher)
+				.cache(null)
+				.addInterceptor(interceptor)
 				.callTimeout(2, TimeUnit.MINUTES)
 				.connectTimeout(2, TimeUnit.MINUTES)
 				.readTimeout(2, TimeUnit.MINUTES)

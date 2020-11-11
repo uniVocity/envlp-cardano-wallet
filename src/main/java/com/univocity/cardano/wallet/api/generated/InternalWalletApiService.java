@@ -323,6 +323,27 @@ public interface InternalWalletApiService {
 	Call<List<ListStakePoolsResponseItem>> listStakePools(@Query("stake") Long stake);
 
 
+	/**Returns the current status of the stake pools maintenance actions.
+	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetMaintenanceActionsResponse}
+	 */
+	@GET("/v2/stake-pools/maintenance-actions")
+	Call<GetMaintenanceActionsResponse> getMaintenanceActions();
+
+
+	/**
+	 * 
+	 * Performs maintenance actions on stake pools, such
+	 * as triggering metadata garbage collection.
+	 * Actions may not be instantaneous.
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostMaintenanceActionRequest}
+	 * @return a Retrofit {@link Call} which is used as a handle for this HTTP request. No response body is expected.
+	 */
+	@Headers("Content-Type: application/json")
+	@POST("/v2/stake-pools/maintenance-actions")
+	Call<Void> postMaintenanceAction(@Body RequestBody requestBody);
+
+
 	/**
 	 * 
 	 * Estimate fee for joining or leaving a stake pool. Note that it is an

@@ -364,6 +364,25 @@ public class SynchronousWalletApi {
 		return executeSync(api.listStakePools(stake));
 	}
 
+	/**Returns the current status of the stake pools maintenance actions.
+	 * @return the server response as an instance of {@link GetMaintenanceActionsResponse}
+	 */
+	public GetMaintenanceActionsResponse getMaintenanceActions(){
+		return executeSync(api.getMaintenanceActions());
+	}
+
+	/**
+	 * 
+	 * Performs maintenance actions on stake pools, such
+	 * as triggering metadata garbage collection.
+	 * Actions may not be instantaneous.
+	 * 
+	 * @param requestBody a request body containing the json representation of {@link PostMaintenanceActionRequest}
+	 */
+	public void postMaintenanceAction(PostMaintenanceActionRequest requestBody){
+		executeSync(api.postMaintenanceAction(Utils.createRequestBody(requestBody)));
+	}
+
 	/**
 	 * 
 	 * Estimate fee for joining or leaving a stake pool. Note that it is an

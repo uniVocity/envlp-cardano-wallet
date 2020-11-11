@@ -1,8 +1,10 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
 import com.univocity.cardano.wallet.api.*;
+import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
 import com.univocity.cardano.wallet.builders.network.*;
+import com.univocity.cardano.wallet.builders.stakepools.*;
 import com.univocity.cardano.wallet.builders.wallets.addresses.*;
 import com.univocity.cardano.wallet.builders.wallets.transactions.*;
 import com.univocity.cardano.wallet.common.*;
@@ -127,7 +129,17 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 		return new ShelleyWallet(api.sync().getWallet(id()), api);
 	}
 
-	public Keys keys(){
+	public Keys keys() {
 		return keys;
+	}
+
+	public void delegate(StakePool stakePool, String password) {
+		JoinStakePoolRequest request = new JoinStakePoolRequest();
+		request.setPassphrase(password);
+		api.sync().joinStakePool(stakePool.id(), this.id(), request);
+	}
+
+	public void undelegate(String password) {
+		api.sync().quitStakePool(this.id());
 	}
 }

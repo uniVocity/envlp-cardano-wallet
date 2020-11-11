@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.generated.stakepools;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
+import java.util.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
@@ -33,6 +34,9 @@ public final class ListStakePoolsResponseItem {
 
 	@JsonProperty("retirement")
 	private Retirement retirement;
+
+	@JsonProperty("flags")
+	private ArrayList<String> flags;
 
 	/**
 	 * Returns the unique identifier for the pool.
@@ -196,6 +200,42 @@ public final class ListStakePoolsResponseItem {
 		}
 
 		this.retirement = retirement;
+	}
+
+	/**
+	 * Returns the flags.
+	 * 
+	 * Various flags applicable to stake pools. Possible flags:
+	 * | flag     | description                                                                                                      |
+	 * | ---      | ---                                                                                                              |
+	 * | delisted | The pool is marked as delisted on a configured SMASH server; metadata for this pool have therefore been dropped. |
+	 * 
+	 * - Values: {@code [delisted]}.
+	 * 
+	 * @return the flags
+	 */
+	public ArrayList<String> getFlags(){
+		return flags;
+	}
+
+	/**
+	 * Defines the flags.
+	 * 
+	 * Various flags applicable to stake pools. Possible flags:
+	 * | flag     | description                                                                                                      |
+	 * | ---      | ---                                                                                                              |
+	 * | delisted | The pool is marked as delisted on a configured SMASH server; metadata for this pool have therefore been dropped. |
+	 * 
+	 * - Values: {@code [delisted]}.
+	 * 
+	 * @param flags the flags
+	 */
+	public void setFlags(ArrayList<String> flags){
+		if (flags == null) {
+			throw new IllegalArgumentException("Value of flags cannot be null");
+		}
+
+		this.flags = flags;
 	}
 
 	@Override

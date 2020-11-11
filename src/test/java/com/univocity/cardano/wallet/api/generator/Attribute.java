@@ -27,6 +27,7 @@ public class Attribute {
 	private String description;
 	private final JsonSchema nested;
 	private final List<String> acceptedValues = new ArrayList<>();
+	private final List<String> enumeratedValues = new ArrayList<>();
 	private final String arrayElementType;
 	private Stack<Object> stack;
 	private boolean isJavaObject;
@@ -58,7 +59,7 @@ public class Attribute {
 		this.minimum = (Number) properties.remove("minimum");
 		this.maximum = (Number) properties.remove("maximum");
 		this.defaultValue = properties.remove("default");
-		this.deprecated = (Boolean)properties.remove("deprecated");
+		this.deprecated = (Boolean) properties.remove("deprecated");
 
 		additionalPropertiesType = JsonSchema.extractAdditionalPropertiesType(properties);
 
@@ -88,10 +89,15 @@ public class Attribute {
 			items.remove("type");
 			if (items.containsKey("description")) {
 				String s = (String) items.remove("description");
-				if(StringUtils.isNotBlank(s)){
+				if (StringUtils.isNotBlank(s)) {
 					description = s;
 				}
 			}
+			List enumItems = (List) items.remove("enum");
+			if (enumItems != null && !enumItems.isEmpty()) {
+				enumItems.forEach(i -> enumeratedValues.add(String.valueOf(i)));
+			}
+
 			if (!items.isEmpty()) {
 				throw new IllegalStateException("Properties not fully processed: " + items.keySet());
 			}
@@ -99,7 +105,7 @@ public class Attribute {
 
 		this.format = format;
 		Boolean nullable = (Boolean) properties.remove("nullable");
-		if(this.required == null){
+		if (this.required == null) {
 			this.required = nullable;
 		}
 
@@ -108,18 +114,18 @@ public class Attribute {
 			enumItems.forEach(e -> acceptedValues.add(String.valueOf(e)));
 		}
 
-		List oneOf = (List)properties.remove("oneOf");
-		if(oneOf != null){
+		List oneOf = (List) properties.remove("oneOf");
+		if (oneOf != null) {
 			type = "string";
 			//we just ignore attribute items here.
 		}
 
-		if(type == null){
-			if(additionalPropertiesType != null){
+		if (type == null) {
+			if (additionalPropertiesType != null) {
 				type = "string";
-				if(format == null){
+				if (format == null) {
 					format = StringUtils.substringAfterLast(additionalPropertiesType, "/");
-					if(StringUtils.isBlank(format)){
+					if (StringUtils.isBlank(format)) {
 						this.format = additionalPropertiesType;
 					}
 				}
@@ -127,7 +133,7 @@ public class Attribute {
 
 		}
 
-		if(type== null){
+		if (type == null) {
 			throw new IllegalStateException("Attribute type cannot be null");
 		}
 
@@ -377,6 +383,11 @@ public class Attribute {
 				out.append("\n\t * - Maximum number of elements: {@code ").append(maxItems).append("}.");
 			}
 		}
+
+		if(!enumeratedValues.isEmpty()){
+			out.append("\n\t * - Values: {@code ").append(enumeratedValues).append("}.");
+		}
+
 		if (example != null) {
 			out.append("\n\t * \n\t * - Example: \n\t * ");
 			appendMultiLine(out, example, true, 1);
@@ -389,7 +400,7 @@ public class Attribute {
 		out.append("\n\t * \n\t * ").append("@return ");
 		appendDescriptionOrName(out, true);
 
-		if(deprecated != null){
+		if (deprecated != null) {
 			out.append("\n\t * @Deprecated");
 		}
 

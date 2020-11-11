@@ -1,9 +1,9 @@
 package com.univocity.cardano.wallet.api;
 
 import com.univocity.cardano.wallet.builders.server.*;
+import com.univocity.cardano.wallet.builders.stakepools.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
 import com.univocity.cardano.wallet.builders.wallets.transactions.*;
-import org.apache.commons.lang3.*;
 import org.testng.annotations.*;
 
 import java.math.*;
@@ -132,6 +132,51 @@ public class TransactionTests {
 	}
 
 	@Test
+	public void testStakePoolJoiningAndLeaving() throws Exception {
+		List<StakePool> pools = server.stakePools().listAsync().get();
+//		pools.forEach(p -> System.out.println("++++++++++++\n" + p + "\n++++++++++++\n"));
+//pool1hvg5evmawhaq2fsr9rprtg76u226x0gt5e62t6c78etgu2j7xtn
+
+		String id = undelegatedShelleyWallet.currentStakePoolId();
+		System.out.println("delegated to " + id);
+
+		undelegatedShelleyWallet.delegate(pools.get(0), PASSWORD);
+
+		while(true){
+			undelegatedShelleyWallet = undelegatedShelleyWallet.update();
+			System.out.println("next pool id " + undelegatedShelleyWallet.nextStakePoolId());
+			System.out.println("delegated to " + undelegatedShelleyWallet.currentStakePoolId());
+
+			if(!id.equals(undelegatedShelleyWallet.currentStakePoolId())){
+				break;
+			}
+
+			Thread.sleep(5_000);
+		}
+
+//		undelegatedShelleyWallet = undelegatedShelleyWallet.update();
+//
+//		System.out.println("delegated to " + undelegatedShelleyWallet.currentStakePoolId());
+//
+//		Thread.sleep(60_000);
+//
+//		undelegatedShelleyWallet = undelegatedShelleyWallet.update();
+//		System.out.println("delegated to " + undelegatedShelleyWallet.currentStakePoolId());
+//
+//		System.out.println("Undelegating");
+//		undelegatedShelleyWallet.undelegate(PASSWORD);
+//		undelegatedShelleyWallet = undelegatedShelleyWallet.update();
+//		System.out.println("Undelegated");
+//		System.out.println("delegated to " + undelegatedShelleyWallet.currentStakePoolId());
+//
+//		Thread.sleep(60_000);
+//
+//		undelegatedShelleyWallet = undelegatedShelleyWallet.update();
+//		System.out.println("Undelegated");
+//		System.out.println("delegated to " + undelegatedShelleyWallet.currentStakePoolId());
+	}
+
+	@Test
 	public void transferTestShelleyToShelley() {
 		BigDecimal payerBalance = undelegatedShelleyWallet.totalBalance();
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
@@ -252,7 +297,6 @@ public class TransactionTests {
 		Transaction transaction = fees.authorize(PASSWORD);
 		System.out.println(transaction);
 	}
-
 
 
 	@Test
