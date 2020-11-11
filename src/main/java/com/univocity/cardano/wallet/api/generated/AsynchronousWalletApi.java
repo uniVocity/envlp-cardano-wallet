@@ -419,10 +419,11 @@ public class AsynchronousWalletApi {
 	 * @param walletId the walletId.
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
+	 * @param requestBody a request body containing the json representation of {@link QuitStakePoolRequest}
 	 * @param callback code to be executed once a response is available. The response will be an instance of {@link QuitStakePoolResponse}
 	 */
-	public void quitStakePool(String walletId, WalletApiCallback<QuitStakePoolResponse> callback){
-		api.quitStakePool(walletId).enqueue(new WalletApiCallbackAdapter<>(callback));
+	public void quitStakePool(String walletId, QuitStakePoolRequest requestBody, WalletApiCallback<QuitStakePoolResponse> callback){
+		api.quitStakePool(walletId, Utils.createRequestBody(requestBody)).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 
 	/**

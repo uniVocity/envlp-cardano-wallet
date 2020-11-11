@@ -415,10 +415,11 @@ public class SynchronousWalletApi {
 	 * @param walletId the walletId.
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
+	 * @param requestBody a request body containing the json representation of {@link QuitStakePoolRequest}
 	 * @return the server response as an instance of {@link QuitStakePoolResponse}
 	 */
-	public QuitStakePoolResponse quitStakePool(String walletId){
-		return executeSync(api.quitStakePool(walletId));
+	public QuitStakePoolResponse quitStakePool(String walletId, QuitStakePoolRequest requestBody){
+		return executeSync(api.quitStakePool(walletId, Utils.createRequestBody(requestBody)));
 	}
 
 	/**

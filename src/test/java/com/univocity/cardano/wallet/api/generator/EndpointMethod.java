@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.generator;
 
 import org.apache.commons.lang3.*;
+import retrofit2.http.*;
 
 import java.io.*;
 import java.util.*;
@@ -83,10 +84,11 @@ public class EndpointMethod {
 			requestBodyClass = "byte[]";
 		}
 		returnType = response == null || response.isEmpty() ? "Void" : StringUtils.capitalize(methodName) + (response.isArray ? "ResponseItem" : "Response");
-		allowsBody = !"delete".equalsIgnoreCase(method);
+		allowsBody = "delete".equalsIgnoreCase(method) || "post".equalsIgnoreCase(method) || "put".equalsIgnoreCase(method);
 
 		generateMethodSignatureAndInvocation();
 		response.createClass(methodSignature, packageDir, packageName, returnType, classes);
+
 		if (requestBody != null) {
 			requestBody.createClass(methodSignature, packageDir, packageName, requestBodyClass, classes);
 		}
@@ -157,7 +159,7 @@ public class EndpointMethod {
 
 
 		int signatureIndex = out.toString().indexOf(signature.toString());
-		if(signatureIndex < 0){
+		if (signatureIndex < 0) {
 			out.append("\n\t/**");
 			if (this.description != null) {
 				Attribute.appendMultiLine(out, description, false, 1);
@@ -178,24 +180,32 @@ public class EndpointMethod {
 			} else if ("put".equalsIgnoreCase(method)) {
 				out.append("@PUT(\"");
 			} else if ("delete".equalsIgnoreCase(method)) {
-				out.append("@DELETE(\"");
+				if(requestBody != null){
+					out.append("@HTTP(method = \"DELETE\",path=\"");
+				} else {
+					out.append("@DELETE(\"");
+				}
 			} else {
 				throw new IllegalStateException("Unsupported HTTP method: " + method);
 			}
 
-			out.append("/v2" + endpoint).append("\")\n");
+			out.append("/v2" + endpoint).append("\"");
+			if ("delete".equalsIgnoreCase(method) && requestBody != null){
+				out.append(", hasBody = true");
+			}
+			out.append(")\n");
 			out.append('\t');
 
 			out.append(signature);
 		} else {
 			String s = "a request body containing the json representation of ";
 			int existingDocIndex = out.lastIndexOf(s);
-			if(existingDocIndex > 0) {
+			if (existingDocIndex > 0) {
 				String separator = " or ";
-				if(out.indexOf("or {@link ", existingDocIndex) != -1){
+				if (out.indexOf("or {@link ", existingDocIndex) != -1) {
 					separator = ", ";
 				}
-				out.insert(existingDocIndex + s.length(), "{@link " + requestBodyClass+ "}" + separator);
+				out.insert(existingDocIndex + s.length(), "{@link " + requestBodyClass + "}" + separator);
 			}
 		}
 	}

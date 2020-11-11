@@ -9,7 +9,7 @@ import com.univocity.cardano.wallet.api.generated.*;
 /**
  * 
  * Request body definition for 
- * {@link InternalWalletApiService#quitStakePool(String)}.
+ * {@link InternalWalletApiService#quitStakePool(String, okhttp3.RequestBody)}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class QuitStakePoolRequest extends AbstractStakePoolRequest {

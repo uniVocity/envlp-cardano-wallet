@@ -140,6 +140,8 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 	}
 
 	public void undelegate(String password) {
-		api.sync().quitStakePool(this.id());
+		QuitStakePoolRequest request = new QuitStakePoolRequest();
+		request.setPassphrase(password);
+		api.sync().quitStakePool(this.id(), request);
 	}
 }

@@ -376,11 +376,12 @@ public interface InternalWalletApiService {
 	 * @param walletId the walletId.
 	 * - Format: {@code hex}.
 	 * - Length must be exactly {@code 40}.
+	 * @param requestBody a request body containing the json representation of {@link QuitStakePoolRequest}
 	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link QuitStakePoolResponse}
 	 */
 	@Headers("Content-Type: application/json")
-	@DELETE("/v2/stake-pools/*/wallets/{walletId}")
-	Call<QuitStakePoolResponse> quitStakePool(@Path("walletId") String walletId);
+	@HTTP(method = "DELETE",path="/v2/stake-pools/*/wallets/{walletId}", hasBody = true)
+	Call<QuitStakePoolResponse> quitStakePool(@Path("walletId") String walletId, @Body RequestBody requestBody);
 
 
 	/**
