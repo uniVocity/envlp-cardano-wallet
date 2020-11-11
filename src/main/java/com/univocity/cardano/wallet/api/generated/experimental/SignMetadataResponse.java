@@ -18,6 +18,14 @@ public final class SignMetadataResponse {
 	@JsonProperty("result")
 	private String result;
 
+	public SignMetadataResponse(){
+		this(null);
+	}
+
+	public SignMetadataResponse(String result){
+		this.result = result;
+	}
+
 	/**
 	 * Returns the result.
 	 * - Format: {@code binary}.

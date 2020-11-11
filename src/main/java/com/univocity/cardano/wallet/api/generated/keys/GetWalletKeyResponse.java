@@ -18,6 +18,14 @@ public final class GetWalletKeyResponse {
 	@JsonProperty("result")
 	private String result;
 
+	public GetWalletKeyResponse(){
+		this(null);
+	}
+
+	public GetWalletKeyResponse(String result){
+		this.result = result;
+	}
+
 	/**
 	 * Returns the result.
 	 * - Format: {@code bech32}.

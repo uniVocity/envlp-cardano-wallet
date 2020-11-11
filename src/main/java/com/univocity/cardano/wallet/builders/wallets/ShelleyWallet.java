@@ -13,10 +13,12 @@ import java.time.*;
 public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> implements Wallet {
 
 	private final Addresses addresses;
+	private final Keys keys;
 
 	public ShelleyWallet(AbstractWalletResponse original, WalletApi api) {
 		super(original, api);
 		this.addresses = new ShelleyAddresses(this, api);
+		this.keys = new Keys(this, api);
 	}
 
 	@Override
@@ -123,5 +125,9 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 
 	public ShelleyWallet update() {
 		return new ShelleyWallet(api.sync().getWallet(id()), api);
+	}
+
+	public Keys keys(){
+		return keys;
 	}
 }

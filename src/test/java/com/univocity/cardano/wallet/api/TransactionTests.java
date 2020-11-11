@@ -137,17 +137,17 @@ public class TransactionTests {
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
 		BigDecimal payeeBalance = emptyShelleyWallet.totalBalance();
 
-		ShelleyTransaction transaction;/* = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).authorize(PASSWORD);
+		ShelleyTransaction transaction = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).authorize(PASSWORD);
 		assertEquals(transaction.status(), Transaction.Status.PENDING);
-		System.out.println(transaction);*/
+		System.out.println(transaction);
 
 		String transactionId = "2b1633ba62ee3bfc553f69579ae308614ed5c6a425844a6dbf4ba0629ab82ecf";
 		transaction = undelegatedShelleyWallet.transactions().get(transactionId);
 
-		System.out.println(transaction);
-		List<ShelleyTransaction> transactions = undelegatedShelleyWallet.transactions().list();
-		assertTrue(transactions.contains(transaction));
-		System.out.println(transactions);
+//		System.out.println(transaction);
+//		List<ShelleyTransaction> transactions = undelegatedShelleyWallet.transactions().list();
+//		assertTrue(transactions.contains(transaction));
+//		System.out.println(transactions);
 
 		//transaction.update();
 

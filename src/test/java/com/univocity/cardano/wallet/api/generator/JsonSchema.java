@@ -4,6 +4,7 @@ package com.univocity.cardano.wallet.api.generator;
 import java.io.*;
 import java.util.*;
 
+import static com.univocity.cardano.wallet.api.generator.Attribute.*;
 import static com.univocity.cardano.wallet.api.generator.ClassRef.*;
 
 public class JsonSchema {
@@ -15,6 +16,7 @@ public class JsonSchema {
 	private String additionalPropertiesType;
 	private final String example;
 	private final Boolean nullable;
+	private boolean buildConstructor;
 
 	public JsonSchema(Map properties, Stack<Object> path) {
 		type = (String) properties.remove("type");
@@ -31,6 +33,7 @@ public class JsonSchema {
 		} else if (!"object".equalsIgnoreCase(type)) {
 			properties.put("type", type);
 			this.attributes.add(new Attribute("result", properties, true, path));
+			buildConstructor = true;
 		}
 
 		this.additionalPropertiesType = extractAdditionalPropertiesType(properties);
@@ -137,6 +140,16 @@ public class JsonSchema {
 			if ("BigInteger".equals(attribute.getJavaType())) {
 				insertImport(out, "java.math.*");
 			}
+		}
+
+		if (buildConstructor) {
+			out.append("\n\tpublic ").append(className).append("(){\n");
+			out.append("\t\tthis(null);\n");
+			out.append("\t}\n");
+
+			out.append("\n\tpublic ").append(className).append('(').append(getType(type, null)).append(' ').append("result").append("){\n");
+			out.append("\t\tthis.result = result;\n");
+			out.append("\t}\n");
 		}
 
 		for (Attribute attribute : attributes) {
