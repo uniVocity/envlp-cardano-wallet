@@ -5,9 +5,9 @@ import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
 
-public class StakeWithdrawal extends Wrapper<Withdrawal> {
+public class StakeWithdrawal extends Wrapper<AbstractWithdrawal> {
 
-	public StakeWithdrawal(Withdrawal original) {
+	public StakeWithdrawal(AbstractWithdrawal original) {
 		super(original, null);
 	}
 

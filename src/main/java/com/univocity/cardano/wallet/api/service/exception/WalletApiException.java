@@ -4,6 +4,10 @@ import com.univocity.cardano.wallet.api.generated.*;
 import com.univocity.cardano.wallet.api.service.*;
 import org.apache.commons.lang3.*;
 
+import java.math.*;
+
+import static com.univocity.cardano.wallet.common.Wrapper.*;
+
 /**
  * An exception which can occur while invoking methods of the {@link InternalWalletApiService}.
  */
@@ -33,6 +37,24 @@ public class WalletApiException extends RuntimeException {
 				String id = StringUtils.substringAfter(message, "id: ");
 				id = StringUtils.isBlank(id) ? null : id.trim();
 				throw new WalletNotFoundException(error, id);
+			}
+			if (message.contains("retire from delegation") && message.contains("withdraw")) {
+				String lovelace = StringUtils.substringBetween(message, "withdraw your ", " lovelace");
+				BigInteger rewards = null;
+				try {
+					rewards = new BigInteger(lovelace);
+				} catch (Exception ex) {
+					//ignore
+				}
+				if (rewards != null) {
+					throw new RewardsNotRedeemedException(error, lovelaceToAda(rewards));
+				}
+			}
+			if (message.contains("couldn't join a stake pool with the given id:")) {
+				String poolId = StringUtils.substringBetween(message, "pool with the given id: ", ". I have already joined this pool");
+				if (StringUtils.isNotBlank(poolId)) {
+					throw new StakePoolAlreadyJoinedException(error, poolId);
+				}
 			}
 		}
 		return new WalletApiException(error);

@@ -40,18 +40,18 @@ public class ByronWallet extends WrapperWithId<AbstractByronWalletResponse> impl
 	}
 
 	@Override
-	public BigDecimal totalBalance() {
-		return lovelaceToAda(original.getBalance().getTotal().getQuantity());
+	public BigInteger totalBalanceInLovelace() {
+		return original.getBalance().getTotal().getQuantity();
 	}
 
 	@Override
-	public BigDecimal availableBalance() {
-		return lovelaceToAda(original.getBalance().getAvailable().getQuantity());
+	public BigInteger availableBalanceInLovelace() {
+		return original.getBalance().getAvailable().getQuantity();
 	}
 
 	@Override
-	public BigDecimal rewardsBalance() {
-		return BigDecimal.ZERO;
+	public BigInteger rewardsBalanceInLovelace() {
+		return BigInteger.ZERO;
 	}
 
 	@Override

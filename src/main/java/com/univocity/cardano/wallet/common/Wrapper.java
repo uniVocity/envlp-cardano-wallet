@@ -57,7 +57,7 @@ public abstract class Wrapper<T> {
 		return quantity;
 	}
 
-	protected static BigDecimal lovelaceToAda(BigInteger quantity) {
+	public static BigDecimal lovelaceToAda(BigInteger quantity) {
 		return new BigDecimal(quantity).divide(new BigDecimal(ONE_ADA_IN_LOVELACE), 6, RoundingMode.HALF_UP);
 	}
 

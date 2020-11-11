@@ -5,9 +5,9 @@ import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
 
-public class TransactionInput extends Wrapper<Input> {
+public class TransactionInput extends Wrapper<AbstractInput> {
 
-	public TransactionInput(Input original) {
+	public TransactionInput(AbstractInput original) {
 		super(original, null);
 	}
 

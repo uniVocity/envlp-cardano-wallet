@@ -1,7 +1,9 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
 import com.univocity.cardano.wallet.api.*;
+import com.univocity.cardano.wallet.api.generated.common.*;
 import com.univocity.cardano.wallet.api.generated.stakepools.*;
+import com.univocity.cardano.wallet.api.generated.transactions.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
 import com.univocity.cardano.wallet.builders.network.*;
 import com.univocity.cardano.wallet.builders.stakepools.*;
@@ -11,6 +13,7 @@ import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
 import java.time.*;
+import java.util.*;
 
 public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> implements Wallet {
 
@@ -44,18 +47,18 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 	}
 
 	@Override
-	public BigDecimal totalBalance() {
-		return lovelaceToAda(original.getBalance().getTotal().getQuantity());
+	public BigInteger totalBalanceInLovelace() {
+		return original.getBalance().getTotal().getQuantity();
 	}
 
 	@Override
-	public BigDecimal availableBalance() {
-		return lovelaceToAda(original.getBalance().getAvailable().getQuantity());
+	public BigInteger availableBalanceInLovelace() {
+		return original.getBalance().getAvailable().getQuantity();
 	}
 
 	@Override
-	public BigDecimal rewardsBalance() {
-		return lovelaceToAda(original.getBalance().getReward().getQuantity());
+	public BigInteger rewardsBalanceInLovelace() {
+		return original.getBalance().getReward().getQuantity();
 	}
 
 	@Override
@@ -133,15 +136,58 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 		return keys;
 	}
 
-	public void delegate(StakePool stakePool, String password) {
-		JoinStakePoolRequest request = new JoinStakePoolRequest();
+	public ShelleyTransaction redeemITNStakingRewards(String password, String itnWalletSeed){
+		PostTransactionRedemptionRequest request = new PostTransactionRedemptionRequest();
 		request.setPassphrase(password);
-		api.sync().joinStakePool(stakePool.id(), this.id(), request);
+
+		ArrayList<PaymentsRedemption> payments = new ArrayList<>();
+		PaymentsRedemption redemption = new PaymentsRedemption();
+		redemption.setAddress(this.addresses.next().id());
+
+		Amount amount = new Amount();
+		amount.setQuantity(this.rewardsBalanceInLovelace());
+		amount.setUnit("lovelace");
+		redemption.setAmount(amount);
+
+		request.setPassphrase(itnWalletSeed);
+
+		payments.add(redemption);
+
+		request.setPayments(payments);
+		return new ShelleyTransaction(this, api.sync().postTransaction(id(), request), api);
 	}
 
-	public void undelegate(String password) {
+	public ShelleyTransaction redeemStakingRewards(String password){
+		PostTransactionPaymentRequest request = new PostTransactionPaymentRequest();
+		request.setPassphrase(password);
+
+		ArrayList<PaymentsPayment> payments = new ArrayList<>();
+		PaymentsPayment redemption = new PaymentsPayment();
+		redemption.setAddress(this.addresses.next().id());
+
+		Amount amount = new Amount();
+		amount.setQuantity(this.rewardsBalanceInLovelace());
+		amount.setUnit("lovelace");
+		redemption.setAmount(amount);
+
+		payments.add(redemption);
+
+		request.setPayments(payments);
+
+		request.setWithdrawal("self");
+
+		return new ShelleyTransaction(this, api.sync().postTransaction(id(), request), api);
+	}
+
+	public ShelleyTransaction delegate(StakePool stakePool, String password) {
+		JoinStakePoolRequest request = new JoinStakePoolRequest();
+		request.setPassphrase(password);
+		return new ShelleyTransaction(this, api.sync().joinStakePool(stakePool.id(), this.id(), request), api);
+	}
+
+	public QuitPoolTransaction undelegate(String password) {
 		QuitStakePoolRequest request = new QuitStakePoolRequest();
 		request.setPassphrase(password);
-		api.sync().quitStakePool(this.id(), request);
+		return new QuitPoolTransaction(this, api.sync().quitStakePool(this.id(), request), api);
 	}
 }

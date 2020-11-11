@@ -8,6 +8,8 @@ import com.univocity.cardano.wallet.common.*;
 import java.math.*;
 import java.time.*;
 
+import static com.univocity.cardano.wallet.common.Wrapper.*;
+
 public interface Wallet extends ObjectWithId {
 
 	String name();
@@ -16,11 +18,23 @@ public interface Wallet extends ObjectWithId {
 
 	int addressPoolGap();
 
-	BigDecimal totalBalance();
+	default BigDecimal totalBalanceInAda(){
+		return lovelaceToAda(totalBalanceInLovelace());
+	}
 
-	BigDecimal availableBalance();
+	default BigDecimal availableBalanceInAda() {
+		return lovelaceToAda(availableBalanceInLovelace());
+	}
 
-	BigDecimal rewardsBalance();
+	default BigDecimal rewardsBalanceInAda() {
+		return lovelaceToAda(rewardsBalanceInLovelace());
+	}
+
+	BigInteger totalBalanceInLovelace();
+
+	BigInteger availableBalanceInLovelace();
+
+	BigInteger rewardsBalanceInLovelace();
 
 	String currentStakePoolId();
 

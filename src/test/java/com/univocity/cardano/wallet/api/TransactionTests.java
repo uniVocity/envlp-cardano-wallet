@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.api;
 
+import com.univocity.cardano.wallet.api.service.exception.*;
 import com.univocity.cardano.wallet.builders.server.*;
 import com.univocity.cardano.wallet.builders.stakepools.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
@@ -136,18 +137,18 @@ public class TransactionTests {
 		List<StakePool> pools = server.stakePools().listAsync().get();
 
 		String id = undelegatedShelleyWallet.currentStakePoolId();
-		if(pools.get(0).id().equals(id) || (id != null && id.equals(undelegatedShelleyWallet.nextStakePoolId()))){
+		if (pools.get(0).id().equals(id) || (id != null && id.equals(undelegatedShelleyWallet.nextStakePoolId()))) {
 			undelegatedShelleyWallet.delegate(pools.get(1), PASSWORD);
 		} else {
 			undelegatedShelleyWallet.delegate(pools.get(0), PASSWORD);
 		}
 
-		while(true){
+		while (true) {
 			undelegatedShelleyWallet = undelegatedShelleyWallet.update();
 			System.out.println("next pool id " + undelegatedShelleyWallet.nextStakePoolId());
 			System.out.println("delegated to " + undelegatedShelleyWallet.currentStakePoolId());
 
-			if(!id.equals(undelegatedShelleyWallet.currentStakePoolId())){
+			if (!id.equals(undelegatedShelleyWallet.currentStakePoolId())) {
 				System.out.println("Stake pool switched");
 				break;
 			}
@@ -160,16 +161,27 @@ public class TransactionTests {
 	public void testUndelegateFromStakePool() throws Exception {
 		System.out.println("Undelegating");
 
-		undelegatedShelleyWallet.undelegate(PASSWORD);
+		try {
+			undelegatedShelleyWallet.undelegate(PASSWORD);
+		} catch (RewardsNotRedeemedException e) {
+			System.out.println("redeeming rewards: " + e.getRewardsBalance());
+			ShelleyTransaction redeemTransaction = undelegatedShelleyWallet.redeemStakingRewards(PASSWORD);
+			System.out.println(redeemTransaction);
+			System.out.println("Waiting for undelegation process to complete");
+			Thread.sleep(65_000);
+			System.out.println("Undelegating now.");
+			undelegatedShelleyWallet.undelegate(PASSWORD);
+		}
 		String id = undelegatedShelleyWallet.currentStakePoolId();
-		if(id == null){
+		if (id == null) {
 			testStakePoolJoining();
 			id = undelegatedShelleyWallet.currentStakePoolId();
 		}
 
-		while(id != null){
+		while (id != null) {
 			undelegatedShelleyWallet = undelegatedShelleyWallet.update();
 			id = undelegatedShelleyWallet.currentStakePoolId();
+			System.out.println("stake pool id " + id);
 			Thread.sleep(5_000);
 		}
 		System.out.println("Undelegated");
@@ -177,9 +189,9 @@ public class TransactionTests {
 
 	@Test
 	public void transferTestShelleyToShelley() {
-		BigDecimal payerBalance = undelegatedShelleyWallet.totalBalance();
+		BigDecimal payerBalance = undelegatedShelleyWallet.totalBalanceInAda();
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
-		BigDecimal payeeBalance = emptyShelleyWallet.totalBalance();
+		BigDecimal payeeBalance = emptyShelleyWallet.totalBalanceInAda();
 
 		ShelleyTransaction transaction = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).authorize(PASSWORD);
 		assertEquals(transaction.status(), Transaction.Status.PENDING);
@@ -253,9 +265,9 @@ public class TransactionTests {
 	public void estimateFeeShelleyToShelleyWithMetadata() {
 //		99997.735900
 
-		BigDecimal payerBalance = undelegatedShelleyWallet.totalBalance();
+		BigDecimal payerBalance = undelegatedShelleyWallet.totalBalanceInAda();
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
-		BigDecimal payeeBalance = emptyShelleyWallet.totalBalance();
+		BigDecimal payeeBalance = emptyShelleyWallet.totalBalanceInAda();
 
 
 		Fees<ShelleyTransaction> fees = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).estimateFees();
@@ -269,9 +281,9 @@ public class TransactionTests {
 	public void testTransferFromShelleyToByron() {
 //		99997.735900
 
-		BigDecimal payerBalance = emptyShelleyWallet.totalBalance();
+		BigDecimal payerBalance = emptyShelleyWallet.totalBalanceInAda();
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
-		BigDecimal payeeBalance = byronWallet.totalBalance();
+		BigDecimal payeeBalance = byronWallet.totalBalanceInAda();
 
 
 		Fees<ShelleyTransaction> fees = emptyShelleyWallet.transfer().to(byronWallet.addresses().next(), new BigDecimal(1)).withMetadata(new Object[]{"testing"}).estimateFees();
@@ -285,9 +297,9 @@ public class TransactionTests {
 	public void testTransferFromByronToByron() {
 //		99997.735900
 
-		BigDecimal payerBalance = icarusWallet.totalBalance();
+		BigDecimal payerBalance = icarusWallet.totalBalanceInAda();
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
-		BigDecimal payeeBalance = byronWallet.totalBalance();
+		BigDecimal payeeBalance = byronWallet.totalBalanceInAda();
 
 
 		Fees<ByronTransaction> fees = icarusWallet.transfer().to(byronWallet.addresses().next(), new BigDecimal(1)).withMetadata(new Object[]{"testing"}).estimateFees();
@@ -300,10 +312,10 @@ public class TransactionTests {
 
 	@Test
 	public void transferTestShelleyToShelleyWithMetadata() {
-		BigDecimal payerBalance = undelegatedShelleyWallet.totalBalance();
+		BigDecimal payerBalance = undelegatedShelleyWallet.totalBalanceInAda();
 		System.out.println(payerBalance);
 		BigDecimal amountToTransfer = payerBalance.multiply(new BigDecimal("0.01"));
-		BigDecimal payeeBalance = emptyShelleyWallet.totalBalance();
+		BigDecimal payeeBalance = emptyShelleyWallet.totalBalanceInAda();
 
 //		ShelleyTransaction transaction = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).withMetadata(new Object[]{"cardano", 1}).authorize(PASSWORD);
 //		System.out.println(transaction);
@@ -321,7 +333,7 @@ public class TransactionTests {
 			System.out.println(t);
 		}
 
-		System.out.println(emptyShelleyWallet.totalBalance());
+		System.out.println(emptyShelleyWallet.totalBalanceInAda());
 
 
 //		ByronTransaction byronTransaction = byronWallet.transfer().to(shelleyWallet, new BigInteger(1000000)).authorize(PASSWORD);
