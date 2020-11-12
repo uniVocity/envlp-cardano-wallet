@@ -48,6 +48,8 @@ and won't change that often.
 
 Then add the following dependency to your `pom.xml`:
 
+(Snapshots available only, read next section)
+
 ```xml
     <dependencies>
 
@@ -56,7 +58,7 @@ Then add the following dependency to your `pom.xml`:
         <dependency>
             <groupId>com.univocity</groupId>
             <artifactId>envlp-cardano-wallet</artifactId>
-            <version>2020.11.03</version>
+            <version>2020.11.03-SNAPSHOT</version>
         </dependency>
     </dependencies>
 ```
