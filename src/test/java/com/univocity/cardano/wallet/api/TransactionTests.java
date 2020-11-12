@@ -162,6 +162,19 @@ public class TransactionTests {
 	}
 
 	@Test
+	public void testGarbageCollect() {
+		server.stakePools().garbageCollect();
+	}
+
+	@Test
+	public void testAddressInspection() {
+		wallets.forEach(w -> {
+			System.out.println("----- " + w.name() + "-----");
+			System.out.println(server.inspectAddress(w.addresses().next().id()));
+		});
+	}
+
+	@Test
 	public void testFundSendingToMultiplePayees() throws Exception {
 		BigDecimal balance = undelegatedShelleyWallet.totalBalanceInAda();
 		System.out.println("initial balance: " + balance);

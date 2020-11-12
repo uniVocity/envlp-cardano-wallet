@@ -3,7 +3,13 @@ package com.univocity.cardano.wallet.builders.server;
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.builders.network.*;
 import com.univocity.cardano.wallet.builders.stakepools.*;
+import com.univocity.cardano.wallet.builders.utils.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
+import org.apache.commons.codec.*;
+import org.apache.commons.codec.binary.*;
+import org.apache.commons.io.*;
+
+import java.io.*;
 
 public class RemoteWalletServer {
 
@@ -28,15 +34,44 @@ public class RemoteWalletServer {
 		return api;
 	}
 
-	public StakePools stakePools(){
+	public StakePools stakePools() {
 		return stakePools;
 	}
 
-	public Network network(){
+	public Network network() {
 		return network;
 	}
 
-	public Wallets wallets(){
+	public Wallets wallets() {
 		return wallets;
 	}
+
+	public AddressDetails inspectAddress(String address) {
+		return new AddressDetails(api.sync().inspectAddress(address), api);
+	}
+
+	public String submitTransaction(File signedTransactionFile) {
+		byte[] bytes;
+		try {
+			bytes = FileUtils.readFileToByteArray(signedTransactionFile);
+		} catch (IOException e) {
+			throw new IllegalStateException("Unable to read signed transaction from file: " + signedTransactionFile, e);
+		}
+		return submitTransaction(bytes);
+	}
+
+	public String submitTransaction(String signedTransactionBytes) {
+		byte[] bytes;
+		try {
+			bytes = Hex.decodeHex(signedTransactionBytes);
+		} catch (DecoderException e) {
+			throw new IllegalStateException("Unable to decode signed transaction from: " + signedTransactionBytes, e);
+		}
+		return submitTransaction(bytes);
+	}
+
+	public String submitTransaction(byte[] signedTransactionBytes) {
+		return api.sync().postExternalTransaction(signedTransactionBytes).getId();
+	}
+
 }

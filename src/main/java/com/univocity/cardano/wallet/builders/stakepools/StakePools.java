@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.builders.stakepools;
 
 import com.univocity.cardano.wallet.api.*;
+import com.univocity.cardano.wallet.api.generated.settings.*;
 import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.builders.*;
 import com.univocity.cardano.wallet.common.*;
@@ -28,5 +29,24 @@ public class StakePools extends ApiWrapper {
 
 	public Future<List<StakePool>> listAsync() {
 		return asyncCallbackHandler.getAsync();
+	}
+
+	public void garbageCollect() {
+		PostMaintenanceActionRequest request = new PostMaintenanceActionRequest();
+		request.setMaintenanceAction("gc_stake_pools");
+		api.async().postMaintenanceAction(request, response -> {
+		});
+	}
+
+	public String metadataSource(){
+		return api.sync().getSettings().getPoolMetadataSource();
+	}
+
+	public void metadataSource(String metadataSource){
+		PutSettingsRequest request = new PutSettingsRequest();
+		Settings settings = new Settings();
+		settings.setPoolMetadataSource(metadataSource);
+		request.setSettings(settings);
+		api.sync().putSettings(request);
 	}
 }

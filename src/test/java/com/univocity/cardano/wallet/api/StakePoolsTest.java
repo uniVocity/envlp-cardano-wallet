@@ -34,4 +34,12 @@ public class StakePoolsTest {
 		assertEquals(shopPoolCount, 1);
 	}
 
+
+	@Test
+	public void testPoolMetadataSource(){
+		server.stakePools().metadataSource("direct");
+		assertEquals(server.stakePools().metadataSource(), "direct");
+		server.stakePools().metadataSource("none");
+		assertEquals(server.stakePools().metadataSource(), "none");
+	}
 }
