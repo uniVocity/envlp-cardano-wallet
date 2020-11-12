@@ -7,6 +7,7 @@ import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
 import java.time.*;
+import java.util.*;
 
 import static com.univocity.cardano.wallet.common.Wrapper.*;
 
@@ -56,9 +57,11 @@ public interface Wallet extends ObjectWithId {
 
 	Addresses addresses();
 
-	Payee<?> transfer();
+	Payee<? extends Transaction> transfer();
 
-	Transactions<?> transactions();
+	Transactions<? extends Transaction> transactions();
 
 	Wallet update();
+
+	CoinSelection selectCoins(Map<String, BigDecimal> payments);
 }

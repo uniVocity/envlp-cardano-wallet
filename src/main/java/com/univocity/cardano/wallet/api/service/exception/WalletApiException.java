@@ -39,15 +39,9 @@ public class WalletApiException extends RuntimeException {
 				throw new WalletNotFoundException(error, id);
 			}
 			if (message.contains("retire from delegation") && message.contains("withdraw")) {
-				String lovelace = StringUtils.substringBetween(message, "withdraw your ", " lovelace");
-				BigInteger rewards = null;
-				try {
-					rewards = new BigInteger(lovelace);
-				} catch (Exception ex) {
-					//ignore
-				}
+				BigDecimal rewards = getAmountFromMessage(message, "withdraw your ", " lovelace");
 				if (rewards != null) {
-					throw new RewardsNotRedeemedException(error, lovelaceToAda(rewards));
+					throw new RewardsNotRedeemedException(error, rewards);
 				}
 			}
 			if (message.contains("couldn't join a stake pool with the given id:")) {
@@ -56,8 +50,29 @@ public class WalletApiException extends RuntimeException {
 					throw new StakePoolAlreadyJoinedException(error, poolId);
 				}
 			}
+			if (message.contains("not enough UTxO")) {
+				BigDecimal available = getAmountFromMessage(message, "total UTxO sums up to ", " Lovelace");
+				BigDecimal required = getAmountFromMessage(message, ", but I need ", " Lovelace");
+				if(available != null || required != null){
+					throw new InsufficientBalanceException(error, available, required);
+				}
+			}
 		}
 		return new WalletApiException(error);
+	}
+
+	private static BigDecimal getAmountFromMessage(String message, String open, String close) {
+		String lovelace = StringUtils.substringBetween(message, open, close);
+		if (StringUtils.isBlank(lovelace)) {
+			return null;
+		}
+		try {
+			BigInteger amount = new BigInteger(lovelace);
+			return lovelaceToAda(amount);
+		} catch (Exception ex) {
+			//ignore
+		}
+		return null;
 	}
 
 	/**

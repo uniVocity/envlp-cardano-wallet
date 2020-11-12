@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
 import com.univocity.cardano.wallet.api.*;
+import com.univocity.cardano.wallet.api.generated.byroncoinselections.*;
 import com.univocity.cardano.wallet.api.generated.byronwallets.*;
 import com.univocity.cardano.wallet.builders.network.*;
 import com.univocity.cardano.wallet.builders.wallets.addresses.*;
@@ -9,6 +10,7 @@ import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
 import java.time.*;
+import java.util.*;
 
 public class ByronWallet extends WrapperWithId<AbstractByronWalletResponse> implements Wallet {
 
@@ -124,5 +126,12 @@ public class ByronWallet extends WrapperWithId<AbstractByronWalletResponse> impl
 
 	public ByronWallet update() {
 		return new ByronWallet(api.sync().getByronWallet(id()), api);
+	}
+
+	@Override
+	public CoinSelection selectCoins(Map<String, BigDecimal> payments) {
+		ByronSelectCoinsRequest request = new ByronSelectCoinsRequest();
+		request.setPayments(CoinSelection.toPaymentList(payments));
+		return new CoinSelection(this.api.sync().byronSelectCoins(id(), request), api);
 	}
 }

@@ -5,6 +5,7 @@ import com.univocity.cardano.wallet.builders.server.*;
 import com.univocity.cardano.wallet.builders.stakepools.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
 import com.univocity.cardano.wallet.builders.wallets.transactions.*;
+import org.apache.commons.lang3.*;
 import org.testng.annotations.*;
 
 import java.math.*;
@@ -83,53 +84,119 @@ public class TransactionTests {
 	 */
 	Wallet ledgerWallet2;
 
+	List<Wallet> wallets = new ArrayList<>();
+
 	@BeforeClass
 	public void startServer() {
 		server = WalletServer.remote("http://localhost").connectToPort(WALLET_PORT);
 
 		emptyShelleyWalletFactor = "fiber urban wood thing fluid sibling hunt theme output";//Seed.generateEnglishSeedPhrase(9);
-		emptyShelleyWallet = server.wallets().createOrGet("emptyShelleyWallet").shelley()
+		wallets.add(emptyShelleyWallet = server.wallets().createOrGet("emptyShelleyWallet").shelley()
 				.fromSeed("over decorate flock badge beauty stamp chest owner excess omit bid raccoon spin reduce rival")
 				.secondFactor(emptyShelleyWalletFactor)
-				.password(PASSWORD);
+				.password(PASSWORD));
 
-		undelegatedShelleyWallet = server.wallets().createOrGet("undelegatedShelleyWallet").shelley()
+		wallets.add(undelegatedShelleyWallet = server.wallets().createOrGet("undelegatedShelleyWallet").shelley()
 				.fromSeed("over decorate flock badge beauty stamp chest owner excess omit bid raccoon spin reduce rival")
-				.password(PASSWORD);
+				.password(PASSWORD));
 
-		smallCoinShelleyWallet = server.wallets().createOrGet("smallCoinShelleyWallet").shelley()
+		wallets.add(smallCoinShelleyWallet = server.wallets().createOrGet("smallCoinShelleyWallet").shelley()
 				.fromSeed("either flip maple shift dismiss bridge sweet reveal green tornado need patient wall stamp pass")
-				.password(PASSWORD);
+				.password(PASSWORD));
 
-		shelleyWallet = server.wallets().createOrGet("shelleyWallet").shelley()
+		wallets.add(shelleyWallet = server.wallets().createOrGet("shelleyWallet").shelley()
 				.fromSeed("radar scare sense winner little jeans blue spell mystery sketch omit time tiger leave load")
-				.password(PASSWORD);
+				.password(PASSWORD));
 
-		icarusWallet = server.wallets().createOrGet("icarusWallet").icarus()
+		wallets.add(icarusWallet = server.wallets().createOrGet("icarusWallet").icarus()
 				.fromSeed("erosion ahead vibrant air day timber thunder general dice into chest enrich social neck shine")
-				.password(PASSWORD);
+				.password(PASSWORD));
 
-		smallCoinByronWallet = server.wallets().createOrGet("smallCoinByronWallet").icarus()
+		wallets.add(smallCoinByronWallet = server.wallets().createOrGet("smallCoinByronWallet").icarus()
 				.fromSeed("suffer decorate head opera yellow debate visa fire salute hybrid stone smart")
-				.password(PASSWORD);
+				.password(PASSWORD));
 
-		byronWallet = server.wallets().createOrGet("byronWallet").icarus()
+		wallets.add(byronWallet = server.wallets().createOrGet("byronWallet").icarus()
 				.fromSeed("collect fold file clown injury sun brass diet exist spike behave clip")
-				.password(PASSWORD);
+				.password(PASSWORD));
 
-		ledgerWallet = server.wallets().createOrGet("ledgerWallet").ledger()
+		wallets.add(ledgerWallet = server.wallets().createOrGet("ledgerWallet").ledger()
 				.fromSeed("struggle section scissors siren garbage yellow maximum finger duty require mule earn")
-				.password(PASSWORD);
+				.password(PASSWORD));
 
-		ledgerWallet2 = server.wallets().createOrGet("ledgerWallet2").ledger()
+		wallets.add(ledgerWallet2 = server.wallets().createOrGet("ledgerWallet2").ledger()
 				.fromSeed("vague wrist poet crazy danger dinner grace home naive unfold april exile relief rifle ranch tone betray wrong")
-				.password(PASSWORD);
+				.password(PASSWORD));
 
+		wallets.forEach(this::printWallet);
 	}
 
 	@AfterClass
 	public void exit() {
 		System.exit(0);
+	}
+
+	private void printWallet(Wallet wallet) {
+		System.out.println("--------------------------");
+		System.out.println(wallet.name() + " = $" + wallet.totalBalanceInAda() + " / " + "Rewards: $" + wallet.rewardsBalanceInAda() + " / pool " + wallet.currentStakePoolId());
+		System.out.println(wallet.utxoStatistics().distribution());
+		int count = 0;
+		for (Transaction t : wallet.transactions().list()) {
+			System.out.println("+++++++++++ transaction: " + (++count) + " +++++++++++");
+			System.out.println(t.amount() + " " + t.direction());
+			System.out.println("Inputs:");
+			for (TransactionInput input : t.inputs()) {
+				System.out.println("\t" + input.amount() + " " + input.index() + " " + input.id() + " " + input.address());
+			}
+			System.out.println("Outputs:");
+			for (Payment payment : t.outputs()) {
+				System.out.println("\t" + payment.amount() + " " + payment.address());
+			}
+			System.out.println("Withdrawals:");
+			for (StakeWithdrawal withdrawal : t.withdrawals()) {
+				System.out.println("\t" + withdrawal.amount() + " " + withdrawal.stakeAddress());
+			}
+			System.out.println("Metadata:" + t.metadata());
+		}
+		System.out.println("Staking with: " + wallet.currentStakePoolId());
+	}
+
+	@Test
+	public void testFundSendingToMultiplePayees() throws Exception {
+		BigDecimal balance = undelegatedShelleyWallet.totalBalanceInAda();
+		System.out.println("initial balance: " + balance);
+		Fees<ShelleyTransaction> fees = undelegatedShelleyWallet.transfer()
+				.to(smallCoinShelleyWallet, new BigDecimal(15))
+				.and()
+				.to(emptyShelleyWallet, new BigDecimal(111))
+				.and()
+				.to(smallCoinByronWallet, new BigDecimal(222))
+				.withMetadata(new Object[]{"abcd", "efg", "hijk", "lmnop"})
+				.estimateFees();
+
+		BigDecimal fee = fees.maximumInAda();
+		System.out.println("Fee " + fee);
+
+		ShelleyTransaction transaction = fees.authorize(PASSWORD);
+
+		System.out.println(transaction);
+
+		while (transaction.update().status() != Transaction.Status.IN_LEDGER) {
+			System.out.println("waiting");
+			System.out.println(undelegatedShelleyWallet.update().totalBalanceInAda());
+			System.out.println(smallCoinShelleyWallet.update().totalBalanceInAda());
+			System.out.println(emptyShelleyWallet.update().totalBalanceInAda());
+			System.out.println(smallCoinByronWallet.update().totalBalanceInAda());
+			Thread.sleep(5000);
+		}
+
+		System.out.println("paid");
+		System.out.println(transaction);
+		System.out.println();
+		System.out.println(undelegatedShelleyWallet.update().totalBalanceInAda());
+		System.out.println(smallCoinShelleyWallet.update().totalBalanceInAda());
+		System.out.println(emptyShelleyWallet.update().totalBalanceInAda());
+		System.out.println(smallCoinByronWallet.update().totalBalanceInAda());
 	}
 
 	@Test
@@ -148,7 +215,7 @@ public class TransactionTests {
 			System.out.println("next pool id " + undelegatedShelleyWallet.nextStakePoolId());
 			System.out.println("delegated to " + undelegatedShelleyWallet.currentStakePoolId());
 
-			if (!id.equals(undelegatedShelleyWallet.currentStakePoolId())) {
+			if (!StringUtils.equals(id, undelegatedShelleyWallet.currentStakePoolId())) {
 				System.out.println("Stake pool switched");
 				break;
 			}
@@ -157,7 +224,7 @@ public class TransactionTests {
 		}
 	}
 
-	@Test(dependsOnMethods = "testStakePoolJoining")
+	@Test
 	public void testUndelegateFromStakePool() throws Exception {
 		System.out.println("Undelegating");
 
@@ -271,7 +338,7 @@ public class TransactionTests {
 
 
 		Fees<ShelleyTransaction> fees = undelegatedShelleyWallet.transfer().to(emptyShelleyWallet.addresses().next(), new BigDecimal(1)).estimateFees();
-		System.out.println(fees.average());
+		System.out.println(fees.averageInAda());
 
 		Transaction transaction = fees.authorize(PASSWORD);
 		System.out.println(transaction);
@@ -287,7 +354,7 @@ public class TransactionTests {
 
 
 		Fees<ShelleyTransaction> fees = emptyShelleyWallet.transfer().to(byronWallet.addresses().next(), new BigDecimal(1)).withMetadata(new Object[]{"testing"}).estimateFees();
-		System.out.println(fees.average());
+		System.out.println(fees.averageInAda());
 
 		Transaction transaction = fees.authorize(PASSWORD);
 		System.out.println(transaction);
@@ -303,7 +370,7 @@ public class TransactionTests {
 
 
 		Fees<ByronTransaction> fees = icarusWallet.transfer().to(byronWallet.addresses().next(), new BigDecimal(1)).withMetadata(new Object[]{"testing"}).estimateFees();
-		System.out.println(fees.average());
+		System.out.println(fees.averageInAda());
 
 		Transaction transaction = fees.authorize(PASSWORD);
 		System.out.println(transaction);

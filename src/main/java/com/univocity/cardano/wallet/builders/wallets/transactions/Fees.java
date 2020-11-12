@@ -16,16 +16,29 @@ public class Fees<T extends Transaction> extends Wrapper<AbstractFeeResponse> {
 		this.transactionExecution = transactionExecution;
 	}
 
-	public BigDecimal minimum(){
-		return lovelaceToAda(original.getEstimatedMin());
+	public BigInteger minimumInLovelace(){
+		return original.getEstimatedMin().getQuantity();
 	}
 
-	public BigDecimal maximum(){
-		return lovelaceToAda(original.getEstimatedMax());
+	public BigInteger maximumInLovelace(){
+		return original.getEstimatedMax().getQuantity();
 	}
 
-	public BigDecimal average(){
-		return minimum().add(maximum()).divide(new BigDecimal(2), 6, RoundingMode.HALF_UP);
+	public BigInteger averageInLovelace(){
+		return maximumInLovelace().add(minimumInLovelace()).divide(new BigInteger("2"));
+	}
+
+
+	public BigDecimal minimumInAda(){
+		return lovelaceToAda(minimumInLovelace());
+	}
+
+	public BigDecimal maximumInAda(){
+		return lovelaceToAda(maximumInLovelace());
+	}
+
+	public BigDecimal averageInAda(){
+		return minimumInAda().add(maximumInAda()).divide(new BigDecimal(2), 6, RoundingMode.HALF_UP);
 	}
 
 	public T authorize(String password) {

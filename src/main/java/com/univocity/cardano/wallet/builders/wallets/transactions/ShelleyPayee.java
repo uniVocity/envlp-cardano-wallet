@@ -53,6 +53,11 @@ public class ShelleyPayee implements Payee<ShelleyTransaction> {
 			}
 			return new Fees<>(api.sync().postTransactionFee(wallet.id(), request), api, this::authorize);
 		}
+
+		@Override
+		public Payee<ShelleyTransaction> and() {
+			return ShelleyPayee.this;
+		}
 	}
 
 	private final Builder builder;

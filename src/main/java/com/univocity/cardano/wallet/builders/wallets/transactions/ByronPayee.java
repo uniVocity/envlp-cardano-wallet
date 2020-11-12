@@ -50,6 +50,11 @@ public class ByronPayee implements Payee<ByronTransaction> {
 			metadata.forEach(ByronPayee.this.metadata::put);
 			return this;
 		}
+
+		@Override
+		public Payee<ByronTransaction> and() {
+			return ByronPayee.this;
+		}
 	}
 
 	private final Builder builder;

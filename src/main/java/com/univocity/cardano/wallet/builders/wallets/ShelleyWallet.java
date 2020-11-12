@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.builders.wallets;
 
 import com.univocity.cardano.wallet.api.*;
+import com.univocity.cardano.wallet.api.generated.coinselections.*;
 import com.univocity.cardano.wallet.api.generated.common.*;
 import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
@@ -136,7 +137,7 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 		return keys;
 	}
 
-	public ShelleyTransaction redeemITNStakingRewards(String password, String itnWalletSeed){
+	public ShelleyTransaction redeemITNStakingRewards(String password, String itnWalletSeed) {
 		PostTransactionRedemptionRequest request = new PostTransactionRedemptionRequest();
 		request.setPassphrase(password);
 
@@ -157,7 +158,7 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 		return new ShelleyTransaction(this, api.sync().postTransaction(id(), request), api);
 	}
 
-	public ShelleyTransaction redeemStakingRewards(String password){
+	public ShelleyTransaction redeemStakingRewards(String password) {
 		PostTransactionPaymentRequest request = new PostTransactionPaymentRequest();
 		request.setPassphrase(password);
 
@@ -190,4 +191,13 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 		request.setPassphrase(password);
 		return new QuitPoolTransaction(this, api.sync().quitStakePool(this.id(), request), api);
 	}
+
+	@Override
+	public CoinSelection selectCoins(Map<String, BigDecimal> payments) {
+		SelectCoinsRequest request = new SelectCoinsRequest();
+		request.setPayments(CoinSelection.toPaymentList(payments));
+		return new CoinSelection(this.api.sync().selectCoins(id(), request), api);
+	}
+
+
 }

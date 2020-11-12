@@ -11,4 +11,6 @@ public interface Authorization<T extends Transaction> {
 	Authorization<T> withMetadata(Object[] metadata);
 
 	Authorization<T> withMetadata(Map<Long, Object> metadata);
+
+	Payee<T> and();
 }

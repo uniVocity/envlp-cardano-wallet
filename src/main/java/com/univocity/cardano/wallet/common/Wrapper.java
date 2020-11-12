@@ -62,6 +62,9 @@ public abstract class Wrapper<T> {
 	}
 
 	protected static BigDecimal lovelaceToAda(AbstractAmount amount) {
+		if(amount == null){
+			return BigDecimal.ZERO;
+		}
 		if("lovelace".equalsIgnoreCase(amount.getUnit())){
 			return lovelaceToAda(amount.getQuantity());
 		}
