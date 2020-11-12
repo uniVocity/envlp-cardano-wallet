@@ -1,4 +1,4 @@
-# cardano-wallet
+# envlp-cardano-wallet (sponsored by the SHOP stake pool)
 
 This project is an open-source and pure Java client for the
 official [cardano-wallet](https://github.com/input-output-hk/cardano-wallet), 
@@ -28,11 +28,6 @@ connect to a remote cardano-wallet server.
 
 ## Warning
 
-This library is still under development. Lots of functionalities are still only
-accessible using classes that map to the raw API of the cardano-wallet. All of
-these are meant to be used internally by a nicer-to use programming API which
-is being built here.
-
 The `cardano-wallet` backend built by IOG was not designed to be exposed as a 
 public web service. The use case for it is close to 1 server <-> 1 client 
 (or a few clients). If should be fine for utility APIs such as listing
@@ -41,10 +36,37 @@ managing wallets if it's not running locally.
 
 ## Installation
 
-We are releasing new snapshots to maven central whenever there's any relevant
-progress.
+You'll notice that the library version matches with the `cardano-wallet` releases
+published by IOG [here](https://github.com/input-output-hk/cardano-wallet/releases).
 
-You can download the latest SNAPSHOT builds directly from [this link](https://oss.sonatype.org/content/repositories/snapshots/com/univocity/cardano-wallet/).
+This means that all endpoints available from that build of the official `cardano-wallet`
+should be supported by the build you are installing. In general, it should be
+safe to use more recent builds of the cardano-wallet as its API is generally stable
+and won't change that often.
+
+### Stable releases
+
+Then add the following dependency to your `pom.xml`:
+
+```xml
+    <dependencies>
+
+        <!-- other dependencies ... -->
+
+        <dependency>
+            <groupId>com.univocity</groupId>
+            <artifactId>envlp-cardano-wallet</artifactId>
+            <version>2020.11.03</version>
+        </dependency>
+    </dependencies>
+```
+ 
+### Snapshot builds
+
+We are releasing new snapshots to maven central whenever there's any relevant
+updates.
+
+You can download the latest SNAPSHOT builds directly from [this link](https://oss.sonatype.org/content/repositories/snapshots/com/univocity/envlp-cardano-wallet/).
 
 To get the snapshots automatically using maven, add this to the **repositories**
 section of your `pom.xml`:
@@ -59,21 +81,6 @@ section of your `pom.xml`:
         <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </repository>
 </repositories>
-```
-
-Then add the following dependency:
-
-```xml
-    <dependencies>
-
-        <!-- other dependencies ... -->
-
-        <dependency>
-            <groupId>com.univocity</groupId>
-            <artifactId>cardano-wallet</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
 ```
 
 ## Usage
@@ -174,8 +181,6 @@ is supported. We generate this code automatically so there's no reason to lag
 behind updates to the official cardano-wallet.
 
 ## Useful operations
-
-Here is what is working:
 
 ### Seed phrases
 
@@ -293,6 +298,7 @@ addresses = byronWallet.addresses().all();
 Address nextUnusedAddress = byronWallet.addresses().next();
 ```
 
+
 ### Balances
 
 Wallet balances (in ADA):
@@ -347,6 +353,105 @@ Future<List<ByronTransaction>> transactionsLoading = byronWallet
 
 List<ByronTransaction> transactions = transactionsLoading.get();
 ```
+
+### Send payments to multiple addresses:
+
+```java
+Fees<ShelleyTransaction> fees = shelleyWallet
+    .transfer()
+    .to(firstWallet, new BigDecimal(15)) //15 ADA
+    .and()
+    .to("addr", new BigDecimal(111)) // 111 ADA
+    .and()
+    .to(byronWallet, new BigDecimal("222.55")) //222.55 ADA
+    .estimateFees();
+
+// you can estimate fees first 
+BigDecimal fee = fees.maximumInAda();
+System.out.println("Fee " + fee);
+
+// then submit the transaction from there
+ShelleyTransaction transaction = fees.authorize(PASSWORD);
+```
+
+### Metadata
+
+#### Send a simple list of objects;
+
+```java
+ShelleyTransaction transaction = shelleyWallet.transfer()
+    .to(someWallet, new BigDecimal(15))
+    .withMetadata(new Object[]{"abcd", "efg", "hijk", 123})
+    .authorize(PASSWORD)
+```
+
+Metadata has an index assigned to each entry, this will internally create 
+a simple map with `{0=abcd, 1=efg, 2=hijk, 3=lmnop}`
+
+#### Send a complex object structure
+
+```java
+Map<Long, Object> metadata = new TreeMap<>();
+metadata.put(0L, "cardano");
+metadata.put(1L, 14);
+metadata.put(2L, new byte[]{55, 33, 33});
+
+metadata.put(3L, Arrays.asList(14, 42, 1337));
+
+Map<Object, Object> inner = new LinkedHashMap<>();
+inner.put("key", "value");
+inner.put(14, 42);
+metadata.put(4L, inner);
+
+ShelleyTransaction transaction = shelleyWallet.transfer()
+    .to(someWallet, new BigDecimal(15))
+    .withMetadata(metadata);
+    .authorize(PASSWORD)
+```
+
+### Stake pools:
+
+#### List stake pools
+
+Notice, on the first run this will time out - the cardano-wallet backed takes a few minutes to load them all
+
+```java
+List<StakePool> pools = server.stakePools().listAsync().get();
+```
+
+#### Delegate to a stake poll
+
+```java
+StakePool pool = pools.get(0);
+shelleyWallet.delegate(pool, PASSWORD);
+```
+
+To switch to another stake pool, simply execute the above with a new stake pool.
+
+#### Update stake pool metadata source:
+
+```java
+server.stakePools().metadataSource("direct");
+server.stakePools().metadataSource("none");
+server.stakePools().metadataSource("https://some.smasth.server.url");
+```
+
+#### Force reload of stake pools
+
+```java
+server.stakePools().garbageCollect();
+```
+
+### Miscellaneous
+
+#### Inspect addresses
+
+```java
+AddressDetails addressDetails = server.inspectAddress("addr1qysdgp6y6k5ncmw3ts4epnqv32tf762a5rlwcj0j5ek0vwawzdq65lps4pmtz6e5gwqsurydjrkc04vn82uwgsnpd0nsj4d8lh");
+System.out.println(addressDetails.style()); //Shelley
+System.out.println(addressDetails.stakeKeyHash()); //ae1341aa7c30a876b16b3443810e0c8d90ed87d5933ab8e442616be7
+```
+
 
 ## Running an embedded cardano-wallet process
 
@@ -461,8 +566,6 @@ is made available on their API.
 
 ## TODO LIST
  
- * Finalize all code builders that wrap around the generated classes and hide the REST API from you.
- * Transaction metadata.
  * Enable HTTPS on embedded mode.
  * Ensure embedded server runs on Windows/Mac/Linux.
  * Document all source code files.
