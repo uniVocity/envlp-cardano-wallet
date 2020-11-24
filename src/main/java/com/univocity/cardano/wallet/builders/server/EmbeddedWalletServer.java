@@ -1,6 +1,9 @@
 package com.univocity.cardano.wallet.builders.server;
 
 import com.univocity.cardano.wallet.embedded.services.*;
+import org.apache.commons.lang3.*;
+
+import java.util.*;
 
 public class EmbeddedWalletServer extends RemoteWalletServer {
 
@@ -21,6 +24,10 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 		} else {
 			String blockchainPath = config.blockchainDir.getAbsolutePath();
 			String socketPath = config.blockchainDir.toPath().resolve("node.socket").toFile().getAbsolutePath();
+
+			if (SystemUtils.IS_OS_WINDOWS) {
+				socketPath = "\\\\.\\pipe\\" + UUID.randomUUID().toString();
+			}
 
 			nodeManager = new CardanoNodeManager(cardanoTools, config.nodeOutputConsumer);
 			nodeManager.setStartupCommand(

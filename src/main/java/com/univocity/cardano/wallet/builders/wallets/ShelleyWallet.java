@@ -39,7 +39,7 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 
 	@Override
 	public LocalDateTime lastPasswordChange() {
-		return toDateTime(original.getPassphrase().getLastUpdatedAt());
+		return toDateTime(safeGet(() -> original.getPassphrase().getLastUpdatedAt()));
 	}
 
 	@Override

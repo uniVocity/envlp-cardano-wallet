@@ -33,7 +33,7 @@ public class ByronWallet extends WrapperWithId<AbstractByronWalletResponse> impl
 
 	@Override
 	public LocalDateTime lastPasswordChange() {
-		return toDateTime(original.getPassphrase().getLastUpdatedAt());
+		return toDateTime(safeGet(() -> original.getPassphrase().getLastUpdatedAt()));
 	}
 
 	@Override

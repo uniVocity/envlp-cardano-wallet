@@ -46,9 +46,9 @@ and won't change that often.
 
 ### Stable releases
 
-Then add the following dependency to your `pom.xml`:
+Add the following dependency to your `pom.xml`:
 
-(Snapshots available only, read next section)
+(Snapshots available only for now, read next section)
 
 ```xml
     <dependencies>
@@ -421,7 +421,7 @@ Notice, on the first run this will time out - the cardano-wallet backed takes a 
 List<StakePool> pools = server.stakePools().listAsync().get();
 ```
 
-#### Delegate to a stake poll
+#### Delegate to a stake pool
 
 ```java
 StakePool pool = pools.get(0);
@@ -553,14 +553,14 @@ List<StakePool> pools = remoteServer.stakePools().list();
 ## REST API code generation
 
 All classes and methods that interact directly with the cardano-wallet REST API 
-are generated automatically by class [ApiGenerator](https://github.com/uniVocity/cardano-wallet/blob/main/src/test/java/com/univocity/cardano/wallet/api/generator/ApiGenerator.java).
+are generated automatically by class [ApiGenerator](https://github.com/uniVocity/envlp-cardano-wallet/blob/main/src/test/java/com/univocity/cardano/wallet/api/generator/ApiGenerator.java).
 
 It simply reads the [swagger.yaml](https://github.com/input-output-hk/cardano-wallet/blob/master/specifications/api/swagger.yaml)
 specification from IOG's cardano-wallet and generates all classes that conform to
 that specification.
 
 Every time IOG updates their spec, we can execute the `ApiGenerator` to update the
-[generated classes](https://github.com/uniVocity/cardano-wallet/tree/main/src/main/java/com/univocity/cardano/wallet/api/generated)
+[generated classes](https://github.com/uniVocity/envlp-cardano-wallet/tree/main/src/main/java/com/univocity/cardano/wallet/api/generated)
 and release a new build for you.
 
 This allows us to quickly stay up to date and support EVERY single endpoint that
@@ -571,7 +571,6 @@ is made available on their API.
  * Enable HTTPS on embedded mode.
  * Ensure embedded server runs on Windows/Mac/Linux.
  * Document all source code files.
- * Automatically generate unit test code for REST API classes.
  * Download binaries and configuration files automatically.
  
 ## SUPPORTING OUR PROJECT

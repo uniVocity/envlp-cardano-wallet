@@ -5,6 +5,7 @@ import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.*;
 import com.univocity.cardano.wallet.api.service.exception.*;
 import okhttp3.*;
+import org.apache.commons.lang3.*;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.*;
@@ -83,6 +84,27 @@ public class InternalWalletApiServiceGenerator {
 	 * Extracts and converts the response error body into an object.
 	 */
 	public static WalletApiError getWalletApiError(Response<?> response) throws IOException, WalletApiException {
+		if("text/plain".equals(response.headers().get("Content-type"))){
+			WalletApiError out = new WalletApiError();
+			StringBuilder tmp = new StringBuilder();
+			String message = response.message();
+			if(StringUtils.isNotBlank(message)){
+				tmp.append(message.trim());
+			}
+			ResponseBody body = response.errorBody();
+			if(body != null){
+				String string = body.string();
+				if(StringUtils.isNotBlank(string)) {
+					if (tmp.length() > 0) {
+						tmp.append(": ");
+					}
+					tmp.append(string);
+				}
+			}
+			out.setMessage(tmp.toString());
+
+			return out;
+		}
 		return errorBodyConverter.convert(response.errorBody());
 	}
 

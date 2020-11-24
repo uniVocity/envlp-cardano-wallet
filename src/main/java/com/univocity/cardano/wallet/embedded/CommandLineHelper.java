@@ -145,6 +145,18 @@ public class CommandLineHelper {
 	}
 
 	public final Process startProcess(File directory, String command) {
+		if(!(directory.isDirectory() && directory.exists())){
+			throw new IllegalArgumentException("Not a directory: " +directory.getAbsolutePath());
+		}
+
+		if(SystemUtils.IS_OS_WINDOWS){
+			String driveLetter = directory.getAbsoluteFile().toPath().getRoot().toString();
+			if(driveLetter.contains(":")){
+				driveLetter = StringUtils.substringBefore(driveLetter, ":");
+			}
+			command = "cmd.exe /" + driveLetter + " 'cd \"" + directory.getAbsolutePath() +"\"' && " + command;
+		}
+
 		ProcessBuilder builder = createProcessBuilder(command);
 		builder.directory(directory);
 
