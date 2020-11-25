@@ -1,13 +1,14 @@
 package com.univocity.cardano.wallet.api;
 
 import com.univocity.cardano.wallet.builders.server.*;
+import com.univocity.cardano.wallet.common.x509.*;
 import org.testng.annotations.*;
 
 @Ignore
 public class TestEmbeddedServer {
 
 
-	public static void main(String... args) throws InterruptedException {
+	public static void main(String... args) throws Exception {
 		final String HOME = System.getProperty("user.home");
 		final String CONFIGS = HOME + "/dev/repository/free-commerce/src/main/resources/";
 		final String DOWNLOADS = HOME + "/Downloads";
@@ -25,6 +26,11 @@ public class TestEmbeddedServer {
 				.consumeOutput(System.out::println);
 
 		server.start();
+
+//		System.out.println("WAITING--------------------------");
+//		Thread.sleep(10000);
+//		WalletCertificateGenerator.main(null);
+
 		server.waitForServerToStop();
 	}
 }

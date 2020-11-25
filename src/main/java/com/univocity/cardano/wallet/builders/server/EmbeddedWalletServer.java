@@ -1,14 +1,34 @@
 package com.univocity.cardano.wallet.builders.server;
 
+import com.univocity.cardano.wallet.common.x509.*;
 import com.univocity.cardano.wallet.embedded.services.*;
 import org.apache.commons.lang3.*;
+import org.slf4j.*;
 
 import java.util.*;
 
 public class EmbeddedWalletServer extends RemoteWalletServer {
 
+	private static final Logger log = LoggerFactory.getLogger(EmbeddedWalletServer.class);
 	private final CardanoNodeManager nodeManager;
 	private final CardanoWalletManager walletManager;
+
+	private static Chain certificateChain = null;
+
+	public static synchronized Chain getCertificateChain() {
+		return certificateChain;
+	}
+
+	private static synchronized Chain createCertificateChain(){
+		if (certificateChain == null) {
+			try {
+				certificateChain = WalletCertificateGenerator.generate();
+			} catch (Exception e) {
+				log.warn("Could not generate wallet server certificate chain", e);
+			}
+		}
+		return certificateChain;
+	}
 
 	public EmbeddedWalletServer(WalletServer.WalletServerConfig config) {
 		super(config);
@@ -42,13 +62,23 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 
 		walletManager = new CardanoWalletManager(cardanoTools, config.walletOutputConsumer);
 
-		walletManager.setStartupCommand(
-				"serve " +
-						networkParam +
-						" --database " + nodeManager.getBlockchainDirPath() +
-						" --node-socket " + nodeManager.getSocketPath() +
-						" --port " + config.walletPort
-		);
+		String command = "serve " +
+				networkParam +
+				" --database " + nodeManager.getBlockchainDirPath() +
+				" --node-socket " + nodeManager.getSocketPath() +
+				" --port " + config.walletPort;
+
+		if(config.enableHttps) {
+			createCertificateChain();
+			if (certificateChain != null) {
+				command = command +
+						" --tls-ca-cert " + certificateChain.getRootCACertificatePath() +
+						" --tls-sv-cert " + certificateChain.getServerCertificatePath() +
+						" --tls-sv-key " + certificateChain.getServerKeyPath();
+			}
+		}
+
+		walletManager.setStartupCommand(command);
 
 	}
 

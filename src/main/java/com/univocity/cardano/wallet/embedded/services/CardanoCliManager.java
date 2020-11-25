@@ -2,7 +2,6 @@ package com.univocity.cardano.wallet.embedded.services;
 
 import org.apache.commons.io.*;
 import org.apache.commons.lang3.*;
-import org.slf4j.*;
 
 import java.io.*;
 import java.math.*;
@@ -14,18 +13,8 @@ import static java.time.temporal.ChronoUnit.*;
 
 public class CardanoCliManager extends ProcessManager {
 
-	private static final Logger log = LoggerFactory.getLogger(CardanoCliManager.class);
-
-	protected File tempDir;
-
 	public CardanoCliManager(String toolDirPath) {
 		super(toolDirPath, "cardano-cli", System.out::println);
-
-		try {
-			tempDir = File.createTempFile("tmp", ".txt").getParentFile();
-		} catch (Exception e) {
-			log.warn("Unable to determine temporary directory", e);
-		}
 	}
 
 	protected File createDir(File root, String subDir) {
@@ -44,15 +33,6 @@ public class CardanoCliManager extends ProcessManager {
 			tmp = tmp.resolve(path[i]);
 		}
 		return tmp.toFile();
-	}
-
-
-	private File createTempFile(String prefix) {
-		try {
-			return File.createTempFile(prefix, ".tmp", tempDir);
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
-		}
 	}
 
 	public File buildTransaction(String transactionIn, String transactionOut, BigInteger lovelaceAmount, BigInteger lovelaceFee) {

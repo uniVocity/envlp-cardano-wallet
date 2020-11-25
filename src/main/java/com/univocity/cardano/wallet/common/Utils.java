@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.*;
 import okhttp3.*;
 import org.apache.commons.codec.binary.*;
 import org.apache.commons.io.*;
+import org.slf4j.*;
 
 import java.io.*;
 import java.nio.charset.*;
@@ -15,8 +16,32 @@ import java.util.function.*;
 
 public class Utils {
 
-	private static final ObjectWriter OBJECT_PRINTER = new ObjectMapper().writerWithDefaultPrettyPrinter();
+	private static final Logger log = LoggerFactory.getLogger(Utils.class);
 
+	private static final ObjectWriter OBJECT_PRINTER = new ObjectMapper().writerWithDefaultPrettyPrinter();
+	private static File tempDir;
+
+	static {
+		try {
+			tempDir = File.createTempFile("tmp", ".txt").getParentFile();
+		} catch (Exception e) {
+			log.warn("Unable to determine temporary directory", e);
+		}
+	}
+
+	public static File tempDir(){
+		return tempDir;
+	}
+
+	public static File createTempFile(String prefix) {
+		try {
+			File out = File.createTempFile(prefix, ".tmp", tempDir);
+			out.deleteOnExit();
+			return out;
+		} catch (Exception e) {
+			throw new IllegalStateException(e);
+		}
+	}
 
 	public static String readTextFromResource(String resourcePath, Charset encoding) {
 		return readTextFromInput(getInput(resourcePath), encoding);

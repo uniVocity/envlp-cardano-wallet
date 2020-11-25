@@ -4,7 +4,10 @@ package com.univocity.cardano.wallet.api.service;
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.*;
 import com.univocity.cardano.wallet.api.service.exception.*;
+import com.univocity.cardano.wallet.builders.server.*;
+import com.univocity.cardano.wallet.common.x509.*;
 import okhttp3.*;
+import okhttp3.tls.*;
 import org.apache.commons.lang3.*;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -31,7 +34,6 @@ public class InternalWalletApiServiceGenerator {
 		return chain.proceed(request);
 	};
 
-
 	static {
 		Dispatcher dispatcher = new Dispatcher();
 		dispatcher.setMaxRequestsPerHost(500);
@@ -39,7 +41,20 @@ public class InternalWalletApiServiceGenerator {
 		converterFactory = JacksonConverterFactory.create();
 		errorBodyConverter = (Converter) converterFactory.responseBodyConverter(WalletApiError.class, new Annotation[0], null);
 
-		sharedClient = new OkHttpClient.Builder()
+		OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+		Chain chain = EmbeddedWalletServer.getCertificateChain();
+		if (chain != null) {
+			HandshakeCertificates certificates = new HandshakeCertificates.Builder()
+					.addTrustedCertificate(chain.getServerCertificate())
+					.addTrustedCertificate(chain.getRootCACertificate())
+					.addPlatformTrustedCertificates()
+					.build();
+
+			builder.sslSocketFactory(certificates.sslSocketFactory(), certificates.trustManager());
+		}
+
+		builder
 				.dispatcher(dispatcher)
 				.cache(null)
 				.addInterceptor(interceptor)
@@ -47,8 +62,9 @@ public class InternalWalletApiServiceGenerator {
 				.connectTimeout(2, TimeUnit.MINUTES)
 				.readTimeout(2, TimeUnit.MINUTES)
 				.writeTimeout(2, TimeUnit.MINUTES)
-				.pingInterval(20, TimeUnit.SECONDS)
-				.build();
+				.pingInterval(20, TimeUnit.SECONDS);
+
+		sharedClient = builder.build();
 	}
 
 	public static <S> S createService(ApiConfiguration configuration, Class<S> serviceClass) {
@@ -84,17 +100,17 @@ public class InternalWalletApiServiceGenerator {
 	 * Extracts and converts the response error body into an object.
 	 */
 	public static WalletApiError getWalletApiError(Response<?> response) throws IOException, WalletApiException {
-		if("text/plain".equals(response.headers().get("Content-type"))){
+		if ("text/plain".equals(response.headers().get("Content-type"))) {
 			WalletApiError out = new WalletApiError();
 			StringBuilder tmp = new StringBuilder();
 			String message = response.message();
-			if(StringUtils.isNotBlank(message)){
+			if (StringUtils.isNotBlank(message)) {
 				tmp.append(message.trim());
 			}
 			ResponseBody body = response.errorBody();
-			if(body != null){
+			if (body != null) {
 				String string = body.string();
-				if(StringUtils.isNotBlank(string)) {
+				if (StringUtils.isNotBlank(string)) {
 					if (tmp.length() > 0) {
 						tmp.append(": ");
 					}

@@ -10,6 +10,8 @@ import java.nio.charset.*;
 import java.util.*;
 import java.util.function.*;
 
+import static com.univocity.cardano.wallet.common.Utils.*;
+
 public class TemporaryBlockchainHelper extends CardanoCliManager {
 
 	private File genesisFile;
@@ -19,11 +21,11 @@ public class TemporaryBlockchainHelper extends CardanoCliManager {
 	}
 
 	public CardanoNodeManager createTemporaryShelleyNetwork(long testnetMagicCode, long port, Consumer<String> nodeOutputConsumer) {
-		return createTemporaryShelleyNetwork(testnetMagicCode, new BigInteger("1000000000"), tempDir, port, nodeOutputConsumer);
+		return createTemporaryShelleyNetwork(testnetMagicCode, new BigInteger("1000000000"), tempDir(), port, nodeOutputConsumer);
 	}
 
 	public CardanoNodeManager createTemporaryShelleyNetwork(long testnetMagicCode, BigInteger lovelaceSupply, long port, Consumer<String> nodeOutputConsumer) {
-		return createTemporaryShelleyNetwork(testnetMagicCode, lovelaceSupply, tempDir, port, nodeOutputConsumer);
+		return createTemporaryShelleyNetwork(testnetMagicCode, lovelaceSupply, tempDir(), port, nodeOutputConsumer);
 	}
 
 	/**
