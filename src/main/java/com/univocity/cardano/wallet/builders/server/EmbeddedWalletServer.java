@@ -13,22 +13,6 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 	private final CardanoNodeManager nodeManager;
 	private final CardanoWalletManager walletManager;
 
-	private static Chain certificateChain = null;
-
-	public static synchronized Chain getCertificateChain() {
-		return certificateChain;
-	}
-
-	private static synchronized Chain createCertificateChain(){
-		if (certificateChain == null) {
-			try {
-				certificateChain = WalletCertificateGenerator.generate();
-			} catch (Exception e) {
-				log.warn("Could not generate wallet server certificate chain", e);
-			}
-		}
-		return certificateChain;
-	}
 
 	public EmbeddedWalletServer(WalletServer.WalletServerConfig config) {
 		super(config);
@@ -68,14 +52,13 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 				" --node-socket " + nodeManager.getSocketPath() +
 				" --port " + config.walletPort;
 
-		if(config.enableHttps) {
-			createCertificateChain();
-			if (certificateChain != null) {
-				command = command +
-						" --tls-ca-cert " + certificateChain.getRootCACertificatePath() +
-						" --tls-sv-cert " + certificateChain.getServerCertificatePath() +
-						" --tls-sv-key " + certificateChain.getServerKeyPath();
-			}
+		if (config.enableHttps) {
+			WalletCertificateGenerator generator = WalletCertificateGenerator.getInstance();
+			generator.generate(null);
+			command = command +
+					" --tls-ca-cert " + generator.getRootCACertificatePath() +
+					" --tls-sv-cert " + generator.getServerCertificatePath() +
+					" --tls-sv-key " + generator.getServerKeyPath();
 		}
 
 		walletManager.setStartupCommand(command);

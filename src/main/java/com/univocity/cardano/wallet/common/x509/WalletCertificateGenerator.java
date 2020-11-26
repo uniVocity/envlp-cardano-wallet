@@ -1,199 +1,121 @@
 package com.univocity.cardano.wallet.common.x509;
 
-import com.univocity.cardano.wallet.builders.server.*;
+import com.univocity.cardano.wallet.common.*;
 import okhttp3.*;
 import okhttp3.tls.*;
-import org.bouncycastle.asn1.*;
-import org.bouncycastle.asn1.x500.*;
-import org.bouncycastle.asn1.x509.Extension;
-import org.bouncycastle.asn1.x509.*;
-import org.bouncycastle.cert.*;
-import org.bouncycastle.cert.jcajce.*;
-import org.bouncycastle.jce.provider.*;
-import org.bouncycastle.operator.*;
-import org.bouncycastle.operator.jcajce.*;
-import org.bouncycastle.pkcs.*;
-import org.bouncycastle.pkcs.jcajce.*;
+import org.bouncycastle.openssl.jcajce.*;
 
-import java.security.*;
-import java.security.cert.*;
-import java.time.*;
+import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.*;
 
 public class WalletCertificateGenerator {
 
-	private static final int RSA_KEY_SIZE = 4096;
-	private static final String ALGO = "RSA";
-	private static final String SIGNATURE_ALGO = "SHA256With" + ALGO;
-	private static final String ROOT_CN = "Root CA";
-	private static final String SERVER_CN = "Server Cert";
+	private static final WalletCertificateGenerator instance = new WalletCertificateGenerator();
 
-	static {
-		Security.addProvider(new BouncyCastleProvider());
-	}
+	private HandshakeCertificates clientCertificates;
+	private Path rootCACertificatePath;
+	private Path serverCertificatePath;
+	private Path serverKeyPath;
 
 	private WalletCertificateGenerator() {
 
 	}
 
-	public static Chain generate() {
-		return generate(null);
+	public static WalletCertificateGenerator getInstance() {
+		return instance;
 	}
 
-	public static Chain generate(String baseDir) {
-		Chain details = new Chain();
-		try {
-			generateCA(details);
-			generateServerCertificate(details);
-
-			details.verify();
-
-			details.generateFiles(baseDir);
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new IllegalStateException(e);
+	static String getBaseDir(String baseDir) {
+		if (baseDir == null) {
+			baseDir = Utils.tempDir().toPath().resolve("chain").toFile().getAbsolutePath();
 		}
-		return details;
+		if (!new File(baseDir).exists()) {
+			new File(baseDir).mkdirs();
+		}
+		return baseDir;
 	}
 
-	private static void generateCA(Chain chain) throws Exception {
-		KeyPair keypair = generateKeyPair();
 
-		OffsetDateTime now = OffsetDateTime.now();
-		X500Name cnName = x500Name(ROOT_CN);
-		JcaX509v3CertificateBuilder builder = new JcaX509v3CertificateBuilder(
-				cnName,
-				chain.getSerialNumber(),
-				Date.from(now.toInstant()),
-				Date.from(now.plusDays(365 * 10).toInstant()),
-				cnName,
-				keypair.getPublic()
-		);
-		JcaX509ExtensionUtils extensionUtils = new JcaX509ExtensionUtils();
-		builder.addExtension(Extension.basicConstraints, true, new BasicConstraints(0));
-		builder.addExtension(Extension.authorityKeyIdentifier, false, extensionUtils.createAuthorityKeyIdentifier(keypair.getPublic()));
-		builder.addExtension(Extension.subjectKeyIdentifier, false, extensionUtils.createSubjectKeyIdentifier(keypair.getPublic()));
-		builder.addExtension(Extension.keyUsage, false, new KeyUsage(KeyUsage.cRLSign | KeyUsage.keyCertSign));
+	public void generate(String baseDir) {
+		HeldCertificate rootCertificate = new HeldCertificate.Builder()
+				.certificateAuthority(0)
+				.duration(3650, TimeUnit.DAYS)
+				.rsa2048()
+				.build();
 
-		ContentSigner signer = new JcaContentSignerBuilder(SIGNATURE_ALGO).build(keypair.getPrivate());
-		X509CertificateHolder holder = builder.build(signer);
-		X509Certificate cert = new JcaX509CertificateConverter().setProvider(BouncyCastleProvider.PROVIDER_NAME).getCertificate(holder);
+		HeldCertificate serverCertificate = new HeldCertificate.Builder()
+				.commonName("server")
+				.duration(365, TimeUnit.DAYS)
+				.rsa2048()
+				.addSubjectAlternativeName("localhost")
+				.signedBy(rootCertificate)
+				.build();
 
-		cert.checkValidity();
 
-		chain.rootCACertificate = cert;
-		chain.rootCAKeyPair = keypair;
-		chain.rootCAName = cnName;
+		baseDir = getBaseDir(baseDir);
+		Path p = new File(baseDir).toPath();
+
+		dumpObjectsAsPem(rootCACertificatePath = p.resolve("rootCa.pem"), rootCertificate.certificate());
+		dumpObjectsAsPem(serverCertificatePath = p.resolve("server.pem"), serverCertificate.certificate());
+		dumpObjectsAsPem(serverKeyPath = p.resolve("key.pem"), serverCertificate.keyPair().getPrivate());
+
+		HeldCertificate clientCertificate = new HeldCertificate.Builder()
+				.commonName("client")
+				.duration(365, TimeUnit.DAYS)
+				.rsa2048()
+				.signedBy(rootCertificate)
+				.build();
+
+		clientCertificates = new HandshakeCertificates.Builder()
+				.addTrustedCertificate(rootCertificate.certificate())
+				.heldCertificate(clientCertificate)
+				.build();
 	}
 
-	private static void generateServerCertificate(Chain chain) throws Exception {
-		KeyPair keyPair = generateKeyPair();
-
-		X500Name subjectName = x500Name(SERVER_CN);
-		PKCS10CertificationRequestBuilder p10Builder = new JcaPKCS10CertificationRequestBuilder(subjectName, keyPair.getPublic());
-		JcaContentSignerBuilder csBuilder = new JcaContentSignerBuilder(SIGNATURE_ALGO).setProvider(BouncyCastleProvider.PROVIDER_NAME);
-		ContentSigner signer = csBuilder.build(chain.rootCAKeyPair.getPrivate());
-		PKCS10CertificationRequest csr = p10Builder.build(signer);
-
-		OffsetDateTime now = OffsetDateTime.now();
-		X509v3CertificateBuilder builder = new X509v3CertificateBuilder(
-				chain.rootCAName,
-				chain.getSerialNumber(),
-				Date.from(now.toInstant()),
-				Date.from(now.plusDays(365).toInstant()),
-				csr.getSubject(),
-				csr.getSubjectPublicKeyInfo()
-		);
-
-		JcaX509ExtensionUtils extensionUtils = new JcaX509ExtensionUtils();
-		builder.addExtension(Extension.basicConstraints, true, new BasicConstraints(false));
-		builder.addExtension(Extension.authorityKeyIdentifier, false, extensionUtils.createAuthorityKeyIdentifier(chain.rootCACertificate));
-		builder.addExtension(Extension.subjectKeyIdentifier, false, extensionUtils.createSubjectKeyIdentifier(csr.getSubjectPublicKeyInfo()));
-		builder.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(new KeyPurposeId[]{KeyPurposeId.id_kp_serverAuth}));
-		builder.addExtension(Extension.keyUsage, false, new KeyUsage(KeyUsage.keyEncipherment | KeyUsage.digitalSignature));
-
-		builder.addExtension(Extension.subjectAlternativeName, false, new GeneralNames(new GeneralName[]{
-				new GeneralName(GeneralName.dNSName, "localhost"),
-				new GeneralName(GeneralName.dNSName, "localhost.localdomain"),
-				new GeneralName(GeneralName.iPAddress, "127.0.0.1"),
-				new GeneralName(GeneralName.iPAddress, "::1"),
-		}));
-
-		X509CertificateHolder issuedCertHolder = builder.build(signer);
-		X509Certificate issuedCert = new JcaX509CertificateConverter().setProvider(BouncyCastleProvider.PROVIDER_NAME).getCertificate(issuedCertHolder);
-
-		issuedCert.checkValidity();
-		issuedCert.verify(chain.rootCACertificate.getPublicKey(), BouncyCastleProvider.PROVIDER_NAME);
-
-		chain.serverCertificate = issuedCert;
-		chain.serverKeyPair = keyPair;
-		chain.serverName = subjectName;
-
-	}
-
-	private static KeyPair generateKeyPair() {
-		try {
-			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(ALGO, BouncyCastleProvider.PROVIDER_NAME);
-			keyPairGenerator.initialize(RSA_KEY_SIZE);
-			return keyPairGenerator.generateKeyPair();
-		} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+	private static void dumpObjectsAsPem(Path path, Object... objects) {
+		try (JcaPEMWriter writer = new JcaPEMWriter(new FileWriter(path.toFile()))) {
+			Arrays.stream(objects).forEach(obj -> {
+				try {
+					writer.writeObject(obj);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			});
+			writer.flush();
+		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		}
 	}
 
-	private static X500Name x500Name(String cn) {
-		RDN[] rDNs = new RDN[]{
-				new RDN(new AttributeTypeAndValue(X509ObjectIdentifiers.commonName, new DERUTF8String(cn))),
-				new RDN(new AttributeTypeAndValue(X509ObjectIdentifiers.countryName, new DERUTF8String("AU"))),
-				new RDN(new AttributeTypeAndValue(X509ObjectIdentifiers.stateOrProvinceName, new DERUTF8String("SA"))),
-				new RDN(new AttributeTypeAndValue(X509ObjectIdentifiers.localityName, new DERUTF8String("Adelaide"))),
-				new RDN(new AttributeTypeAndValue(X509ObjectIdentifiers.organization, new DERUTF8String("univocity"))),
-				new RDN(new AttributeTypeAndValue(X509ObjectIdentifiers.organizationalUnitName, new DERUTF8String("NA"))),
-		};
-		return new X500Name(rDNs);
+	public String getRootCACertificatePath() {
+		return rootCACertificatePath.toFile().getAbsolutePath();
+	}
+
+	public String getServerCertificatePath() {
+		return serverCertificatePath.toFile().getAbsolutePath();
+	}
+
+	public String getServerKeyPath() {
+		return serverKeyPath.toFile().getAbsolutePath();
+	}
+
+	public OkHttpClient.Builder configureSSL(OkHttpClient.Builder builder) {
+		if (clientCertificates != null) {
+			builder.sslSocketFactory(clientCertificates.sslSocketFactory(), clientCertificates.trustManager());
+		}
+		return builder;
 	}
 
 	public static void main(String[] args) throws Exception {
-		Security.addProvider(new BouncyCastleProvider());
-
-		Dispatcher dispatcher = new Dispatcher();
-		dispatcher.setMaxRequestsPerHost(500);
-		dispatcher.setMaxRequests(500);
-
-		OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
-		Chain chain = EmbeddedWalletServer.getCertificateChain();
-		if (chain != null) {
-			HandshakeCertificates certificates = new HandshakeCertificates.Builder()
-					.addTrustedCertificate(chain.getServerCertificate())
-					.addTrustedCertificate(chain.getRootCACertificate())
-					.addPlatformTrustedCertificates()
-					.build();
-
-//			builder.sslSocketFactory(chain.getSSLContextFromKeystore("/tmp/chain/keystore.tmp", "changeit").getSocketFactory(), chain.getTrustManager());
-			builder.sslSocketFactory(certificates.sslSocketFactory(), certificates.trustManager());
-		}
-
-		builder
-				.dispatcher(dispatcher)
-				.cache(null)
-				.callTimeout(2, TimeUnit.MINUTES)
-				.connectTimeout(2, TimeUnit.MINUTES)
-				.readTimeout(2, TimeUnit.MINUTES)
-				.writeTimeout(2, TimeUnit.MINUTES)
-				.pingInterval(20, TimeUnit.SECONDS);
-
-		OkHttpClient client = builder.build();
-
-
+		OkHttpClient client = WalletCertificateGenerator.getInstance().configureSSL(new OkHttpClient.Builder()).build();
 		Request request = new Request.Builder()
 				.url("https://localhost:4444/v2/network/clock")
 				.build();
 
 		Response response = client.newCall(request).execute();
-		System.out.println(response.body().toString());
+		System.out.println(response.body().string());
 
 	}
 }

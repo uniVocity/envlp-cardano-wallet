@@ -18,7 +18,7 @@ public class WalletServer {
 
 	public static class WalletServerConfig implements EmbeddedWallet, RemoteWallet, Node {
 
-		boolean enableHttps = false; //TODO: enable this to be configurable once we get something that works
+		boolean enableHttps = true; //TODO: enable this to be configurable once we get something that works
 		final String walletHost;
 		int walletPort;
 		int nodePort;

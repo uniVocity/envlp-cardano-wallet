@@ -27,9 +27,9 @@ public class TestEmbeddedServer {
 
 		server.start();
 
-//		System.out.println("WAITING--------------------------");
-//		Thread.sleep(10000);
-//		WalletCertificateGenerator.main(null);
+		System.out.println("WAITING--------------------------");
+		Thread.sleep(2000);
+		WalletCertificateGenerator.main(null);
 
 		server.waitForServerToStop();
 	}

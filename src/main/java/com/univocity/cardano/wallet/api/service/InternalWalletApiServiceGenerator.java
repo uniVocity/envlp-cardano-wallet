@@ -4,10 +4,8 @@ package com.univocity.cardano.wallet.api.service;
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.*;
 import com.univocity.cardano.wallet.api.service.exception.*;
-import com.univocity.cardano.wallet.builders.server.*;
 import com.univocity.cardano.wallet.common.x509.*;
 import okhttp3.*;
-import okhttp3.tls.*;
 import org.apache.commons.lang3.*;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -42,17 +40,7 @@ public class InternalWalletApiServiceGenerator {
 		errorBodyConverter = (Converter) converterFactory.responseBodyConverter(WalletApiError.class, new Annotation[0], null);
 
 		OkHttpClient.Builder builder = new OkHttpClient.Builder();
-
-		Chain chain = EmbeddedWalletServer.getCertificateChain();
-		if (chain != null) {
-			HandshakeCertificates certificates = new HandshakeCertificates.Builder()
-					.addTrustedCertificate(chain.getServerCertificate())
-					.addTrustedCertificate(chain.getRootCACertificate())
-					.addPlatformTrustedCertificates()
-					.build();
-
-			builder.sslSocketFactory(certificates.sslSocketFactory(), certificates.trustManager());
-		}
+		WalletCertificateGenerator.getInstance().configureSSL(builder);
 
 		builder
 				.dispatcher(dispatcher)
