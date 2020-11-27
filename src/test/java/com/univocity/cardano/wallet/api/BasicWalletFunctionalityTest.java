@@ -64,16 +64,16 @@ public class BasicWalletFunctionalityTest {
 
 	@Test(dependsOnMethods = "testShelleyWalletCreation")
 	public void testShelleyWalletGetPublicKey() {
-		assertEquals(shelleyWallet.keys().externalUtxoPublicKey(0), "addr_xvk1pqkrxdfnuq43gkjq5qdgfyuvj29569njywst5w46lkzzrjazy5rsxqu9r57y25xsygje380t0cke95uz7gdvrns39xr5rsungfqkwvce5782a");
-		assertEquals(shelleyWallet.keys().internalUtxoPublicKey(0), "addr_xvk1k96j9609ukthxtnq0te87yh7jvhq2d6q6vkyzwmgdw84f9uk3xdtzt6n5ml427mzk8se9u4g8lvw08gf7xmewva9eh4ac0300mmgv4qkjh9jx");
-		assertEquals(shelleyWallet.keys().mutableAccountPublicKey(0), "stake_xvk13s9ax57ttljfuak6w95lae2vvuwp29zhvvyu7t3uj343kv0zuhmv9cy8a39tza384mrvqx3jfa2d584evu6regshjm00ujl3h2hmdcgje367c");
-		assertEquals(shelleyWallet.keys().multiSigPublicKey(0), "script_xvk129zt5mee3qdzjlf2980yw02aq9q7e2alpqzc8artwdnzt2mchj9h77lns9herw7dntf5fvg3kc97kc37yvs6at9a4tnedh9qrmdxujgkgx0gc");
+		assertEquals(shelleyWallet.keys().externalUtxoPublicKey(0), "addr_vk1pqkrxdfnuq43gkjq5qdgfyuvj29569njywst5w46lkzzrjazy5rselayhc");
+		assertEquals(shelleyWallet.keys().internalUtxoPublicKey(0), "addr_vk1k96j9609ukthxtnq0te87yh7jvhq2d6q6vkyzwmgdw84f9uk3xdq2kh9hy");
+		assertEquals(shelleyWallet.keys().mutableAccountPublicKey(0), "stake_vk13s9ax57ttljfuak6w95lae2vvuwp29zhvvyu7t3uj343kv0zuhmq7lq973");
+		assertEquals(shelleyWallet.keys().multiSigPublicKey(0), "script_vk129zt5mee3qdzjlf2980yw02aq9q7e2alpqzc8artwdnzt2mchj9svkhawu");
 	}
 
 	@Test(dependsOnMethods = "testShelleyWalletCreation")
 	public void testShelleyReadOnlyWallet() {
 		testWallet(shelleyReadOnlyWallet = server.wallets().createOrGet("shelleyReadOnlyWallet").shelley()
-				.fromPublicKey("invalid")); //TODO
+				.fromPublicKey("addr_vk1pqkrxdfnuq43gkjq5qdgfyuvj29569njywst5w46lkzzrjazy5rselayhc")); //TODO
 	}
 
 	@Test

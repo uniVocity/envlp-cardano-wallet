@@ -72,6 +72,10 @@ public class CertificateGenerator {
 				.build();
 	}
 
+	public void setClientCertificates(HandshakeCertificates certificates){
+		this.clientCertificates = certificates;
+	}
+
 	private static void dumpObjectsAsPem(Path path, Object... objects) {
 		try (JcaPEMWriter writer = new JcaPEMWriter(new FileWriter(path.toFile()))) {
 			Arrays.stream(objects).forEach(obj -> {

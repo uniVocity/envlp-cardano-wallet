@@ -8,6 +8,7 @@ import com.univocity.cardano.wallet.builders.wallets.*;
 import org.apache.commons.codec.*;
 import org.apache.commons.codec.binary.*;
 import org.apache.commons.io.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 
@@ -20,7 +21,12 @@ public class RemoteWalletServer {
 
 	public RemoteWalletServer(WalletServer.WalletServerConfig config) {
 		ApiConfiguration configuration = new ApiConfiguration();
-		configuration.setWalletServiceHost(config.walletHost);
+		String protocol = config.enableHttps ? "https://" : "http://";
+		String host = config.walletHost;
+		if (host.contains("//")) {
+			host = StringUtils.substringAfter(host, "//");
+		}
+		configuration.setWalletServiceHost(protocol + host);
 		configuration.setWalletServicePort(config.walletPort);
 
 		api = new WalletApi(configuration);

@@ -10,7 +10,7 @@ import java.util.function.*;
 public class WalletServer {
 
 	public static EmbeddedWallet embedded() {
-		return new WalletServerConfig("http://localhost");
+		return new WalletServerConfig("localhost");
 	}
 
 	public static RemoteWallet remote(String host) {

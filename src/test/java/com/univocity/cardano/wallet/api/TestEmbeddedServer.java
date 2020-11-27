@@ -22,15 +22,15 @@ public class TestEmbeddedServer {
 				.randomPort()
 				.consumeOutput(System.out::println)
 				.wallet()
-				.enableHttps()
-				.randomPort()
+				//.enableHttps()
+				.port(4444)
 				.consumeOutput(System.out::println);
 
 		server.start();
 
-		System.out.println("WAITING--------------------------");
-		Thread.sleep(2000);
-		CertificateGenerator.main("https://localhost:" + server.getWalletPort());
+//		System.out.println("WAITING--------------------------");
+//		Thread.sleep(2000);
+//		CertificateGenerator.main("https://localhost:" + server.getWalletPort());
 
 		server.waitForServerToStop();
 	}
