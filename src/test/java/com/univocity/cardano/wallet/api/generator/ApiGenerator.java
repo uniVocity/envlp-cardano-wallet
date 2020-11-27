@@ -19,8 +19,7 @@ import java.util.function.*;
 public class ApiGenerator {
 	static final String home = System.getProperty("user.home");
 	static final String yaml = home + "/dev/repository/iog-cardano-wallet/specifications/api/swagger.yaml";
-	static final String generated = home + "/dev/repository/envlp/cardano-wallet/src/main/java/com/univocity/cardano/wallet/api/generated";
-
+	static final String generated = home + "/dev/repository/envlp-cardano-wallet/src/main/java/com/univocity/cardano/wallet/api/generated";
 
 	private static Reader openYamlFile() throws Exception {
 		return new FileReader(new File(yaml));

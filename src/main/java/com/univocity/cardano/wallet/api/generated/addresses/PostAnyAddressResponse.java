@@ -1,4 +1,4 @@
-package com.univocity.cardano.wallet.api.generated.utils;
+package com.univocity.cardano.wallet.api.generated.addresses;
 
 import com.univocity.cardano.wallet.api.generated.common.*;
 import static com.univocity.cardano.wallet.common.Utils.*;

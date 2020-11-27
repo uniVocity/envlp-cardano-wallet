@@ -1,7 +1,7 @@
 package com.univocity.cardano.wallet.builders.utils;
 
 import com.univocity.cardano.wallet.api.*;
-import com.univocity.cardano.wallet.api.generated.utils.*;
+import com.univocity.cardano.wallet.api.generated.addresses.*;
 import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;

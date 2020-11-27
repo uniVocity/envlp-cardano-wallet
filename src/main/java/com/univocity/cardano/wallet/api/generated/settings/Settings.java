@@ -24,6 +24,10 @@ public final class Settings {
 	 *   - `uri` - metadata is fetched from an external Stake-Pool Metadata Aggregation Server (SMASH)
 	 * After update existing metadata will be dropped forcing it to re-sync automatically with the new setting.
 	 * 
+	 * - Pattern: {@code ^(none|direct|https?:\/\/[a-zA-Z0-9-_~.]+(:[0-9]+)?/?)$}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code https://smash.cardano-mainnet.iohk.io/}</pre>
 	 * 
 	 * @return the pool metadata source
 	 */
@@ -40,6 +44,10 @@ public final class Settings {
 	 *   - `uri` - metadata is fetched from an external Stake-Pool Metadata Aggregation Server (SMASH)
 	 * After update existing metadata will be dropped forcing it to re-sync automatically with the new setting.
 	 * 
+	 * - Pattern: {@code ^(none|direct|https?:\/\/[a-zA-Z0-9-_~.]+(:[0-9]+)?/?)$}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code https://smash.cardano-mainnet.iohk.io/}</pre>
 	 * 
 	 * @param poolMetadataSource the pool metadata source
 	 */

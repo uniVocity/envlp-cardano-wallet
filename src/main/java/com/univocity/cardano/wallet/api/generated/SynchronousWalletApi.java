@@ -19,7 +19,6 @@ import com.univocity.cardano.wallet.api.generated.proxy.*;
 import com.univocity.cardano.wallet.api.generated.settings.*;
 import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
-import com.univocity.cardano.wallet.api.generated.utils.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
 import java.util.*;
 
@@ -351,12 +350,10 @@ public class SynchronousWalletApi {
 	 * List all known stake pools ordered by descending `non_myopic_member_rewards`.
 	 * The `non_myopic_member_rewards` — and thus the ordering — depends on the `?stake` query
 	 * parameter.
-	 * > ⚠️  On the incentivized testnet, pools are instead ordered by
-	 * descending `desirability`.
 	 * Some pools _may_ also have metadata attached to them.
 	 * {@code status: stable}
 	 * 
-	 * @param stake the stake (optional).
+	 * @param stake the stake.
 	 * - Value range from {@code 0} to {@code 45000000000000000}.
 	 * @return the server response as a list of {@link ListStakePoolsResponseItem}
 	 */
@@ -943,7 +940,46 @@ public class SynchronousWalletApi {
 	/**
 	 * 
 	 * Construct any address by specyfying credential for payment or stake.
-	 * {@code status: unstable}
+	 * In Cardano, Addresses are made of three parts:
+	 *   <pre>{@code 
+	 * *---------*---------*-------*
+	 * | NETWORK | PAYMENT | STAKE |
+	 * *---------*---------*-------*
+	 *   }</pre>
+	 * The `NETWORK` part allows for distinguishing addresses between different networks like the mainnet or the testnet. It is implicitly
+	 * handled by the server without you having to worry about it. The `PAYMENT` and `STAKE` parts however can be constructed similarly, using
+	 * either:
+	 * - A public key
+	 * - A script
+	 * The script itself is either constructed out of a public key, or one of the three following primitives:
+	 * - all
+	 * - any
+	 * - some
+	 * Each of which contains one or more script(s) that can be either keys or primitives, and so on. Schematically:
+	 *   <pre>{@code 
+	 *                                    ┏─────────┓
+	 * SCRIPT = ──┬───────────────────────┤ pub key ├─────────────────────┬──
+	 *            │                       ┗─────────┛                     │
+	 *            │  ╭─────╮   ╭────────╮                                 │
+	 *            ├──┤ ALL ├───┤ SCRIPT ├─┬───────────────────────────────┤
+	 *            │  ╰─────╯ ^ ╰────────╯ │                               │
+	 *            │          │   ╭───╮    │                               │
+	 *            │          └───┤ , ├────┘                               │
+	 *            │              ╰───╯                                    │
+	 *            │  ╭─────╮   ╭────────╮                                 │
+	 *            ├──┤ ALL ├───┤ SCRIPT ├─┬───────────────────────────────┤
+	 *            │  ╰─────╯ ^ ╰────────╯ │                               │
+	 *            │          │   ╭───╮    │                               │
+	 *            │          └───┤ , ├────┘                               │
+	 *            │              ╰───╯                                    │
+	 *            │  ╭──────╮ ╭──────────╮ ┏───┓ ╭──────╮   ╭────────╮    │
+	 *            └──┤ SOME ├─┤ AT_LEAST ├─┤ n ├─┤ FROM ├───┤ SCRIPT ├─┬──┘
+	 *               ╰──────╯ ╰──────────╯ ┗───┛ ╰──────╯ ^ ╰────────╯ │
+	 *                                                    │   ╭───╮    │
+	 *                                                    └───┤ , ├────┘
+	 *                                                        ╰───╯
+	 *   }</pre>
+	 * {@code status: stable}
 	 * 
 	 * @param requestBody a request body containing the json representation of {@link PostAnyAddressRequest}
 	 * @return the server response as an instance of {@link PostAnyAddressResponse}

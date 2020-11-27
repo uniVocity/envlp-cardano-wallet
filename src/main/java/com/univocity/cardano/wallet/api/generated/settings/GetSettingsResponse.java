@@ -23,10 +23,14 @@ public final class GetSettingsResponse {
 	 * 
 	 * Pool metadata source. This sets the metadata fetching strategy.
 	 * Possible values are
-	 *   * null -> no fetching
+	 *   * none -> no fetching
 	 *   * direct -> direct fetching
 	 *   * uri -> use SMASH server
 	 * 
+	 * - Pattern: {@code ^(none|direct|https?:\/\/[a-zA-Z0-9-_~.]+(:[0-9]+)?/?)$}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code https://smash.cardano-mainnet.iohk.io/}</pre>
 	 * 
 	 * @return the pool metadata source
 	 */
@@ -39,10 +43,14 @@ public final class GetSettingsResponse {
 	 * 
 	 * Pool metadata source. This sets the metadata fetching strategy.
 	 * Possible values are
-	 *   * null -> no fetching
+	 *   * none -> no fetching
 	 *   * direct -> direct fetching
 	 *   * uri -> use SMASH server
 	 * 
+	 * - Pattern: {@code ^(none|direct|https?:\/\/[a-zA-Z0-9-_~.]+(:[0-9]+)?/?)$}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code https://smash.cardano-mainnet.iohk.io/}</pre>
 	 * 
 	 * @param poolMetadataSource the pool metadata source
 	 */

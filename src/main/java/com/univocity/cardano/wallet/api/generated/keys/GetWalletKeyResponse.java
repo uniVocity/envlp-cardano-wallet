@@ -29,7 +29,7 @@ public final class GetWalletKeyResponse {
 	/**
 	 * Returns the result.
 	 * - Format: {@code bech32}.
-	 * - Pattern: {@code ^((addr_xvk)|(stake_xvk)|(script_xvk))1[0-9a-z]*$}.
+	 * - Pattern: {@code ^((addr_vk)|(stake_vk)|(script_vk))1[0-9a-z]*$}.
 	 * 
 	 * @return the result
 	 */
@@ -40,7 +40,7 @@ public final class GetWalletKeyResponse {
 	/**
 	 * Defines the result.
 	 * - Format: {@code bech32}.
-	 * - Pattern: {@code ^((addr_xvk)|(stake_xvk)|(script_xvk))1[0-9a-z]*$}.
+	 * - Pattern: {@code ^((addr_vk)|(stake_vk)|(script_vk))1[0-9a-z]*$}.
 	 * 
 	 * @param result the result
 	 */
