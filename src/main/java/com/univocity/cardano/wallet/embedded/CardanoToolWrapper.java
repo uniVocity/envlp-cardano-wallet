@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.embedded;
 
+import com.univocity.cardano.wallet.exception.*;
 import org.apache.commons.lang3.*;
 import org.slf4j.*;
 
@@ -21,6 +22,11 @@ public class CardanoToolWrapper {
 		this.commandLineHelper = new CommandLineHelper();
 		this.toolName = toolName;
 		this.toolDir = new File(toolDirectoryPath);
+
+		if(!toolDir.exists()){
+			throw new CardanoToolsNotFoundException("Cardano tools directory does not exist: " + toolDirectoryPath);
+		}
+
 		String executableName = toolName;
 		if (SystemUtils.IS_OS_WINDOWS) {
 			executableName += ".exe";
