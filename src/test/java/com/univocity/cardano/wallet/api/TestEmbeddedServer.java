@@ -19,17 +19,18 @@ public class TestEmbeddedServer {
 				.configuration(CONFIGS + "mainnet-config.json")
 				.topology(CONFIGS + "mainnet-topology.json")
 				.storeBlockchainIn(HOME + "/Downloads/blockchain")
-				.port(3333)
+				.randomPort()
 				.consumeOutput(System.out::println)
 				.wallet()
-				.port(4444)
+				.enableHttps()
+				.randomPort()
 				.consumeOutput(System.out::println);
 
 		server.start();
 
 		System.out.println("WAITING--------------------------");
 		Thread.sleep(2000);
-		WalletCertificateGenerator.main(null);
+		CertificateGenerator.main("https://localhost:" + server.getWalletPort());
 
 		server.waitForServerToStop();
 	}

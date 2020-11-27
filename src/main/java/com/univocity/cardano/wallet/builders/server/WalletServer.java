@@ -1,5 +1,6 @@
 package com.univocity.cardano.wallet.builders.server;
 
+import com.univocity.cardano.wallet.common.*;
 import com.univocity.cardano.wallet.embedded.services.*;
 
 import java.io.*;
@@ -18,7 +19,7 @@ public class WalletServer {
 
 	public static class WalletServerConfig implements EmbeddedWallet, RemoteWallet, Node {
 
-		boolean enableHttps = true; //TODO: enable this to be configurable once we get something that works
+		boolean enableHttps = false;
 		final String walletHost;
 		int walletPort;
 		int nodePort;
@@ -51,6 +52,12 @@ public class WalletServer {
 			}
 
 			@Override
+			public ProcessOutput<WalletBuilder> randomPort() {
+				nodePort = Utils.randomPortNumber();
+				return this;
+			}
+
+			@Override
 			public ProcessOutput<WalletBuilder> port(int port) {
 				nodePort = port;
 				return this;
@@ -74,12 +81,12 @@ public class WalletServer {
 			}
 
 			@Override
-			public WalletServerBuilder wallet() {
+			public WalletOptions wallet() {
 				return new WalletServerBuilder();
 			}
 		}
 
-		public class WalletServerBuilder implements PortConfig<EmbeddedWalletServer>, ProcessOutput<EmbeddedWalletServer> {
+		public class WalletServerBuilder implements WalletOptions, ProcessOutput<EmbeddedWalletServer> {
 			@Override
 			public ProcessOutput<EmbeddedWalletServer> port(int port) {
 				walletPort = port;
@@ -95,6 +102,17 @@ public class WalletServer {
 			@Override
 			public EmbeddedWalletServer ignoreOutput() {
 				return new EmbeddedWalletServer(WalletServerConfig.this);
+			}
+
+			public PortConfig<EmbeddedWalletServer> enableHttps(){
+				enableHttps = true;
+				return this;
+			}
+
+			@Override
+			public ProcessOutput<EmbeddedWalletServer> randomPort() {
+				walletPort = Utils.randomPortNumber();
+				return this;
 			}
 		}
 

@@ -13,6 +13,8 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 	private final CardanoNodeManager nodeManager;
 	private final CardanoWalletManager walletManager;
 
+	private int walletPort;
+	private int nodePort;
 
 	public EmbeddedWalletServer(WalletServer.WalletServerConfig config) {
 		super(config);
@@ -20,6 +22,8 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 		String networkParam = "--mainnet";
 
 		String cardanoTools = config.cardanoToolsDir.getAbsolutePath();
+		this.nodePort = config.nodePort;
+		this.walletPort = config.walletPort;
 
 		if (config.buildTemporaryBlockchain) {
 			TemporaryBlockchainHelper tmp = new TemporaryBlockchainHelper(cardanoTools);
@@ -53,8 +57,8 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 				" --port " + config.walletPort;
 
 		if (config.enableHttps) {
-			WalletCertificateGenerator generator = WalletCertificateGenerator.getInstance();
-			generator.generate(null);
+			CertificateGenerator generator = CertificateGenerator.getInstance();
+			generator.generate();
 			command = command +
 					" --tls-ca-cert " + generator.getRootCACertificatePath() +
 					" --tls-sv-cert " + generator.getServerCertificatePath() +
@@ -63,6 +67,14 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 
 		walletManager.setStartupCommand(command);
 
+	}
+
+	public int getWalletPort() {
+		return walletPort;
+	}
+
+	public int getNodePort() {
+		return nodePort;
 	}
 
 	public CardanoNodeManager getNodeManager() {

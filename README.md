@@ -568,7 +568,6 @@ is made available on their API.
 
 ## TODO LIST
  
- * Enable HTTPS on embedded mode.
  * Ensure embedded server runs on Windows/Mac/Linux.
  * Document all source code files.
  * Download binaries and configuration files automatically.

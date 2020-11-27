@@ -10,35 +10,34 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class WalletCertificateGenerator {
+public class CertificateGenerator {
 
-	private static final WalletCertificateGenerator instance = new WalletCertificateGenerator();
+	private static final CertificateGenerator instance = new CertificateGenerator();
 
 	private HandshakeCertificates clientCertificates;
 	private Path rootCACertificatePath;
 	private Path serverCertificatePath;
 	private Path serverKeyPath;
+	private final File baseDir = getBaseDir();
 
-	private WalletCertificateGenerator() {
+	private CertificateGenerator() {
 
 	}
 
-	public static WalletCertificateGenerator getInstance() {
+	public static CertificateGenerator getInstance() {
 		return instance;
 	}
 
-	static String getBaseDir(String baseDir) {
-		if (baseDir == null) {
-			baseDir = Utils.tempDir().toPath().resolve("chain").toFile().getAbsolutePath();
-		}
-		if (!new File(baseDir).exists()) {
-			new File(baseDir).mkdirs();
+	private static File getBaseDir() {
+		File baseDir = Utils.tempDir().toPath().resolve("chains").toFile();
+		if (!baseDir.exists()) {
+			baseDir.mkdirs();
 		}
 		return baseDir;
 	}
 
 
-	public void generate(String baseDir) {
+	public void generate() {
 		HeldCertificate rootCertificate = new HeldCertificate.Builder()
 				.certificateAuthority(0)
 				.duration(3650, TimeUnit.DAYS)
@@ -54,12 +53,11 @@ public class WalletCertificateGenerator {
 				.build();
 
 
-		baseDir = getBaseDir(baseDir);
-		Path p = new File(baseDir).toPath();
+		Path p = baseDir.toPath();
 
-		dumpObjectsAsPem(rootCACertificatePath = p.resolve("rootCa.pem"), rootCertificate.certificate());
-		dumpObjectsAsPem(serverCertificatePath = p.resolve("server.pem"), serverCertificate.certificate());
-		dumpObjectsAsPem(serverKeyPath = p.resolve("key.pem"), serverCertificate.keyPair().getPrivate());
+		dumpObjectsAsPem(rootCACertificatePath = p.resolve(UUID.randomUUID().toString()), rootCertificate.certificate());
+		dumpObjectsAsPem(serverCertificatePath = p.resolve(UUID.randomUUID().toString()), serverCertificate.certificate());
+		dumpObjectsAsPem(serverKeyPath = p.resolve(UUID.randomUUID().toString()), serverCertificate.keyPair().getPrivate());
 
 		HeldCertificate clientCertificate = new HeldCertificate.Builder()
 				.commonName("client")
@@ -108,10 +106,10 @@ public class WalletCertificateGenerator {
 		return builder;
 	}
 
-	public static void main(String[] args) throws Exception {
-		OkHttpClient client = WalletCertificateGenerator.getInstance().configureSSL(new OkHttpClient.Builder()).build();
+	public static void main(String... args) throws Exception {
+		OkHttpClient client = CertificateGenerator.getInstance().configureSSL(new OkHttpClient.Builder()).build();
 		Request request = new Request.Builder()
-				.url("https://localhost:4444/v2/network/clock")
+				.url(args[0] + "/v2/network/clock")
 				.build();
 
 		Response response = client.newCall(request).execute();

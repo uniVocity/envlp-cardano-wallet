@@ -40,7 +40,7 @@ public class InternalWalletApiServiceGenerator {
 		errorBodyConverter = (Converter) converterFactory.responseBodyConverter(WalletApiError.class, new Annotation[0], null);
 
 		OkHttpClient.Builder builder = new OkHttpClient.Builder();
-		WalletCertificateGenerator.getInstance().configureSSL(builder);
+		CertificateGenerator.getInstance().configureSSL(builder);
 
 		builder
 				.dispatcher(dispatcher)

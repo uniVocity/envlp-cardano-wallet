@@ -8,10 +8,12 @@ import org.apache.commons.io.*;
 import org.slf4j.*;
 
 import java.io.*;
+import java.net.*;
 import java.nio.charset.*;
 import java.time.*;
 import java.time.format.*;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.*;
 
 public class Utils {
@@ -23,7 +25,9 @@ public class Utils {
 
 	static {
 		try {
-			tempDir = File.createTempFile("tmp", ".txt").getParentFile();
+			File tmp = File.createTempFile("tmp", ".txt");
+			tempDir = tmp.getParentFile();
+			tmp.delete();
 		} catch (Exception e) {
 			log.warn("Unable to determine temporary directory", e);
 		}
@@ -328,4 +332,29 @@ public class Utils {
 		}
 		return iso8601DateFormatter().format(date);
 	}
+
+	public static int randomPortNumber() {
+		int start = ThreadLocalRandom.current().nextInt(1100, 65535);
+		for(int port = start; port < 65535; port++){
+			if (isLocalPortFree(port)) {
+				return port;
+			}
+		}
+		for(int port = start - 1; port >= 1100; port--){
+			if (isLocalPortFree(port)) {
+				return port;
+			}
+		}
+		throw new IllegalStateException("No free ports available");
+	}
+
+	public static boolean isLocalPortFree(int port) {
+		try {
+			new ServerSocket(port).close();
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
 }
