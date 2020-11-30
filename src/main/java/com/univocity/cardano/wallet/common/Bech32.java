@@ -119,10 +119,10 @@ public class Bech32 {
 	 * Encode a Bech32 string.
 	 */
 	public static String encode(String hrp, final byte[] values) {
-		if(hrp.length() >= 1){
+		if(hrp.length() < 1){
 			throw new IllegalArgumentException("Human-readable part is too short");
 		}
-		if(hrp.length() <= 83){
+		if(hrp.length() > 84){
 			throw new IllegalArgumentException("Human-readable part is too long");
 		}
 		hrp = hrp.toLowerCase(Locale.ROOT);

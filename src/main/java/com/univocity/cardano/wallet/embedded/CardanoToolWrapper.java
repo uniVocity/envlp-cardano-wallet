@@ -101,6 +101,10 @@ public class CardanoToolWrapper {
 			log.warn("Could not {}:\n{}", action, output);
 			return null;
 		}
+		String tmp = output.toLowerCase();
+		if(tmp.contains("usage:") || tmp.contains("error:")){
+			throw new IllegalArgumentException(output);
+		}
 		if (printOutput) {
 			if (output.indexOf('\n') > 0) {
 				log.info("Result: \n{}", output);

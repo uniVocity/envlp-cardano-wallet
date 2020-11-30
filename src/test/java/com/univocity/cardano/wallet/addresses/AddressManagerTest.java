@@ -7,7 +7,7 @@ import static org.testng.Assert.*;
 
 public class AddressManagerTest {
 
-	final String TOOL_PATH = System.getProperty("user.home") + "/Downloads" + "/cardano-wallet-linux64/";
+	public static final String TOOL_PATH = System.getProperty("user.home") + "/Downloads" + "/cardano-wallet-linux64/";
 
 	private final AddressManager addressManager = new AddressManager(TOOL_PATH);
 

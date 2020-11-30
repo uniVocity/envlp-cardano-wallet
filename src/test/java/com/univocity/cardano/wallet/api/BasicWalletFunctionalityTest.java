@@ -1,9 +1,13 @@
 package com.univocity.cardano.wallet.api;
 
+import com.univocity.cardano.wallet.addresses.*;
+import com.univocity.cardano.wallet.addresses.Bech32;
 import com.univocity.cardano.wallet.api.service.exception.*;
 import com.univocity.cardano.wallet.builders.server.*;
 import com.univocity.cardano.wallet.builders.wallets.*;
 import com.univocity.cardano.wallet.builders.wallets.addresses.*;
+import com.univocity.cardano.wallet.common.*;
+import org.apache.commons.codec.binary.*;
 import org.testng.annotations.*;
 
 import java.time.*;
@@ -72,8 +76,16 @@ public class BasicWalletFunctionalityTest {
 
 	@Test(dependsOnMethods = "testShelleyWalletCreation")
 	public void testShelleyReadOnlyWallet() {
+		AddressManager addresses = new AddressManager(AddressManagerTest.TOOL_PATH);
+
+		String bech32PublicKey = addresses.generatePublicKeyFromSeed(shelleySeed);
+		assertEquals(bech32PublicKey, "root_xvk15qhndxry94h2sw72jxm0wwcnpl8henuy5xref39hjmawkx5u7ywvqw50rtcl5tnup44g8hya6na4dgljwsnukyp3fck062wgy3x6e0cxaqcr3");
+
+		String hexPublicKey = new Bech32(AddressManagerTest.TOOL_PATH).toHex(bech32PublicKey);
+		assertEquals(hexPublicKey, "a02f3698642d6ea83bca91b6f73b130fcf7ccf84a18794c4b796faeb1a9cf11cc03a8f1af1fa2e7c0d6a83dc9dd4fb56a3f27427cb10314e2cfd29c8244dacbf");
+
 		testWallet(shelleyReadOnlyWallet = server.wallets().createOrGet("shelleyReadOnlyWallet").shelley()
-				.fromPublicKey("addr_vk1pqkrxdfnuq43gkjq5qdgfyuvj29569njywst5w46lkzzrjazy5rselayhc")); //TODO
+				.fromPublicKey(hexPublicKey));
 	}
 
 	@Test

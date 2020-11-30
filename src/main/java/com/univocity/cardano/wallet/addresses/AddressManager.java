@@ -50,6 +50,21 @@ public class AddressManager extends CardanoToolWrapper {
 		return null;
 	}
 
+	public String generatePublicKeyFromSeed(String seed) {
+		return generatePublicKey(generatePrivateKey(seed));
+	}
+
+	public String generatePublicKey(String privateKey) {
+		if (StringUtils.isBlank(privateKey)) {
+			throw new IllegalArgumentException("Private key cannot be null/blank");
+		}
+		return execute("generate public key", privateKey, "key public --with-chain-code --", false);
+	}
+
+	public String generateHardenedPublicKeyPathFromSeed(String seed, long accountIndex) {
+		return generateHardenedPublicKeyPath(generatePrivateKey(seed), accountIndex);
+	}
+
 	public String generateHardenedPublicKeyPath(String privateKey, long accountIndex) {
 		if (StringUtils.isBlank(privateKey)) {
 			throw new IllegalArgumentException("Private key cannot be null/blank");
@@ -59,7 +74,7 @@ public class AddressManager extends CardanoToolWrapper {
 		}
 
 		String derivationPath = "1852H/1815H/";
-		return execute("generate hardened public key path", privateKey, "key child " + derivationPath + accountIndex + "H ", false);
+		return execute("generate hardened public key path", privateKey, "key child " + derivationPath + accountIndex + "H", false);
 	}
 
 	public String generatePublicRootKeyFromPrivateKey(String privateKey, long accountIndex) {
