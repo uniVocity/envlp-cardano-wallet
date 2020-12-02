@@ -6,6 +6,7 @@ import com.univocity.cardano.wallet.common.*;
 import java.time.*;
 
 import static com.univocity.cardano.wallet.builders.network.SynchronizationStatus.*;
+import static com.univocity.cardano.wallet.common.Utils.*;
 
 public class NetworkInformation extends Wrapper<GetNetworkInformationResponse> {
 
@@ -29,7 +30,7 @@ public class NetworkInformation extends Wrapper<GetNetworkInformationResponse> {
 		if (synchronizationStatus() == SYNCING) {
 			return toFormattedPercentage(original.getSyncProgress().getProgress().getQuantity());
 		}
-		return "N/A";
+		return synchronizationStatus().name();
 	}
 
 	public long nodeEpoch() {
@@ -65,7 +66,7 @@ public class NetworkInformation extends Wrapper<GetNetworkInformationResponse> {
 	}
 
 	public LocalDateTime nextEpochStart(){
-		return LocalDateTime.parse(original.getNextEpoch().getEpochStartTime());
+		return parseISO8601Date(original.getNextEpoch().getEpochStartTime());
 	}
 }
 

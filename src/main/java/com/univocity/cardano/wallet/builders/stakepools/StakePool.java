@@ -6,6 +6,8 @@ import com.univocity.cardano.wallet.common.*;
 import java.math.*;
 import java.time.*;
 
+import static com.univocity.cardano.wallet.common.Utils.*;
+
 public class StakePool extends Wrapper<ListStakePoolsResponseItem> {
 
 	StakePool(ListStakePoolsResponseItem pool) {
@@ -70,7 +72,7 @@ public class StakePool extends Wrapper<ListStakePoolsResponseItem> {
 
 	public LocalDateTime retirementDate() {
 		if (isRetiring()) {
-			return LocalDateTime.parse(original.getRetirement().getEpochStartTime());
+			return parseISO8601Date(original.getRetirement().getEpochStartTime());
 		}
 		return null;
 	}

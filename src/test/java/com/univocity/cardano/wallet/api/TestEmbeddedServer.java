@@ -10,7 +10,7 @@ public class TestEmbeddedServer {
 
 	public static void main(String... args) throws Exception {
 		final String HOME = System.getProperty("user.home");
-		final String CONFIGS = HOME + "/dev/repository/free-commerce/src/main/resources/";
+		final String CONFIGS = HOME + "/dev/repository/envlp/src/main/resources/";
 		final String DOWNLOADS = HOME + "/Downloads";
 
 		EmbeddedWalletServer server = WalletServer.embedded()

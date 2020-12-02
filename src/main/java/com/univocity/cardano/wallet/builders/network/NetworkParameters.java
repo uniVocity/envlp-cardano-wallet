@@ -6,6 +6,8 @@ import com.univocity.cardano.wallet.common.*;
 import java.math.*;
 import java.time.*;
 
+import static com.univocity.cardano.wallet.common.Utils.*;
+
 public class NetworkParameters extends Wrapper<GetNetworkParametersResponse> {
 
 	NetworkParameters(GetNetworkParametersResponse response) {
@@ -17,7 +19,7 @@ public class NetworkParameters extends Wrapper<GetNetworkParametersResponse> {
 	}
 
 	public LocalDateTime blockchainStartTime() {
-		return LocalDateTime.parse(original.getBlockchainStartTime());
+		return parseISO8601Date(original.getBlockchainStartTime());
 	}
 
 	public long slotLengthInSeconds() {
@@ -78,7 +80,7 @@ public class NetworkParameters extends Wrapper<GetNetworkParametersResponse> {
 
 	public LocalDateTime nextHardforkDate() {
 		if (isHardforkPlanned()) {
-			return LocalDateTime.parse(original.getHardforkAt().getEpochStartTime());
+			return parseISO8601Date(original.getHardforkAt().getEpochStartTime());
 		}
 		return null;
 	}

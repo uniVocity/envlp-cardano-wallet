@@ -33,7 +33,7 @@ public class Utils {
 		}
 	}
 
-	public static File tempDir(){
+	public static File tempDir() {
 		return tempDir;
 	}
 
@@ -323,7 +323,14 @@ public class Utils {
 	}
 
 	public static DateTimeFormatter iso8601DateFormatter() {
-		return DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ss'Z'");
+		return DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+	}
+
+	public static LocalDateTime parseISO8601Date(String date) {
+		if (date == null) {
+			return null;
+		}
+		return LocalDateTime.parse(date, iso8601DateFormatter());
 	}
 
 	public static String toFormattedISO8601Date(LocalDateTime date) {
@@ -335,12 +342,12 @@ public class Utils {
 
 	public static int randomPortNumber() {
 		int start = ThreadLocalRandom.current().nextInt(1100, 65535);
-		for(int port = start; port < 65535; port++){
+		for (int port = start; port < 65535; port++) {
 			if (isLocalPortFree(port)) {
 				return port;
 			}
 		}
-		for(int port = start - 1; port >= 1100; port--){
+		for (int port = start - 1; port >= 1100; port--) {
 			if (isLocalPortFree(port)) {
 				return port;
 			}
