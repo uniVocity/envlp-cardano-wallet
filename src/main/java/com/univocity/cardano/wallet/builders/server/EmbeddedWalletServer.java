@@ -52,6 +52,7 @@ public class EmbeddedWalletServer extends RemoteWalletServer {
 
 		String command = "serve " +
 				networkParam +
+				" --sync-tolerance 300s" +
 				" --database " + nodeManager.getBlockchainDirPath() +
 				" --node-socket " + nodeManager.getSocketPath() +
 				" --port " + config.walletPort;

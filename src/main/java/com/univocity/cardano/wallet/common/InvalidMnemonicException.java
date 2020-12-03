@@ -9,7 +9,7 @@ public class InvalidMnemonicException extends IllegalArgumentException {
 	private final int expectedWordCount;
 
 	public InvalidMnemonicException(int expectedWordCount, int actualWordCount) {
-		super("Seed phrase length should be " + expectedWordCount + " words instead of " + actualWordCount);
+		super(actualWordCount > 0 ? "Seed phrase length should be " + expectedWordCount + " words instead of " + actualWordCount : "Seed phrase cannot be blank");
 		this.actualWordCount = actualWordCount;
 		this.expectedWordCount = expectedWordCount;
 	}

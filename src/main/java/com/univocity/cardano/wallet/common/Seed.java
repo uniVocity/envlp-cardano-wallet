@@ -46,6 +46,9 @@ public class Seed {
 	}
 
 	private static ArrayList<String> toMnemonicList(String seedPhrase, int expectedWordCount, boolean validate) throws InvalidMnemonicException {
+		if(StringUtils.isBlank(seedPhrase)){
+			throw new InvalidMnemonicException(expectedWordCount, 0);
+		}
 		Utils.notBlank(seedPhrase, "Seed phrase");
 		seedPhrase = cleanSeedPhrase(seedPhrase);
 		String[] words = seedPhrase.split(" ");
