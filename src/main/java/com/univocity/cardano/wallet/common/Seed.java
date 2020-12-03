@@ -38,25 +38,45 @@ public class Seed {
 	}
 
 	public static ArrayList<String> toMnemonicList(String seedPhrase) {
+		return toMnemonicList(seedPhrase, -1, false);
+	}
+
+	public static ArrayList<String> toValidatedMnemonicList(String seedPhrase) throws InvalidMnemonicException {
+		return toMnemonicList(seedPhrase, -1, true);
+	}
+
+	private static ArrayList<String> toMnemonicList(String seedPhrase, int expectedWordCount, boolean validate) throws InvalidMnemonicException {
 		Utils.notBlank(seedPhrase, "Seed phrase");
 		seedPhrase = cleanSeedPhrase(seedPhrase);
 		String[] words = seedPhrase.split(" ");
-		for (int i = 0; i < words.length; i++) {
-			if (!englishMnemonicWords().contains(words[i])) {
-				throw new IllegalArgumentException("'" + words[i] + "' is an unknown mnemonic word");
+
+		if (validate) {
+			List<String> unknown = new ArrayList<>();
+			for (int i = 0; i < words.length; i++) {
+				if (!englishMnemonicWords().contains(words[i])) {
+					unknown.add(words[i]);
+				}
+			}
+
+			if (!unknown.isEmpty()) {
+				throw new InvalidMnemonicException(expectedWordCount, words.length, unknown);
 			}
 		}
+		if (expectedWordCount != -1 && words.length != expectedWordCount) {
+			throw new InvalidMnemonicException(expectedWordCount, words.length);
+		}
+
 		ArrayList<String> out = new ArrayList<>();
 		Collections.addAll(out, words);
 		return out;
 	}
 
 	public static ArrayList<String> toMnemonicList(String seedPhrase, int length) {
-		ArrayList<String> out = toMnemonicList(seedPhrase);
-		if (out.size() != length) {
-			throw new IllegalArgumentException("Seed phrase length should be " + length + " words instead of " + out.size());
-		}
-		return out;
+		return toMnemonicList(seedPhrase, length, false);
+	}
+
+	public static ArrayList<String> toValidatedMnemonicList(String seedPhrase, int length) throws InvalidMnemonicException {
+		return toMnemonicList(seedPhrase, length, true);
 	}
 
 	public static String cleanSeedPhrase(String seed) {
