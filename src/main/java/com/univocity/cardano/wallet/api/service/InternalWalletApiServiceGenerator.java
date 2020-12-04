@@ -59,6 +59,7 @@ public class InternalWalletApiServiceGenerator {
 		String walletServiceUrl = configuration.getWalletServiceBaseUrl();
 		Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
 				.baseUrl(walletServiceUrl)
+				.client(sharedClient)
 				.addConverterFactory(converterFactory)
 				.validateEagerly(true);
 

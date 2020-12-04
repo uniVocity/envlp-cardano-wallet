@@ -1,7 +1,7 @@
 package com.univocity.cardano.wallet.builders.server;
 
 import com.univocity.cardano.wallet.common.*;
-import com.univocity.cardano.wallet.embedded.services.*;
+import com.univocity.cardano.wallet.common.x509.*;
 
 import java.io.*;
 import java.util.*;
@@ -106,6 +106,7 @@ public class WalletServer {
 
 			public PortConfig<EmbeddedWalletServer> enableHttps(){
 				enableHttps = true;
+				CertificateGenerator.getInstance().generate();
 				return this;
 			}
 

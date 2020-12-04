@@ -37,7 +37,10 @@ public class CertificateGenerator {
 	}
 
 
-	public void generate() {
+	public synchronized void generate() {
+		if (clientCertificates != null) {
+			return;
+		}
 		HeldCertificate rootCertificate = new HeldCertificate.Builder()
 				.certificateAuthority(0)
 				.duration(3650, TimeUnit.DAYS)
