@@ -103,4 +103,20 @@ public class QuitPoolTransaction extends WrapperWithId<QuitStakePoolResponse> im
 	public void forget(){
 		api.sync().deleteTransaction(getWallet().id(), id());
 	}
+
+	public BigInteger feeInLovelace(){
+		return original.getFee().getQuantity();
+	}
+
+	public BigDecimal feeInAda(){
+		return lovelaceToAda(feeInLovelace());
+	}
+
+	public BigInteger depositInLovelace(){
+		return original.getDeposit().getQuantity();
+	}
+
+	public BigDecimal getDepositInAda(){
+		return lovelaceToAda(depositInLovelace());
+	}
 }

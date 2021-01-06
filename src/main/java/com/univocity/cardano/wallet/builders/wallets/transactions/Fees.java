@@ -41,6 +41,14 @@ public class Fees<T extends Transaction> extends Wrapper<AbstractFeeResponse> {
 		return minimumInAda().add(maximumInAda()).divide(new BigDecimal(2), 6, RoundingMode.HALF_UP);
 	}
 
+	public BigInteger getDepositInLovelace(){
+		return original.getDeposit().getQuantity();
+	}
+
+	public BigDecimal getDepositInAda(){
+		return lovelaceToAda(getDepositInLovelace());
+	}
+
 	public T authorize(String password) {
 		return transactionExecution.apply(password);
 	}

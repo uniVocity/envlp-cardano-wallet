@@ -21,6 +21,7 @@ import com.univocity.cardano.wallet.api.generated.proxy.*;
 import com.univocity.cardano.wallet.api.generated.settings.*;
 import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
+import com.univocity.cardano.wallet.api.generated.utils.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
 import java.util.*;
 
@@ -916,5 +917,17 @@ public interface InternalWalletApiService {
 	 */
 	@GET("/v2/settings")
 	Call<GetSettingsResponse> getSettings();
+
+
+	/**Get health status of the currently active SMASH server.
+	 * @param url the base SMASH uri without endpoint path. (optional).
+	 * - Pattern: {@code ^https?:\/\/[a-zA-Z0-9-_~.]+(:[0-9]+)?/?$}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code https://smash.cardano-mainnet.iohk.io/}</pre>
+	 * @return a Retrofit {@link Call} wrapping a successful response body represented by an instance of {@link GetCurrentSmashHealthResponse}
+	 */
+	@GET("/v2/smash/health")
+	Call<GetCurrentSmashHealthResponse> getCurrentSmashHealth(@Query("url") String url);
 
 }

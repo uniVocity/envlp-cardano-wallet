@@ -22,6 +22,9 @@ public abstract class AbstractCoinSelectionResponse {
 	@JsonProperty("certificates")
 	private ArrayList<Certificate> certificates;
 
+	@JsonProperty("deposits")
+	private ArrayList<Deposit> deposits;
+
 	/**
 	 * Returns the list of transaction inputs.
 	 * - Minimum number of elements: {@code 1}.
@@ -115,6 +118,31 @@ public abstract class AbstractCoinSelectionResponse {
 		}
 
 		this.certificates = certificates;
+	}
+
+	/**
+	 * Returns the list of deposits associated with a transaction. (optional).
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @return the list of deposits associated with a transaction.
+	 */
+	public ArrayList<Deposit> getDeposits(){
+		return deposits;
+	}
+
+	/**
+	 * Defines a list of deposits associated with a transaction. (optional).
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @param deposits a list of deposits associated with a transaction.
+	 */
+	public void setDeposits(ArrayList<Deposit> deposits){
+		if (deposits == null) {
+			this.deposits = deposits;
+			return;
+		}
+
+		this.deposits = deposits;
 	}
 
 	@Override

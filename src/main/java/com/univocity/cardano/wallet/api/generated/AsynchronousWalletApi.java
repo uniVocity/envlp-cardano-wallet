@@ -19,6 +19,7 @@ import com.univocity.cardano.wallet.api.generated.proxy.*;
 import com.univocity.cardano.wallet.api.generated.settings.*;
 import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
+import com.univocity.cardano.wallet.api.generated.utils.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
 import java.util.*;
 
@@ -1018,5 +1019,17 @@ public class AsynchronousWalletApi {
 	 */
 	public void getSettings(WalletApiCallback<GetSettingsResponse> callback){
 		api.getSettings().enqueue(new WalletApiCallbackAdapter<>(callback));
+	}
+
+	/**Get health status of the currently active SMASH server.
+	 * @param url the base SMASH uri without endpoint path. (optional).
+	 * - Pattern: {@code ^https?:\/\/[a-zA-Z0-9-_~.]+(:[0-9]+)?/?$}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code https://smash.cardano-mainnet.iohk.io/}</pre>
+	 * @param callback code to be executed once a response is available. The response will be an instance of {@link GetCurrentSmashHealthResponse}
+	 */
+	public void getCurrentSmashHealth(String url, WalletApiCallback<GetCurrentSmashHealthResponse> callback){
+		api.getCurrentSmashHealth(url).enqueue(new WalletApiCallbackAdapter<>(callback));
 	}
 }

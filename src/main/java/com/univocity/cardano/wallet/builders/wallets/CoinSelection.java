@@ -6,6 +6,7 @@ import com.univocity.cardano.wallet.common.*;
 
 import java.math.*;
 import java.util.*;
+import java.util.stream.*;
 
 public class CoinSelection extends Wrapper<AbstractCoinSelectionResponse> {
 	public CoinSelection(AbstractCoinSelectionResponse original, WalletApi api) {
@@ -24,5 +25,13 @@ public class CoinSelection extends Wrapper<AbstractCoinSelectionResponse> {
 			out.add(payment);
 		});
 		return out;
+	}
+
+	public List<BigInteger> depositsInLovelace() {
+		return original.getDeposits().stream().map(AbstractAmount::getQuantity).collect(Collectors.toList());
+	}
+
+	public List<BigDecimal> getDepositsInAda() {
+		return original.getDeposits().stream().map(e -> lovelaceToAda(e.getQuantity())).collect(Collectors.toList());
 	}
 }

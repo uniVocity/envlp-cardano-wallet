@@ -36,11 +36,11 @@ public class NetworkParameters extends Wrapper<GetNetworkParametersResponse> {
 		throw new IllegalStateException("No conversion from " + original.getEpochLength().getUnit() + " to slot has been implemented");
 	}
 
-	public long epochStabilityInBlocks() {
-		if ("block".equalsIgnoreCase(original.getEpochStability().getUnit())) {
-			return original.getEpochStability().getQuantity().longValue();
+	public long securityParameterInBlocks() {
+		if ("block".equalsIgnoreCase(original.getSecurityParameter().getUnit())) {
+			return original.getSecurityParameter().getQuantity().longValue();
 		}
-		throw new IllegalStateException("No conversion from " + original.getEpochStability().getUnit() + " to block has been implemented");
+		throw new IllegalStateException("No conversion from " + original.getSecurityParameter().getUnit() + " to block has been implemented");
 	}
 
 	public double activeSlotCoefficient() {

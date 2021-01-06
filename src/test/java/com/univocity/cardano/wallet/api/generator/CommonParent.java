@@ -31,7 +31,7 @@ public class CommonParent {
 
 	static {
 		put("AbstractPercentage", "ActiveSlotCoefficient", "DecentralizationLevel", "Margin", "Progress", "RelativeStake");
-		put("AbstractAmount", "Amount", "Available", "ControlledStake", "Cost", "EstimatedMax", "EstimatedMin", "Leftovers", "MigrationCost", "MinimumUtxoValue", "NonMyopicMemberRewards", "Pledge", "Reward", "Total");
+		put("AbstractAmount", "Amount", "Available", "ControlledStake", "Cost", "EstimatedMax", "EstimatedMin", "Leftovers", "MigrationCost", "MinimumUtxoValue", "NonMyopicMemberRewards", "Pledge", "Reward", "Total", "Deposit", "Fee");
 		put("AbstractSlotDetails", "InsertedAt","NodeTip","PendingSince","Tip");
 		put("AbstractTimeDetails", "ExpiresAt","NetworkTip");
 		put("AbstractLengthDetails", "SlotLength","TimeToLive");
@@ -39,7 +39,7 @@ public class CommonParent {
 		put("AbstractCoinSelectionResponse", "ByronSelectCoinsResponse", "SelectCoinsResponse");
 		put("AbstractSchedule", "ChangesAt", "HardforkAt", "NextEpoch", "Retirement");
 		put("AbstractAddress", "CreateAddressResponse", "ListAddressesResponseItem", "ListByronAddressesResponseItem");
-		put("AbstractQuantity", "Depth", "EpochStability", "Height", "ProducedBlocks");
+		put("AbstractQuantity", "Depth", "EpochStability", "Height", "ProducedBlocks", "SecurityParameter");
 		put("AbstractTransaction", "GetByronTransactionResponse", "GetTransactionResponse", "JoinStakePoolResponse", "ListByronTransactionsResponseItem", "ListTransactionsResponseItem", "MigrateByronWalletResponseItem", "MigrateShelleyWalletResponseItem", "PostByronTransactionResponse", "PostTransactionResponse");
 		put("AbstractUTxOStatistic", "GetByronUTxOsStatisticsResponse", "GetUTxOsStatisticsResponse");
 		put("AbstractWalletMigrationResponse", "GetByronWalletMigrationInfoResponse", "GetShelleyWalletMigrationInfoResponse");

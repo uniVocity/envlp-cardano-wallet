@@ -100,4 +100,21 @@ abstract class AbstractTransaction<W extends Wallet, T extends AbstractTransacti
 	}
 
 	public abstract void forget();
+
+
+	public BigInteger feeInLovelace(){
+		return original.getFee().getQuantity();
+	}
+
+	public BigDecimal feeInAda(){
+		return lovelaceToAda(feeInLovelace());
+	}
+
+	public BigInteger depositInLovelace(){
+		return original.getDeposit().getQuantity();
+	}
+
+	public BigDecimal getDepositInAda(){
+		return lovelaceToAda(depositInLovelace());
+	}
 }

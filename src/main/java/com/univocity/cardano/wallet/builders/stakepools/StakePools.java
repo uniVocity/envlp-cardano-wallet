@@ -3,6 +3,7 @@ package com.univocity.cardano.wallet.builders.stakepools;
 import com.univocity.cardano.wallet.api.*;
 import com.univocity.cardano.wallet.api.generated.settings.*;
 import com.univocity.cardano.wallet.api.generated.stakepools.*;
+import com.univocity.cardano.wallet.api.generated.utils.*;
 import com.univocity.cardano.wallet.builders.*;
 import com.univocity.cardano.wallet.common.*;
 
@@ -38,11 +39,16 @@ public class StakePools extends ApiWrapper {
 		});
 	}
 
-	public String metadataSource(){
+	public ServerHealth smashServerHealth(String smashServerUrl) {
+		GetCurrentSmashHealthResponse response = api.sync().getCurrentSmashHealth(smashServerUrl);
+		return ServerHealth.valueOf(response.getHealth().toUpperCase());
+	}
+
+	public String metadataSource() {
 		return api.sync().getSettings().getPoolMetadataSource();
 	}
 
-	public void metadataSource(String metadataSource){
+	public void metadataSource(String metadataSource) {
 		PutSettingsRequest request = new PutSettingsRequest();
 		Settings settings = new Settings();
 		settings.setPoolMetadataSource(metadataSource);

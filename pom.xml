@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.univocity</groupId>
 	<artifactId>envlp-cardano-wallet</artifactId>
-	<version>2020.11.26-SNAPSHOT</version>
+	<version>2020.12.21-SNAPSHOT</version>
 	<name>envlp-cardano-wallet</name>
 	<description>A cardano-wallet client, used by the ENVLP wallet</description>
 

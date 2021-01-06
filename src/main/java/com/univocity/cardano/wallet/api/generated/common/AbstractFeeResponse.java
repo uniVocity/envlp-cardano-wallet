@@ -15,6 +15,9 @@ public abstract class AbstractFeeResponse {
 	@JsonProperty("estimated_max")
 	private EstimatedMax estimatedMax;
 
+	@JsonProperty("deposit")
+	private Deposit deposit;
+
 	/**
 	 * Returns the estimated min.
 	 * 
@@ -57,6 +60,28 @@ public abstract class AbstractFeeResponse {
 		}
 
 		this.estimatedMax = estimatedMax;
+	}
+
+	/**
+	 * Returns the deposit.
+	 * 
+	 * @return the deposit
+	 */
+	public Deposit getDeposit(){
+		return deposit;
+	}
+
+	/**
+	 * Defines the deposit.
+	 * 
+	 * @param deposit the deposit
+	 */
+	public void setDeposit(Deposit deposit){
+		if (deposit == null) {
+			throw new IllegalArgumentException("Value of deposit cannot be null");
+		}
+
+		this.deposit = deposit;
 	}
 
 	@Override

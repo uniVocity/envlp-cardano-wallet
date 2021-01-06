@@ -19,6 +19,7 @@ import com.univocity.cardano.wallet.api.generated.proxy.*;
 import com.univocity.cardano.wallet.api.generated.settings.*;
 import com.univocity.cardano.wallet.api.generated.stakepools.*;
 import com.univocity.cardano.wallet.api.generated.transactions.*;
+import com.univocity.cardano.wallet.api.generated.utils.*;
 import com.univocity.cardano.wallet.api.generated.wallets.*;
 import java.util.*;
 
@@ -1008,5 +1009,17 @@ public class SynchronousWalletApi {
 	 */
 	public GetSettingsResponse getSettings(){
 		return executeSync(api.getSettings());
+	}
+
+	/**Get health status of the currently active SMASH server.
+	 * @param url the base SMASH uri without endpoint path. (optional).
+	 * - Pattern: {@code ^https?:\/\/[a-zA-Z0-9-_~.]+(:[0-9]+)?/?$}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code https://smash.cardano-mainnet.iohk.io/}</pre>
+	 * @return the server response as an instance of {@link GetCurrentSmashHealthResponse}
+	 */
+	public GetCurrentSmashHealthResponse getCurrentSmashHealth(String url){
+		return executeSync(api.getCurrentSmashHealth(url));
 	}
 }

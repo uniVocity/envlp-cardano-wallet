@@ -29,8 +29,8 @@ public final class GetNetworkParametersResponse {
 	@JsonProperty("epoch_length")
 	private EpochLength epochLength;
 
-	@JsonProperty("epoch_stability")
-	private EpochStability epochStability;
+	@JsonProperty("security_parameter")
+	private SecurityParameter securityParameter;
 
 	@JsonProperty("active_slot_coefficient")
 	private ActiveSlotCoefficient activeSlotCoefficient;
@@ -166,25 +166,25 @@ public final class GetNetworkParametersResponse {
 	}
 
 	/**
-	 * Returns the epoch stability.
+	 * Returns the security parameter.
 	 * 
-	 * @return the epoch stability
+	 * @return the security parameter
 	 */
-	public EpochStability getEpochStability(){
-		return epochStability;
+	public SecurityParameter getSecurityParameter(){
+		return securityParameter;
 	}
 
 	/**
-	 * Defines the epoch stability.
+	 * Defines the security parameter.
 	 * 
-	 * @param epochStability the epoch stability
+	 * @param securityParameter the security parameter
 	 */
-	public void setEpochStability(EpochStability epochStability){
-		if (epochStability == null) {
-			throw new IllegalArgumentException("Value of epochStability cannot be null");
+	public void setSecurityParameter(SecurityParameter securityParameter){
+		if (securityParameter == null) {
+			throw new IllegalArgumentException("Value of securityParameter cannot be null");
 		}
 
-		this.epochStability = epochStability;
+		this.securityParameter = securityParameter;
 	}
 
 	/**

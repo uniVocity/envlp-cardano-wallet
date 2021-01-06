@@ -23,6 +23,12 @@ public final class QuitStakePoolResponse {
 	@JsonProperty("amount")
 	private Amount amount;
 
+	@JsonProperty("fee")
+	private Fee fee;
+
+	@JsonProperty("deposit")
+	private Deposit deposit;
+
 	@JsonProperty("inserted_at")
 	private InsertedAt insertedAt;
 
@@ -117,6 +123,50 @@ public final class QuitStakePoolResponse {
 		}
 
 		this.amount = amount;
+	}
+
+	/**
+	 * Returns the fee.
+	 * 
+	 * @return the fee
+	 */
+	public Fee getFee(){
+		return fee;
+	}
+
+	/**
+	 * Defines the fee.
+	 * 
+	 * @param fee the fee
+	 */
+	public void setFee(Fee fee){
+		if (fee == null) {
+			throw new IllegalArgumentException("Value of fee cannot be null");
+		}
+
+		this.fee = fee;
+	}
+
+	/**
+	 * Returns the deposit.
+	 * 
+	 * @return the deposit
+	 */
+	public Deposit getDeposit(){
+		return deposit;
+	}
+
+	/**
+	 * Defines the deposit.
+	 * 
+	 * @param deposit the deposit
+	 */
+	public void setDeposit(Deposit deposit){
+		if (deposit == null) {
+			throw new IllegalArgumentException("Value of deposit cannot be null");
+		}
+
+		this.deposit = deposit;
 	}
 
 	/**
