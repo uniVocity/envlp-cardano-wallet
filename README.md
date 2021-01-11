@@ -58,7 +58,7 @@ Add the following dependency to your `pom.xml`:
         <dependency>
             <groupId>com.univocity</groupId>
             <artifactId>envlp-cardano-wallet</artifactId>
-            <version>2020.11.26-SNAPSHOT</version>
+            <version>2020.12.21-SNAPSHOT</version>
         </dependency>
     </dependencies>
 ```
