@@ -27,6 +27,9 @@ public final class GetNetworkInformationResponse {
 	@JsonProperty("next_epoch")
 	private NextEpoch nextEpoch;
 
+	@JsonProperty("node_era")
+	private String nodeEra;
+
 	/**
 	 * Returns the sync progress.
 	 * 
@@ -129,6 +132,30 @@ public final class GetNetworkInformationResponse {
 		}
 
 		this.nextEpoch = nextEpoch;
+	}
+
+	/**
+	 * Returns the node era.
+	 * - Accepted values: {@code [byron, shelley, allegra, mary, alonzo]}.
+	 * 
+	 * @return the node era
+	 */
+	public String getNodeEra(){
+		return nodeEra;
+	}
+
+	/**
+	 * Defines the node era.
+	 * - Accepted values: {@code [byron, shelley, allegra, mary, alonzo]}.
+	 * 
+	 * @param nodeEra the node era
+	 */
+	public void setNodeEra(String nodeEra){
+		if (nodeEra == null) {
+			throw new IllegalArgumentException("Value of nodeEra cannot be null");
+		}
+
+		this.nodeEra = nodeEra;
 	}
 
 	@Override

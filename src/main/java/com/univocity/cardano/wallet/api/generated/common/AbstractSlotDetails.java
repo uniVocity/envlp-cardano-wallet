@@ -131,7 +131,7 @@ public abstract class AbstractSlotDetails {
 	 * - Format: {@code iso-8601-date-and-time}.
 	 * 
 	 * - Example: 
-	 *   <pre>{@code Thu Feb 28 01:16:45 ACDT 2019}</pre>
+	 *   <pre>{@code Wed Feb 27 11:46:45 BRT 2019}</pre>
 	 * 
 	 * @return the time
 	 */
@@ -144,7 +144,7 @@ public abstract class AbstractSlotDetails {
 	 * - Format: {@code iso-8601-date-and-time}.
 	 * 
 	 * - Example: 
-	 *   <pre>{@code Thu Feb 28 01:16:45 ACDT 2019}</pre>
+	 *   <pre>{@code Wed Feb 27 11:46:45 BRT 2019}</pre>
 	 * 
 	 * @param time the time
 	 */

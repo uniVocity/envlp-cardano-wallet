@@ -21,14 +21,16 @@ public class NetworkInformation extends Wrapper<GetNetworkInformationResponse> {
 
 	public double synchronizationProgressPercentage() {
 		if (synchronizationStatus() == SYNCING) {
-			return toPercentage(original.getSyncProgress().getProgress().getQuantity());
+			//return toPercentage(original.getSyncProgress().getProgress().getQuantity());
+			return 0.0;
 		}
 		return Double.NaN;
 	}
 
 	public String formattedSynchronizationProgressPercentage() {
 		if (synchronizationStatus() == SYNCING) {
-			return toFormattedPercentage(original.getSyncProgress().getProgress().getQuantity());
+			//return toFormattedPercentage(original.getSyncProgress().getProgress().getQuantity());
+			return "0.0";
 		}
 		return synchronizationStatus().name();
 	}

@@ -19,6 +19,9 @@ public abstract class AbstractWalletResponse {
 	@JsonProperty("balance")
 	private Balance balance;
 
+	@JsonProperty("assets")
+	private Assets assets;
+
 	@JsonProperty("delegation")
 	private Delegation delegation;
 
@@ -85,6 +88,10 @@ public abstract class AbstractWalletResponse {
 	 * **IMPORTANT DISCLAIMER:** Using values other than `20` automatically makes your wallet invalid with regards to BIP-44 address discovery. It means that you **will not** be able to fully restore
 	 * your wallet in a different software which is strictly following BIP-44.
 	 * Beside, using large gaps is **not recommended** as it may induce important performance degradations. Use at your own risks.
+	 * **IMPORTANT DISCLAIMER 2:** There is no way to `import` addresses generated outside (e.g. using cardano-addresses) into the wallet.
+	 * Wallet only discovers transactions on its used and unused addresses that are within its currently seen `address_pool_gap`.
+	 * Transactions on addresses that "belong" to the wallet but happen to be beyond its `address_pool_gap` will not be visible to the wallet.
+	 * This is a technical limitation of the industry standard [BIP-44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki). See also [CIP-1852](https://github.com/cardano-foundation/CIPs/blob/master/CIP-1852/CIP-1852.md).
 	 * 
 	 * - Defaults to: {@code 20}.
 	 * - Value range from {@code 10} to {@code 100000}.
@@ -105,6 +112,10 @@ public abstract class AbstractWalletResponse {
 	 * **IMPORTANT DISCLAIMER:** Using values other than `20` automatically makes your wallet invalid with regards to BIP-44 address discovery. It means that you **will not** be able to fully restore
 	 * your wallet in a different software which is strictly following BIP-44.
 	 * Beside, using large gaps is **not recommended** as it may induce important performance degradations. Use at your own risks.
+	 * **IMPORTANT DISCLAIMER 2:** There is no way to `import` addresses generated outside (e.g. using cardano-addresses) into the wallet.
+	 * Wallet only discovers transactions on its used and unused addresses that are within its currently seen `address_pool_gap`.
+	 * Transactions on addresses that "belong" to the wallet but happen to be beyond its `address_pool_gap` will not be visible to the wallet.
+	 * This is a technical limitation of the industry standard [BIP-44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki). See also [CIP-1852](https://github.com/cardano-foundation/CIPs/blob/master/CIP-1852/CIP-1852.md).
 	 * 
 	 * - Defaults to: {@code 20}.
 	 * - Value range from {@code 10} to {@code 100000}.
@@ -150,6 +161,28 @@ public abstract class AbstractWalletResponse {
 		}
 
 		this.balance = balance;
+	}
+
+	/**
+	 * Returns the assets.
+	 * 
+	 * @return the assets
+	 */
+	public Assets getAssets(){
+		return assets;
+	}
+
+	/**
+	 * Defines the assets.
+	 * 
+	 * @param assets the assets
+	 */
+	public void setAssets(Assets assets){
+		if (assets == null) {
+			throw new IllegalArgumentException("Value of assets cannot be null");
+		}
+
+		this.assets = assets;
 	}
 
 	/**

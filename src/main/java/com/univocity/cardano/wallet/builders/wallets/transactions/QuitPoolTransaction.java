@@ -113,7 +113,7 @@ public class QuitPoolTransaction extends WrapperWithId<QuitStakePoolResponse> im
 	}
 
 	public BigInteger depositInLovelace(){
-		return original.getDeposit().getQuantity();
+		return original.getDepositReturned().getQuantity();
 	}
 
 	public BigDecimal getDepositInAda(){

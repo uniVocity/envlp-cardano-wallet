@@ -61,28 +61,46 @@ public final class MigrateShelleyWalletRequest {
 	}
 
 	/**
-	 * Returns the recipient addresses.
+	 * Returns the addresses.
+	 * 
+	 * A sequence of characters that encodes (in Base58 or Bech32) a sequence of bytes
+	 * which represents an address on the Cardano blockchain.
+	 * Sequences in Base58 encoding are expected to be legacy Byron addresses,
+	 * whereas sequences in Bech32 encoding correspond to current Shelley addresses.
+	 * For more details, see
+	 * [CIP-0019 — Cardano addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019)
+	 * .
+	 * 
 	 * - Format: {@code base58|bech32}.
 	 * - Minimum number of elements: {@code 1}.
 	 * 
 	 * - Example: 
 	 *   <pre>{@code addr1sjck9mdmfyhzvjhydcjllgj9vjvl522w0573ncustrrr2rg7h9azg4cyqd36yyd48t5ut72hgld0fg2xfvz82xgwh7wal6g2xt8n996s3xvu5g}</pre>
 	 * 
-	 * @return the recipient addresses.
+	 * @return the addresses
 	 */
 	public ArrayList<String> getAddresses(){
 		return addresses;
 	}
 
 	/**
-	 * Defines the recipient addresses.
+	 * Defines the addresses.
+	 * 
+	 * A sequence of characters that encodes (in Base58 or Bech32) a sequence of bytes
+	 * which represents an address on the Cardano blockchain.
+	 * Sequences in Base58 encoding are expected to be legacy Byron addresses,
+	 * whereas sequences in Bech32 encoding correspond to current Shelley addresses.
+	 * For more details, see
+	 * [CIP-0019 — Cardano addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019)
+	 * .
+	 * 
 	 * - Format: {@code base58|bech32}.
 	 * - Minimum number of elements: {@code 1}.
 	 * 
 	 * - Example: 
 	 *   <pre>{@code addr1sjck9mdmfyhzvjhydcjllgj9vjvl522w0573ncustrrr2rg7h9azg4cyqd36yyd48t5ut72hgld0fg2xfvz82xgwh7wal6g2xt8n996s3xvu5g}</pre>
 	 * 
-	 * @param addresses the recipient addresses.
+	 * @param addresses the addresses
 	 */
 	public void setAddresses(ArrayList<String> addresses){
 		if (addresses == null) {

@@ -14,20 +14,20 @@ public abstract class AbstractCoinSelectionRequest {
 	private ArrayList<Payment> payments;
 
 	/**
-	 * Returns the list of target outputs.
+	 * Returns the list of target outputs with amount specified.
 	 * - Minimum number of elements: {@code 0}.
 	 * 
-	 * @return the list of target outputs
+	 * @return the list of target outputs with amount specified
 	 */
 	public ArrayList<Payment> getPayments(){
 		return payments;
 	}
 
 	/**
-	 * Defines a list of target outputs.
+	 * Defines a list of target outputs with amount specified.
 	 * - Minimum number of elements: {@code 0}.
 	 * 
-	 * @param payments a list of target outputs
+	 * @param payments a list of target outputs with amount specified
 	 */
 	public void setPayments(ArrayList<Payment> payments){
 		if (payments == null) {

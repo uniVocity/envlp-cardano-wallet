@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.*;
 
 
 /**
- * The balance of the reward account for this wallet.
+ * The Ada balance of the reward account for this wallet.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class Reward extends AbstractAmount {

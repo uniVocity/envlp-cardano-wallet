@@ -19,11 +19,23 @@ public final class Change {
 	@JsonProperty("amount")
 	private Amount amount;
 
+	@JsonProperty("assets")
+	private ArrayList<AssetsChange> assets;
+
 	@JsonProperty("derivation_path")
 	private ArrayList<String> derivationPath;
 
 	/**
 	 * Returns the address.
+	 * 
+	 * A sequence of characters that encodes (in Base58 or Bech32) a sequence of bytes
+	 * which represents an address on the Cardano blockchain.
+	 * Sequences in Base58 encoding are expected to be legacy Byron addresses,
+	 * whereas sequences in Bech32 encoding correspond to current Shelley addresses.
+	 * For more details, see
+	 * [CIP-0019 — Cardano addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019)
+	 * .
+	 * 
 	 * - Format: {@code base58|bech32}.
 	 * 
 	 * - Example: 
@@ -37,6 +49,15 @@ public final class Change {
 
 	/**
 	 * Defines the address.
+	 * 
+	 * A sequence of characters that encodes (in Base58 or Bech32) a sequence of bytes
+	 * which represents an address on the Cardano blockchain.
+	 * Sequences in Base58 encoding are expected to be legacy Byron addresses,
+	 * whereas sequences in Bech32 encoding correspond to current Shelley addresses.
+	 * For more details, see
+	 * [CIP-0019 — Cardano addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019)
+	 * .
+	 * 
 	 * - Format: {@code base58|bech32}.
 	 * 
 	 * - Example: 
@@ -75,11 +96,35 @@ public final class Change {
 	}
 
 	/**
+	 * Returns the flat list of assets (possibly empty). (optional).
+	 * 
+	 * @return the flat list of assets (possibly empty).
+	 */
+	public ArrayList<AssetsChange> getAssets(){
+		return assets;
+	}
+
+	/**
+	 * Defines a flat list of assets (possibly empty). (optional).
+	 * 
+	 * @param assets a flat list of assets (possibly empty).
+	 */
+	public void setAssets(ArrayList<AssetsChange> assets){
+		if (assets == null) {
+			this.assets = assets;
+			return;
+		}
+
+		this.assets = assets;
+	}
+
+	/**
 	 * Returns the derivation path.
 	 * 
 	 * An individual segment within a derivation path.
-	 * Indexes without `H` suffix are called `Soft`.
-	 * Indexes with `H` suffix are called `Hardened`.
+	 * The `H` suffix indicates a _Hardened_ child private key, which
+	 * means that children of this key cannot be derived from the public
+	 * key. Indices without a `H` suffix are called _Soft_.
 	 * 
 	 * - Minimum number of elements: {@code 1}.
 	 * 
@@ -96,8 +141,9 @@ public final class Change {
 	 * Defines the derivation path.
 	 * 
 	 * An individual segment within a derivation path.
-	 * Indexes without `H` suffix are called `Soft`.
-	 * Indexes with `H` suffix are called `Hardened`.
+	 * The `H` suffix indicates a _Hardened_ child private key, which
+	 * means that children of this key cannot be derived from the public
+	 * key. Indices without a `H` suffix are called _Soft_.
 	 * 
 	 * - Minimum number of elements: {@code 1}.
 	 * 

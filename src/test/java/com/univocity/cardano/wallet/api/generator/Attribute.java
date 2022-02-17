@@ -120,6 +120,21 @@ public class Attribute {
 			//we just ignore attribute items here.
 		}
 
+		List<Map> allOf = (List) properties.remove("allOf");
+		if (allOf != null) {
+			type = "string";
+			for(Map e : allOf){
+				if(e.get("example") == null){
+					this.example = ApiGenerator.serializeMapToJson(e, "example");
+				}
+				if(this.description == null && e.get("description") != null){
+					this.description = String.valueOf(e.get("description"));
+				}
+			}
+
+			//we just ignore attribute items here.
+		}
+
 		if (type == null) {
 			if (additionalPropertiesType != null) {
 				type = "string";
@@ -207,18 +222,25 @@ public class Attribute {
 	private String getJavaName() {
 		if (javaName == null) {
 			String name = this.name;
-			if (name.equals("object")) {
+			if (name.equals("object") || StringUtils.isBlank(name)) {
 				Stack path = (Stack) stack.clone();
 				StringBuilder tmp = new StringBuilder();
 				while (!path.isEmpty()) {
 					String e = path.pop().toString();
-					if (!e.contains(" ") && !e.equals("object") && !e.contains("/") && Character.isLowerCase(e.charAt(0)) && !e.equals("post") && !e.equals("get") && !e.equals("put")) {
-						if (tmp.length() > 0) {
-							tmp.append('_');
+					if(StringUtils.isNotBlank(e)){
+						if (!e.contains(" ") && !e.equals("object") && !e.contains("/") && Character.isLowerCase(e.charAt(0)) && !e.equals("post") && !e.equals("get") && !e.equals("put")) {
+							if (tmp.length() > 0) {
+								tmp.append('_');
+							}
+							tmp.append(e);
 						}
-						tmp.append(e);
 					}
 				}
+				if(tmp.length() == 0){
+					tmp.append(((String)this.stack.get(0)).replaceAll("-", "_"));
+					tmp.deleteCharAt(0);
+				}
+
 				if (tmp.charAt(tmp.length() - 1) == 's') {
 					tmp.deleteCharAt(tmp.length() - 1);
 				}

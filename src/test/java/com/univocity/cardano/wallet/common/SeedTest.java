@@ -19,6 +19,17 @@ public class SeedTest {
 		}
 	}
 
+	public static void main(String ... args){
+		String seed = Seed.generateEnglishSeedPhrase(24);
+		System.out.println(seed);
+		List<String> words = Seed.toMnemonicList(seed);
+		byte[] entropy = Seed.checkEnglishSeedPhrase(seed);
+		String seedFromEntropy = Seed.generateEnglishSeedPhrase(entropy);
+		String seedFromList = String.join(" ", words.toArray(new String[0]));
+		assertEquals(seedFromEntropy, seedFromList);
+		assertEquals(seedFromEntropy, seed);
+	}
+
 	@Test
 	public void seedGenerationDemo(){
 		String seed = Seed.generateEnglishSeedPhrase(24);

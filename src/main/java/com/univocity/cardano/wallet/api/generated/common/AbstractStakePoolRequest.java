@@ -13,26 +13,26 @@ public abstract class AbstractStakePoolRequest {
 	private String passphrase;
 
 	/**
-	 * Returns the source Byron wallet's master passphrase.
+	 * Returns the source wallet's master passphrase.
 	 * - Length range from {@code 0} to {@code 255}.
 	 * 
 	 * - Example: 
 	 *   <pre>{@code Secure Passphrase}</pre>
 	 * 
-	 * @return the source Byron wallet's master passphrase.
+	 * @return the source wallet's master passphrase.
 	 */
 	public String getPassphrase(){
 		return passphrase;
 	}
 
 	/**
-	 * Defines the source Byron wallet's master passphrase.
+	 * Defines the source wallet's master passphrase.
 	 * - Length range from {@code 0} to {@code 255}.
 	 * 
 	 * - Example: 
 	 *   <pre>{@code Secure Passphrase}</pre>
 	 * 
-	 * @param passphrase the source Byron wallet's master passphrase.
+	 * @param passphrase the source wallet's master passphrase.
 	 */
 	public void setPassphrase(String passphrase){
 		if (passphrase == null) {

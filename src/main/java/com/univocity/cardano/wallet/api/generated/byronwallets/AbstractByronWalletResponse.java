@@ -16,6 +16,9 @@ public abstract class AbstractByronWalletResponse {
 	@JsonProperty("balance")
 	private Balance balance;
 
+	@JsonProperty("assets")
+	private Assets assets;
+
 	@JsonProperty("discovery")
 	private String discovery;
 
@@ -95,6 +98,28 @@ public abstract class AbstractByronWalletResponse {
 		}
 
 		this.balance = balance;
+	}
+
+	/**
+	 * Returns the assets.
+	 * 
+	 * @return the assets
+	 */
+	public Assets getAssets(){
+		return assets;
+	}
+
+	/**
+	 * Defines the assets.
+	 * 
+	 * @param assets the assets
+	 */
+	public void setAssets(Assets assets){
+		if (assets == null) {
+			throw new IllegalArgumentException("Value of assets cannot be null");
+		}
+
+		this.assets = assets;
 	}
 
 	/**

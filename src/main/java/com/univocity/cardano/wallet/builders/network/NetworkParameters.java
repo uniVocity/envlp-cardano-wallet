@@ -67,6 +67,7 @@ public class NetworkParameters extends Wrapper<GetNetworkParametersResponse> {
 		return original.getMinimumUtxoValue().getQuantity();
 	}
 
+	/*
 	public boolean isHardforkPlanned(){
 		return original.getHardforkAt() != null;
 	}
@@ -83,7 +84,7 @@ public class NetworkParameters extends Wrapper<GetNetworkParametersResponse> {
 			return parseISO8601Date(original.getHardforkAt().getEpochStartTime());
 		}
 		return null;
-	}
+	}*/
 }
 
 

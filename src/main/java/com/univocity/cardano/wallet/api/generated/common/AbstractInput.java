@@ -3,8 +3,10 @@ package com.univocity.cardano.wallet.api.generated.common;
 
 import java.util.regex.*;
 import java.math.*;
+import java.util.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
+import com.univocity.cardano.wallet.api.generated.stakepools.*;
 
 
 public abstract class AbstractInput {
@@ -16,6 +18,9 @@ public abstract class AbstractInput {
 	@JsonProperty("amount")
 	private Amount amount;
 
+	@JsonProperty("assets")
+	private ArrayList<AssetsInputsDelete> assets;
+
 	@JsonProperty("id")
 	private String id;
 
@@ -24,6 +29,15 @@ public abstract class AbstractInput {
 
 	/**
 	 * Returns the address (optional).
+	 * 
+	 * A sequence of characters that encodes (in Base58 or Bech32) a sequence of bytes
+	 * which represents an address on the Cardano blockchain.
+	 * Sequences in Base58 encoding are expected to be legacy Byron addresses,
+	 * whereas sequences in Bech32 encoding correspond to current Shelley addresses.
+	 * For more details, see
+	 * [CIP-0019 — Cardano addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019)
+	 * .
+	 * 
 	 * - Format: {@code base58|bech32}.
 	 * 
 	 * - Example: 
@@ -37,6 +51,15 @@ public abstract class AbstractInput {
 
 	/**
 	 * Defines the address (optional).
+	 * 
+	 * A sequence of characters that encodes (in Base58 or Bech32) a sequence of bytes
+	 * which represents an address on the Cardano blockchain.
+	 * Sequences in Base58 encoding are expected to be legacy Byron addresses,
+	 * whereas sequences in Bech32 encoding correspond to current Shelley addresses.
+	 * For more details, see
+	 * [CIP-0019 — Cardano addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019)
+	 * .
+	 * 
 	 * - Format: {@code base58|bech32}.
 	 * 
 	 * - Example: 
@@ -74,6 +97,29 @@ public abstract class AbstractInput {
 		}
 
 		this.amount = amount;
+	}
+
+	/**
+	 * Returns the flat list of assets (possibly empty). (optional).
+	 * 
+	 * @return the flat list of assets (possibly empty).
+	 */
+	public ArrayList<AssetsInputsDelete> getAssets(){
+		return assets;
+	}
+
+	/**
+	 * Defines a flat list of assets (possibly empty). (optional).
+	 * 
+	 * @param assets a flat list of assets (possibly empty).
+	 */
+	public void setAssets(ArrayList<AssetsInputsDelete> assets){
+		if (assets == null) {
+			this.assets = assets;
+			return;
+		}
+
+		this.assets = assets;
 	}
 
 	/**

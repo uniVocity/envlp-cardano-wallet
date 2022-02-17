@@ -79,7 +79,11 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 
 	@Override
 	public double synchronizationProgressPercentage() {
-		return toPercentage(original.getState().getProgress().getQuantity());
+		if("incomplete".equalsIgnoreCase(original.getState().getStatus())){
+			return 0.0;
+		}
+		//return toPercentage(original.getState().getProgress().getQuantity());
+		return 100.0;
 	}
 
 	@Override
@@ -194,7 +198,7 @@ public class ShelleyWallet extends WrapperWithId<AbstractWalletResponse> impleme
 
 	@Override
 	public CoinSelection selectCoins(Map<String, BigDecimal> payments) {
-		SelectCoinsRequest request = new SelectCoinsRequest();
+		SelectCoinsNormalPaymentRequest request = new SelectCoinsNormalPaymentRequest();
 		request.setPayments(CoinSelection.toPaymentList(payments));
 		return new CoinSelection(this.api.sync().selectCoins(id(), request), api);
 	}

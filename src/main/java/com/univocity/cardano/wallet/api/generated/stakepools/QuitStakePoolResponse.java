@@ -26,8 +26,11 @@ public final class QuitStakePoolResponse {
 	@JsonProperty("fee")
 	private Fee fee;
 
-	@JsonProperty("deposit")
-	private Deposit deposit;
+	@JsonProperty("deposit_taken")
+	private DepositTaken depositTaken;
+
+	@JsonProperty("deposit_returned")
+	private DepositReturned depositReturned;
 
 	@JsonProperty("inserted_at")
 	private InsertedAt insertedAt;
@@ -50,14 +53,23 @@ public final class QuitStakePoolResponse {
 	@JsonProperty("outputs")
 	private ArrayList<OutputsDelete> outputs;
 
+	@JsonProperty("collateral")
+	private ArrayList<CollateralDelete> collateral;
+
 	@JsonProperty("withdrawals")
 	private ArrayList<WithdrawalsDelete> withdrawals;
+
+	@JsonProperty("mint")
+	private ArrayList<MintDelete> mint;
 
 	@JsonProperty("status")
 	private String status;
 
 	@JsonProperty("metadata")
 	private Object metadata;
+
+	@JsonProperty("script_validity")
+	private String scriptValidity;
 
 	/**
 	 * Returns the unique identifier for this transaction.
@@ -148,25 +160,47 @@ public final class QuitStakePoolResponse {
 	}
 
 	/**
-	 * Returns the deposit.
+	 * Returns the deposit taken.
 	 * 
-	 * @return the deposit
+	 * @return the deposit taken
 	 */
-	public Deposit getDeposit(){
-		return deposit;
+	public DepositTaken getDepositTaken(){
+		return depositTaken;
 	}
 
 	/**
-	 * Defines the deposit.
+	 * Defines the deposit taken.
 	 * 
-	 * @param deposit the deposit
+	 * @param depositTaken the deposit taken
 	 */
-	public void setDeposit(Deposit deposit){
-		if (deposit == null) {
-			throw new IllegalArgumentException("Value of deposit cannot be null");
+	public void setDepositTaken(DepositTaken depositTaken){
+		if (depositTaken == null) {
+			throw new IllegalArgumentException("Value of depositTaken cannot be null");
 		}
 
-		this.deposit = deposit;
+		this.depositTaken = depositTaken;
+	}
+
+	/**
+	 * Returns the deposit returned.
+	 * 
+	 * @return the deposit returned
+	 */
+	public DepositReturned getDepositReturned(){
+		return depositReturned;
+	}
+
+	/**
+	 * Defines the deposit returned.
+	 * 
+	 * @param depositReturned the deposit returned
+	 */
+	public void setDepositReturned(DepositReturned depositReturned){
+		if (depositReturned == null) {
+			throw new IllegalArgumentException("Value of depositReturned cannot be null");
+		}
+
+		this.depositReturned = depositReturned;
 	}
 
 	/**
@@ -286,20 +320,34 @@ public final class QuitStakePoolResponse {
 	}
 
 	/**
-	 * Returns the list of transaction inputs.
+	 * Returns the inputs.
+	 * 
+	 * A list of transaction inputs.
+	 * `assets` and `address` are always present for `outgoing`
+	 * transactions but generally absent for `incoming`
+	 * transactions. This information is present on the Cardano explorer,
+	 * but is not tracked by the wallet.
+	 * 
 	 * - Minimum number of elements: {@code 0}.
 	 * 
-	 * @return the list of transaction inputs
+	 * @return the inputs
 	 */
 	public ArrayList<InputsDelete> getInputs(){
 		return inputs;
 	}
 
 	/**
-	 * Defines a list of transaction inputs.
+	 * Defines the inputs.
+	 * 
+	 * A list of transaction inputs.
+	 * `assets` and `address` are always present for `outgoing`
+	 * transactions but generally absent for `incoming`
+	 * transactions. This information is present on the Cardano explorer,
+	 * but is not tracked by the wallet.
+	 * 
 	 * - Minimum number of elements: {@code 0}.
 	 * 
-	 * @param inputs a list of transaction inputs
+	 * @param inputs the inputs
 	 */
 	public void setInputs(ArrayList<InputsDelete> inputs){
 		if (inputs == null) {
@@ -310,20 +358,20 @@ public final class QuitStakePoolResponse {
 	}
 
 	/**
-	 * Returns the list of target outputs.
+	 * Returns the list of target outputs with amount specified.
 	 * - Minimum number of elements: {@code 0}.
 	 * 
-	 * @return the list of target outputs
+	 * @return the list of target outputs with amount specified
 	 */
 	public ArrayList<OutputsDelete> getOutputs(){
 		return outputs;
 	}
 
 	/**
-	 * Defines a list of target outputs.
+	 * Defines a list of target outputs with amount specified.
 	 * - Minimum number of elements: {@code 0}.
 	 * 
-	 * @param outputs a list of target outputs
+	 * @param outputs a list of target outputs with amount specified
 	 */
 	public void setOutputs(ArrayList<OutputsDelete> outputs){
 		if (outputs == null) {
@@ -331,6 +379,31 @@ public final class QuitStakePoolResponse {
 		}
 
 		this.outputs = outputs;
+	}
+
+	/**
+	 * Returns the list of transaction inputs used for collateral. (optional).
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @return the list of transaction inputs used for collateral.
+	 */
+	public ArrayList<CollateralDelete> getCollateral(){
+		return collateral;
+	}
+
+	/**
+	 * Defines a list of transaction inputs used for collateral. (optional).
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @param collateral a list of transaction inputs used for collateral.
+	 */
+	public void setCollateral(ArrayList<CollateralDelete> collateral){
+		if (collateral == null) {
+			this.collateral = collateral;
+			return;
+		}
+
+		this.collateral = collateral;
 	}
 
 	/**
@@ -358,17 +431,62 @@ public final class QuitStakePoolResponse {
 	}
 
 	/**
+	 * Returns the mint.
+	 * 
+	 * <p>status: <strong>⚠ under development</strong></p>
+	 * _This field is not implemented yet, and will always be empty._
+	 * Assets minted (created) or unminted (destroyed)
+	 * This amount contributes to the total transaction value.
+	 * Positive values denote creation of assets and negative values
+	 * denote the reverse.
+	 * 
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @return the mint
+	 */
+	public ArrayList<MintDelete> getMint(){
+		return mint;
+	}
+
+	/**
+	 * Defines the mint.
+	 * 
+	 * <p>status: <strong>⚠ under development</strong></p>
+	 * _This field is not implemented yet, and will always be empty._
+	 * Assets minted (created) or unminted (destroyed)
+	 * This amount contributes to the total transaction value.
+	 * Positive values denote creation of assets and negative values
+	 * denote the reverse.
+	 * 
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @param mint the mint
+	 */
+	public void setMint(ArrayList<MintDelete> mint){
+		if (mint == null) {
+			throw new IllegalArgumentException("Value of mint cannot be null");
+		}
+
+		this.mint = mint;
+	}
+
+	/**
 	 * Returns the status.
 	 * 
 	 * Current transaction status.
 	 *   ```
-	 *          *---------*          *-----------*
-	 *          |         |---------->  EXPIRED  |
-	 *          |         |  (ttl)   *-----------*
-	 *   -------> PENDING |
-	 *          |         <----------------*
-	 *          |         |                |
-	 *          *---------*            (rollback)
+	 *        *-----------*
+	 *   ---> |  PENDING  |----------------*
+	 *        *-----------*                |
+	 *              |                      |
+	 *              V                      V
+	 *        *-----------*          *-----------*
+	 *        |           |---------->  EXPIRED  |
+	 *        |           |  (ttl)   *-----------*
+	 *        | SUBMITTED |
+	 *        |           <----------------*
+	 *        |           |                |
+	 *        *-----------*           (rollback)
 	 *               |                     |
 	 *          (in ledger)          *-----------*
 	 *               |               |           |
@@ -377,7 +495,7 @@ public final class QuitStakePoolResponse {
 	 *                               *-----------*
 	 *   ```
 	 * 
-	 * - Accepted values: {@code [pending, in_ledger, expired]}.
+	 * - Accepted values: {@code [pending, submitted, in_ledger, expired]}.
 	 * 
 	 * @return the status
 	 */
@@ -390,13 +508,18 @@ public final class QuitStakePoolResponse {
 	 * 
 	 * Current transaction status.
 	 *   ```
-	 *          *---------*          *-----------*
-	 *          |         |---------->  EXPIRED  |
-	 *          |         |  (ttl)   *-----------*
-	 *   -------> PENDING |
-	 *          |         <----------------*
-	 *          |         |                |
-	 *          *---------*            (rollback)
+	 *        *-----------*
+	 *   ---> |  PENDING  |----------------*
+	 *        *-----------*                |
+	 *              |                      |
+	 *              V                      V
+	 *        *-----------*          *-----------*
+	 *        |           |---------->  EXPIRED  |
+	 *        |           |  (ttl)   *-----------*
+	 *        | SUBMITTED |
+	 *        |           <----------------*
+	 *        |           |                |
+	 *        *-----------*           (rollback)
 	 *               |                     |
 	 *          (in ledger)          *-----------*
 	 *               |               |           |
@@ -405,7 +528,7 @@ public final class QuitStakePoolResponse {
 	 *                               *-----------*
 	 *   ```
 	 * 
-	 * - Accepted values: {@code [pending, in_ledger, expired]}.
+	 * - Accepted values: {@code [pending, submitted, in_ledger, expired]}.
 	 * 
 	 * @param status the status
 	 */
@@ -520,6 +643,45 @@ public final class QuitStakePoolResponse {
 		}
 
 		this.metadata = metadata;
+	}
+
+	/**
+	 * Returns the script validity (optional).
+	 * 
+	 * Indicates whether the phase-2 monetary policy script (e.g. Plutus script)
+	 * used in the transaction validated or not. Validity may be null if this
+	 * transaction was from an era that doesn't support phase-2 monetary policy
+	 * scripts, or is a pending transaction (we don't know if validation passed or
+	 * failed until the transaction hits the ledger).
+	 * 
+	 * - Accepted values: {@code [valid, invalid]}.
+	 * 
+	 * @return the script validity
+	 */
+	public String getScriptValidity(){
+		return scriptValidity;
+	}
+
+	/**
+	 * Defines the script validity (optional).
+	 * 
+	 * Indicates whether the phase-2 monetary policy script (e.g. Plutus script)
+	 * used in the transaction validated or not. Validity may be null if this
+	 * transaction was from an era that doesn't support phase-2 monetary policy
+	 * scripts, or is a pending transaction (we don't know if validation passed or
+	 * failed until the transaction hits the ledger).
+	 * 
+	 * - Accepted values: {@code [valid, invalid]}.
+	 * 
+	 * @param scriptValidity the script validity
+	 */
+	public void setScriptValidity(String scriptValidity){
+		if (scriptValidity == null) {
+			this.scriptValidity = scriptValidity;
+			return;
+		}
+
+		this.scriptValidity = scriptValidity;
 	}
 
 	@Override

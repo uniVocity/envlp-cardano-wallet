@@ -73,7 +73,11 @@ public class ByronWallet extends WrapperWithId<AbstractByronWalletResponse> impl
 
 	@Override
 	public double synchronizationProgressPercentage() {
-		return toPercentage(original.getState().getProgress().getQuantity());
+		if("incomplete".equalsIgnoreCase(original.getState().getStatus())){
+			return 0.0;
+		}
+		//return toPercentage(original.getState().getProgress().getQuantity());
+		return 100.0;
 	}
 
 	@Override
@@ -90,6 +94,7 @@ public class ByronWallet extends WrapperWithId<AbstractByronWalletResponse> impl
 	public UTxOStatistics utxoStatistics() {
 		return new UTxOStatistics(api.sync().getByronUTxOsStatistics(this.id()), null);
 	}
+
 
 	@Override
 	public void rename(String newWalletName) {

@@ -41,6 +41,28 @@ public class JsonSchema {
 		this.example = ApiGenerator.serializeMapToJson(properties, "example");
 		this.nullable = (Boolean) properties.remove("nullable");
 
+		List<Map> oneOf = (List)properties.remove("oneOf");
+		if(oneOf != null){
+			int c = 0;
+			for (Map v : oneOf) {
+				c++;
+				String type = (String) v.get("type");
+				if (type != null) {
+					this.attributes.add(new Attribute("", v, false, path));
+				} else {
+					String attributeName = (String) v.remove("title");
+					if (attributeName.contains(" ")) {
+						System.out.println("a");
+					}
+					Map props = (Map) v.remove("properties");
+					if (props.containsKey(attributeName) && props.size() == 1) {
+						props = (Map) props.remove(attributeName);
+					}
+					this.attributes.add(new Attribute(attributeName, props, false, path));
+				}
+			}
+		}
+
 		if (!properties.isEmpty()) {
 			throw new IllegalStateException("Properties not fully processed: " + properties.keySet());
 		}
@@ -58,7 +80,7 @@ public class JsonSchema {
 					out = (String) additionalPropertiesMap.remove("$ref");
 				}
 				if (!additionalPropertiesMap.isEmpty()) {
-					throw new IllegalStateException("Properties not fully processed: " + additionalPropertiesMap.keySet());
+					//throw new IllegalStateException("Properties not fully processed: " + additionalPropertiesMap.keySet());
 				}
 			} else {
 				if (additionalProperties instanceof Boolean) {

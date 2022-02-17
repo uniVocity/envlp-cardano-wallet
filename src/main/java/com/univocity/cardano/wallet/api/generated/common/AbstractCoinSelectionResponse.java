@@ -19,15 +19,26 @@ public abstract class AbstractCoinSelectionResponse {
 	@JsonProperty("change")
 	private ArrayList<Change> change;
 
+	@JsonProperty("collateral")
+	private ArrayList<Collateral> collateral;
+
+	@JsonProperty("withdrawals")
+	private ArrayList<Withdrawal> withdrawals;
+
 	@JsonProperty("certificates")
 	private ArrayList<Certificate> certificates;
 
-	@JsonProperty("deposits")
-	private ArrayList<Deposit> deposits;
+	@JsonProperty("deposits_taken")
+	private ArrayList<DepositsTaken> depositsTaken;
+
+	@JsonProperty("deposits_returned")
+	private ArrayList<DepositsReturned> depositsReturned;
+
+	@JsonProperty("metadata")
+	private String metadata;
 
 	/**
 	 * Returns the list of transaction inputs.
-	 * - Minimum number of elements: {@code 1}.
 	 * 
 	 * @return the list of transaction inputs
 	 */
@@ -37,7 +48,6 @@ public abstract class AbstractCoinSelectionResponse {
 
 	/**
 	 * Defines a list of transaction inputs.
-	 * - Minimum number of elements: {@code 1}.
 	 * 
 	 * @param inputs a list of transaction inputs
 	 */
@@ -50,20 +60,20 @@ public abstract class AbstractCoinSelectionResponse {
 	}
 
 	/**
-	 * Returns the list of target outputs.
+	 * Returns the list of target outputs with amount specified.
 	 * - Minimum number of elements: {@code 0}.
 	 * 
-	 * @return the list of target outputs
+	 * @return the list of target outputs with amount specified
 	 */
 	public ArrayList<Output> getOutputs(){
 		return outputs;
 	}
 
 	/**
-	 * Defines a list of target outputs.
+	 * Defines a list of target outputs with amount specified.
 	 * - Minimum number of elements: {@code 0}.
 	 * 
-	 * @param outputs a list of target outputs
+	 * @param outputs a list of target outputs with amount specified
 	 */
 	public void setOutputs(ArrayList<Output> outputs){
 		if (outputs == null) {
@@ -98,6 +108,54 @@ public abstract class AbstractCoinSelectionResponse {
 	}
 
 	/**
+	 * Returns the list of transaction inputs used for collateral (optional).
+	 * 
+	 * @return the list of transaction inputs used for collateral
+	 */
+	public ArrayList<Collateral> getCollateral(){
+		return collateral;
+	}
+
+	/**
+	 * Defines a list of transaction inputs used for collateral (optional).
+	 * 
+	 * @param collateral a list of transaction inputs used for collateral
+	 */
+	public void setCollateral(ArrayList<Collateral> collateral){
+		if (collateral == null) {
+			this.collateral = collateral;
+			return;
+		}
+
+		this.collateral = collateral;
+	}
+
+	/**
+	 * Returns the list of withdrawals from stake addresses. (optional).
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @return the list of withdrawals from stake addresses.
+	 */
+	public ArrayList<Withdrawal> getWithdrawals(){
+		return withdrawals;
+	}
+
+	/**
+	 * Defines a list of withdrawals from stake addresses. (optional).
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @param withdrawals a list of withdrawals from stake addresses.
+	 */
+	public void setWithdrawals(ArrayList<Withdrawal> withdrawals){
+		if (withdrawals == null) {
+			this.withdrawals = withdrawals;
+			return;
+		}
+
+		this.withdrawals = withdrawals;
+	}
+
+	/**
 	 * Returns the certificates (optional).
 	 * 
 	 * @return the certificates
@@ -126,23 +184,73 @@ public abstract class AbstractCoinSelectionResponse {
 	 * 
 	 * @return the list of deposits associated with a transaction.
 	 */
-	public ArrayList<Deposit> getDeposits(){
-		return deposits;
+	public ArrayList<DepositsTaken> getDepositsTaken(){
+		return depositsTaken;
 	}
 
 	/**
 	 * Defines a list of deposits associated with a transaction. (optional).
 	 * - Minimum number of elements: {@code 0}.
 	 * 
-	 * @param deposits a list of deposits associated with a transaction.
+	 * @param depositsTaken a list of deposits associated with a transaction.
 	 */
-	public void setDeposits(ArrayList<Deposit> deposits){
-		if (deposits == null) {
-			this.deposits = deposits;
+	public void setDepositsTaken(ArrayList<DepositsTaken> depositsTaken){
+		if (depositsTaken == null) {
+			this.depositsTaken = depositsTaken;
 			return;
 		}
 
-		this.deposits = deposits;
+		this.depositsTaken = depositsTaken;
+	}
+
+	/**
+	 * Returns the list of deposits associated with a transaction. (optional).
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @return the list of deposits associated with a transaction.
+	 */
+	public ArrayList<DepositsReturned> getDepositsReturned(){
+		return depositsReturned;
+	}
+
+	/**
+	 * Defines a list of deposits associated with a transaction. (optional).
+	 * - Minimum number of elements: {@code 0}.
+	 * 
+	 * @param depositsReturned a list of deposits associated with a transaction.
+	 */
+	public void setDepositsReturned(ArrayList<DepositsReturned> depositsReturned){
+		if (depositsReturned == null) {
+			this.depositsReturned = depositsReturned;
+			return;
+		}
+
+		this.depositsReturned = depositsReturned;
+	}
+
+	/**
+	 * Returns the transaction metadata, serialized according to the expected on-chain binary format, base64-encoded. (optional).
+	 * - Format: {@code base64}.
+	 * 
+	 * @return the transaction metadata, serialized according to the expected on-chain binary format, base64-encoded.
+	 */
+	public String getMetadata(){
+		return metadata;
+	}
+
+	/**
+	 * Defines the transaction metadata, serialized according to the expected on-chain binary format, base64-encoded. (optional).
+	 * - Format: {@code base64}.
+	 * 
+	 * @param metadata the transaction metadata, serialized according to the expected on-chain binary format, base64-encoded.
+	 */
+	public void setMetadata(String metadata){
+		if (metadata == null) {
+			this.metadata = metadata;
+			return;
+		}
+
+		this.metadata = metadata;
 	}
 
 	@Override

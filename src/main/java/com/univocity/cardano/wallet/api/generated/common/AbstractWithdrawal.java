@@ -14,6 +14,9 @@ public abstract class AbstractWithdrawal {
 	@JsonProperty("amount")
 	private Amount amount;
 
+	@JsonProperty("context")
+	private String context;
+
 	/**
 	 * Returns the stake address.
 	 * - Format: {@code bech32}.
@@ -64,6 +67,31 @@ public abstract class AbstractWithdrawal {
 		}
 
 		this.amount = amount;
+	}
+
+	/**
+	 * Returns the used when withdrawal or output is ours. (optional).
+	 * - Accepted values: {@code [ours]}.
+	 * 
+	 * @return the used when withdrawal or output is ours.
+	 */
+	public String getContext(){
+		return context;
+	}
+
+	/**
+	 * Defines the used when withdrawal or output is ours. (optional).
+	 * - Accepted values: {@code [ours]}.
+	 * 
+	 * @param context the used when withdrawal or output is ours.
+	 */
+	public void setContext(String context){
+		if (context == null) {
+			this.context = context;
+			return;
+		}
+
+		this.context = context;
 	}
 
 	@Override

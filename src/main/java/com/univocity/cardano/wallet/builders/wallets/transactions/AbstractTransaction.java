@@ -111,7 +111,7 @@ abstract class AbstractTransaction<W extends Wallet, T extends AbstractTransacti
 	}
 
 	public BigInteger depositInLovelace(){
-		return original.getDeposit().getQuantity();
+		return original.getDepositTaken().getQuantity();
 	}
 
 	public BigDecimal getDepositInAda(){

@@ -31,14 +31,14 @@ public class CommonParent {
 
 	static {
 		put("AbstractPercentage", "ActiveSlotCoefficient", "DecentralizationLevel", "Margin", "Progress", "RelativeStake");
-		put("AbstractAmount", "Amount", "Available", "ControlledStake", "Cost", "EstimatedMax", "EstimatedMin", "Leftovers", "MigrationCost", "MinimumUtxoValue", "NonMyopicMemberRewards", "Pledge", "Reward", "Total", "Deposit", "Fee");
+		put("AbstractAmount", "Amount", "Available", "ControlledStake", "Cost", "EstimatedMax", "EstimatedMin", "Leftovers", "MigrationCost", "MinimumUtxoValue", "NonMyopicMemberRewards", "Pledge", "Reward", "Total", "Deposit", "Fee", "Ada","AdaMinimum","DepositReturned","DepositTaken","DepositsReturned","DepositsReturnedCoinSelection","DepositsReturnedSelection","DepositsTaken","DepositsTakenCoinSelection","DepositsTakenSelection","MinimumCoin","RewardBalance","Stake","TotalFee");
 		put("AbstractSlotDetails", "InsertedAt","NodeTip","PendingSince","Tip");
 		put("AbstractTimeDetails", "ExpiresAt","NetworkTip");
 		put("AbstractLengthDetails", "SlotLength","TimeToLive");
 		put("AbstractCoinSelectionRequest", "ByronSelectCoinsRequest", "PostByronTransactionFeeRequest", "SelectCoinsRequest");
 		put("AbstractCoinSelectionResponse", "ByronSelectCoinsResponse", "SelectCoinsResponse");
-		put("AbstractSchedule", "ChangesAt", "HardforkAt", "NextEpoch", "Retirement");
-		put("AbstractAddress", "CreateAddressResponse", "ListAddressesResponseItem", "ListByronAddressesResponseItem");
+		put("AbstractSchedule", "ChangesAt", "HardforkAt", "NextEpoch", "Retirement", "Allegra","Alonzo","Byron","Mary","Shelley");
+		put("AbstractAddress", "CreateAddressResponse", "ListAddressesResponseItem", "ListByronAddressesResponseItem", "ListSharedAddressesResponseItem");
 		put("AbstractQuantity", "Depth", "EpochStability", "Height", "ProducedBlocks", "SecurityParameter");
 		put("AbstractTransaction", "GetByronTransactionResponse", "GetTransactionResponse", "JoinStakePoolResponse", "ListByronTransactionsResponseItem", "ListTransactionsResponseItem", "MigrateByronWalletResponseItem", "MigrateShelleyWalletResponseItem", "PostByronTransactionResponse", "PostTransactionResponse");
 		put("AbstractUTxOStatistic", "GetByronUTxOsStatisticsResponse", "GetUTxOsStatisticsResponse");
@@ -53,6 +53,26 @@ public class CommonParent {
 		put("AbstractPutWalletRequest", "PutByronWalletRequest", "PutWalletRequest");
 		put("AbstractProgress", "State", "SyncProgress");
 		put("AbstractWithdrawal", "Withdrawal", "WithdrawalsDelete");
+		put("AbstractAssetBalance","AssetsBalanceLeftover","AssetsBalanceSelected","AssetsChange","AssetsChangeCoinSelection","AssetsChangeSelection","AssetsEntrie","AssetsInput","AssetsInputsCoinSelection","AssetsInputsDelete","AssetsInputsSelection","AssetsInputsTransaction","AssetsOutput","AssetsOutputsCoinSelection","AssetsOutputsDelete","AssetsOutputsSelection","AssetsOutputsTransaction","AssetsPayment","AssetsPaymentsPayment","AssetsPaymentsRedemption","AvailableAsset","AvailableAssetsPatch","TotalAsset","TotalAssetsPatch");
+		put("AbstractAssetLifecycle","AssetsBurned","AssetsMinted");
+		put("AbstractBalanceTransaction","BalanceTransactionResponse","SignByronTransactionResponse","SignTransactionResponse");
+		put("AbstractCertificate","Certificate","CertificatesCoinSelection","CertificatesSelection");
+		put("AbstractCollateral","Collateral","CollateralCoinSelection","CollateralSelection");
+		put("AbstractCollateralAction","CollateralDelete","CollateralTransaction");
+		put("AbstractConstructTransactionRequest","ConstructByronTransactionRequest","ConstructTransactionRequest");
+		put("AbstractConstructTransactionResponse","ConstructByronTransactionResponse","ConstructTransactionResponse");
+		put("AbstractCreateWalletMigrationPlanRequest","CreateByronWalletMigrationPlanRequest","CreateShelleyWalletMigrationPlanRequest","ImportAddressesRequest");
+		put("AbstractCreateWalletMigrationPlanResponse","CreateByronWalletMigrationPlanResponse","CreateShelleyWalletMigrationPlanResponse");
+		put("AbstractTransactionRequest","DecodeTransactionRequest","SubmitTransactionRequest");
+		put("AbstractScriptTemplate","DelegationScriptTemplate","PaymentScriptTemplate");
+		put("AbstractAssetResponse","GetAssetDefaultResponse","GetAssetResponse","GetByronAssetDefaultResponse","GetByronAssetResponse","ListAssetsResponseItem","ListByronAssetsResponseItem");
+		put("AbstractGetWalletUtxoSnapshotResponse","GetByronWalletUtxoSnapshotResponse","GetWalletUtxoSnapshotResponse");
+		put("AbstractSharedWalletResponse","GetSharedWalletResponse","PatchSharedWalletInDelegationResponse","PatchSharedWalletInPaymentResponse","PostSharedWalletResponse", "SharedWallet");
+		put("AbstractMint","Mint","MintDelete","MintTransaction");
+		put("AbstractDelegation","NextDelegation","NextDelegationOur","NextDelegationPatch");
+		put("AbstractTransactionResponse","PostExternalTransactionResponse","SubmitTransactionResponse");
+		put("AbstractSignTransactionRequest","SignByronTransactionRequest","SignTransactionRequest");
+		put("AbstractCoinSelection","WithdrawalsCoinSelection","WithdrawalsSelection");
 
 		Collections.addAll(KEEP_IN_ORIGINAL_PACKAGE, "AbstractWalletResponse", "AbstractByronWalletResponse");
 	}

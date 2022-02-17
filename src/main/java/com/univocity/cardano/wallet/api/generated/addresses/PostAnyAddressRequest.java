@@ -21,22 +21,25 @@ public final class PostAnyAddressRequest {
 	@JsonProperty("stake")
 	private String stake;
 
+	@JsonProperty("validation")
+	private String validation;
+
 	/**
 	 * Returns the payment (optional).
 	 * 
 	 * - Example: 
 	 *   <pre>{@code 
 	 *     {
-	 *       "any" : [ "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt36ms", {
-	 *         "all" : [ "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt36ms", "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt37ms" ]
+	 *       "any" : [ "addr_shared_vkh1zxt0uvrza94h3hv4jpv0ttddgnwkvdgeyq8jf9w30mcs6y8w3nq", "stake_shared_vkh1nqc00hvlc6cq0sfhretk0rmzw8dywmusp8retuqnnxzajtzhjg5", {
+	 *         "all" : [ "addr_shared_vkh1zxt0uvrza94h3hv4jpv0ttddgnwkvdgeyq8jf9w30mcs6y8w3nq", "addr_shared_vkh1y3zl4nqgm96ankt96dsdhc86vd5geny0wr7hu8cpzdfcqskq2cp" ]
 	 *       }, {
-	 *         "any" : [ "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt36ms", {
-	 *           "all" : [ "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt36ms", "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt37ms" ]
+	 *         "any" : [ "addr_shared_vkh1zxt0uvrza94h3hv4jpv0ttddgnwkvdgeyq8jf9w30mcs6y8w3nq", {
+	 *           "all" : [ "addr_shared_vkh1zxt0uvrza94h3hv4jpv0ttddgnwkvdgeyq8jf9w30mcs6y8w3nq", "addr_shared_vkh1y3zl4nqgm96ankt96dsdhc86vd5geny0wr7hu8cpzdfcqskq2cp" ]
 	 *         } ]
 	 *       }, {
 	 *         "some" : {
 	 *           "at_least" : 2,
-	 *           "from" : [ "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt37ms", "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt38ms" ]
+	 *           "from" : [ "addr_shared_vkh1zxt0uvrza94h3hv4jpv0ttddgnwkvdgeyq8jf9w30mcs6y8w3nq", "addr_shared_vkh1y3zl4nqgm96ankt96dsdhc86vd5geny0wr7hu8cpzdfcqskq2cp" ]
 	 *         }
 	 *       } ]
 	 *     }
@@ -54,16 +57,16 @@ public final class PostAnyAddressRequest {
 	 * - Example: 
 	 *   <pre>{@code 
 	 *     {
-	 *       "any" : [ "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt36ms", {
-	 *         "all" : [ "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt36ms", "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt37ms" ]
+	 *       "any" : [ "addr_shared_vkh1zxt0uvrza94h3hv4jpv0ttddgnwkvdgeyq8jf9w30mcs6y8w3nq", "stake_shared_vkh1nqc00hvlc6cq0sfhretk0rmzw8dywmusp8retuqnnxzajtzhjg5", {
+	 *         "all" : [ "addr_shared_vkh1zxt0uvrza94h3hv4jpv0ttddgnwkvdgeyq8jf9w30mcs6y8w3nq", "addr_shared_vkh1y3zl4nqgm96ankt96dsdhc86vd5geny0wr7hu8cpzdfcqskq2cp" ]
 	 *       }, {
-	 *         "any" : [ "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt36ms", {
-	 *           "all" : [ "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt36ms", "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt37ms" ]
+	 *         "any" : [ "addr_shared_vkh1zxt0uvrza94h3hv4jpv0ttddgnwkvdgeyq8jf9w30mcs6y8w3nq", {
+	 *           "all" : [ "addr_shared_vkh1zxt0uvrza94h3hv4jpv0ttddgnwkvdgeyq8jf9w30mcs6y8w3nq", "addr_shared_vkh1y3zl4nqgm96ankt96dsdhc86vd5geny0wr7hu8cpzdfcqskq2cp" ]
 	 *         } ]
 	 *       }, {
 	 *         "some" : {
 	 *           "at_least" : 2,
-	 *           "from" : [ "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt37ms", "script_vkh18srsxr3khll7vl3w9mqfu55n6wzxxlxj7qzr2mhnyreluzt38ms" ]
+	 *           "from" : [ "addr_shared_vkh1zxt0uvrza94h3hv4jpv0ttddgnwkvdgeyq8jf9w30mcs6y8w3nq", "addr_shared_vkh1y3zl4nqgm96ankt96dsdhc86vd5geny0wr7hu8cpzdfcqskq2cp" ]
 	 *         }
 	 *       } ]
 	 *     }
@@ -107,6 +110,53 @@ public final class PostAnyAddressRequest {
 		}
 
 		this.stake = stake;
+	}
+
+	/**
+	 * Returns the validation (optional).
+	 * 
+	 * Script validation level. Required validation sifts off scripts that would not
+	 * be accepted by the ledger. Recommended level filters out scripts that do not pass
+	 * required validation and additionally when:
+	 *   * 'all' is non-empty
+	 *   * there are redundant timelocks in a given level
+	 *   * there are no duplicated verification keys in a given level
+	 *   * 'at_least' coeffcient is positive
+	 *   * 'all', 'any' are non-empty and `'at_least' has no less elements in the list
+	 *      than the coeffcient after timelocks are filtered out.
+	 * 
+	 * - Accepted values: {@code [required, recommended]}.
+	 * 
+	 * @return the validation
+	 */
+	public String getValidation(){
+		return validation;
+	}
+
+	/**
+	 * Defines the validation (optional).
+	 * 
+	 * Script validation level. Required validation sifts off scripts that would not
+	 * be accepted by the ledger. Recommended level filters out scripts that do not pass
+	 * required validation and additionally when:
+	 *   * 'all' is non-empty
+	 *   * there are redundant timelocks in a given level
+	 *   * there are no duplicated verification keys in a given level
+	 *   * 'at_least' coeffcient is positive
+	 *   * 'all', 'any' are non-empty and `'at_least' has no less elements in the list
+	 *      than the coeffcient after timelocks are filtered out.
+	 * 
+	 * - Accepted values: {@code [required, recommended]}.
+	 * 
+	 * @param validation the validation
+	 */
+	public void setValidation(String validation){
+		if (validation == null) {
+			this.validation = validation;
+			return;
+		}
+
+		this.validation = validation;
 	}
 
 	@Override

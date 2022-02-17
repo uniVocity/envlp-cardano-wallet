@@ -11,12 +11,13 @@ public abstract class AbstractProgress {
 	@JsonProperty("status")
 	private String status;
 
-	@JsonProperty("progress")
-	private Progress progress;
-
 	/**
 	 * Returns the status.
-	 * - Accepted values: {@code [ready, syncing, not_responding]}.
+	 * 
+	 * A pending shared wallet does not have a complete set
+	 * of keys, so the only possible status is `incomplete`.
+	 * 
+	 * - Accepted values: {@code [incomplete]}.
 	 * 
 	 * @return the status
 	 */
@@ -26,7 +27,11 @@ public abstract class AbstractProgress {
 
 	/**
 	 * Defines the status.
-	 * - Accepted values: {@code [ready, syncing, not_responding]}.
+	 * 
+	 * A pending shared wallet does not have a complete set
+	 * of keys, so the only possible status is `incomplete`.
+	 * 
+	 * - Accepted values: {@code [incomplete]}.
 	 * 
 	 * @param status the status
 	 */
@@ -36,29 +41,6 @@ public abstract class AbstractProgress {
 		}
 
 		this.status = status;
-	}
-
-	/**
-	 * Returns the progress (optional).
-	 * 
-	 * @return the progress
-	 */
-	public Progress getProgress(){
-		return progress;
-	}
-
-	/**
-	 * Defines the progress (optional).
-	 * 
-	 * @param progress the progress
-	 */
-	public void setProgress(Progress progress){
-		if (progress == null) {
-			this.progress = progress;
-			return;
-		}
-
-		this.progress = progress;
 	}
 
 	@Override

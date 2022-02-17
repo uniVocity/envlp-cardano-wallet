@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.*;
 
 
 /**
- * Coins, in Lovelace
+ * Coins, in Lovelace. Only relates to 'Ada'. Refer to `assets` for multi-assets wallets instead.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class EstimatedMax extends AbstractAmount {

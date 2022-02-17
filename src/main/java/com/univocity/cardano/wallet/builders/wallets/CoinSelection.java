@@ -28,10 +28,10 @@ public class CoinSelection extends Wrapper<AbstractCoinSelectionResponse> {
 	}
 
 	public List<BigInteger> depositsInLovelace() {
-		return original.getDeposits().stream().map(AbstractAmount::getQuantity).collect(Collectors.toList());
+		return original.getDepositsReturned().stream().map(AbstractAmount::getQuantity).collect(Collectors.toList());
 	}
 
 	public List<BigDecimal> getDepositsInAda() {
-		return original.getDeposits().stream().map(e -> lovelaceToAda(e.getQuantity())).collect(Collectors.toList());
+		return original.getDepositsReturned().stream().map(e -> lovelaceToAda(e.getQuantity())).collect(Collectors.toList());
 	}
 }

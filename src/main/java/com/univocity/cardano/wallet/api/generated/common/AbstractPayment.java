@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.generated.common;
 
 
+import java.util.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
@@ -14,8 +15,20 @@ public abstract class AbstractPayment {
 	@JsonProperty("amount")
 	private Amount amount;
 
+	@JsonProperty("assets")
+	private ArrayList<AssetsOutput> assets;
+
 	/**
 	 * Returns the address.
+	 * 
+	 * A sequence of characters that encodes (in Base58 or Bech32) a sequence of bytes
+	 * which represents an address on the Cardano blockchain.
+	 * Sequences in Base58 encoding are expected to be legacy Byron addresses,
+	 * whereas sequences in Bech32 encoding correspond to current Shelley addresses.
+	 * For more details, see
+	 * [CIP-0019 — Cardano addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019)
+	 * .
+	 * 
 	 * - Format: {@code base58|bech32}.
 	 * 
 	 * - Example: 
@@ -29,6 +42,15 @@ public abstract class AbstractPayment {
 
 	/**
 	 * Defines the address.
+	 * 
+	 * A sequence of characters that encodes (in Base58 or Bech32) a sequence of bytes
+	 * which represents an address on the Cardano blockchain.
+	 * Sequences in Base58 encoding are expected to be legacy Byron addresses,
+	 * whereas sequences in Bech32 encoding correspond to current Shelley addresses.
+	 * For more details, see
+	 * [CIP-0019 — Cardano addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019)
+	 * .
+	 * 
 	 * - Format: {@code base58|bech32}.
 	 * 
 	 * - Example: 
@@ -64,6 +86,29 @@ public abstract class AbstractPayment {
 		}
 
 		this.amount = amount;
+	}
+
+	/**
+	 * Returns the flat list of assets (possibly empty). (optional).
+	 * 
+	 * @return the flat list of assets (possibly empty).
+	 */
+	public ArrayList<AssetsOutput> getAssets(){
+		return assets;
+	}
+
+	/**
+	 * Defines a flat list of assets (possibly empty). (optional).
+	 * 
+	 * @param assets a flat list of assets (possibly empty).
+	 */
+	public void setAssets(ArrayList<AssetsOutput> assets){
+		if (assets == null) {
+			this.assets = assets;
+			return;
+		}
+
+		this.assets = assets;
 	}
 
 	@Override

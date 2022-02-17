@@ -17,6 +17,7 @@ public class EndpointMethod {
 	private Response response;
 	private final List<Parameter> parameters = new ArrayList<>();
 	private String requestBodyClass;
+	private boolean deprecated;
 
 	public EndpointMethod(String method, Map properties, Stack<Object> path) {
 		path.push(method);
@@ -48,6 +49,8 @@ public class EndpointMethod {
 		if (parameters != null) {
 			parameters.forEach(p -> this.parameters.add(new Parameter((Map) p, path)));
 		}
+
+		this.deprecated = Boolean.parseBoolean(String.valueOf(properties.remove("deprecated")));
 
 		if (!properties.isEmpty()) {
 			throw new IllegalStateException("Properties not fully processed: " + properties.keySet());
@@ -179,7 +182,9 @@ public class EndpointMethod {
 				out.append("@POST(\"");
 			} else if ("put".equalsIgnoreCase(method)) {
 				out.append("@PUT(\"");
-			} else if ("delete".equalsIgnoreCase(method)) {
+			}  else if ("patch".equalsIgnoreCase(method)) {
+				out.append("@PATCH(\"");
+			}else if ("delete".equalsIgnoreCase(method)) {
 				if(requestBody != null){
 					out.append("@HTTP(method = \"DELETE\",path=\"");
 				} else {

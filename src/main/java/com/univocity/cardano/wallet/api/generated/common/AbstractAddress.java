@@ -1,6 +1,7 @@
 package com.univocity.cardano.wallet.api.generated.common;
 
 
+import java.util.*;
 import static com.univocity.cardano.wallet.common.Utils.*;
 import com.fasterxml.jackson.annotation.*;
 
@@ -15,8 +16,20 @@ public abstract class AbstractAddress {
 	@JsonProperty("state")
 	private String state;
 
+	@JsonProperty("derivation_path")
+	private ArrayList<String> derivationPath;
+
 	/**
 	 * Returns the id.
+	 * 
+	 * A sequence of characters that encodes (in Base58 or Bech32) a sequence of bytes
+	 * which represents an address on the Cardano blockchain.
+	 * Sequences in Base58 encoding are expected to be legacy Byron addresses,
+	 * whereas sequences in Bech32 encoding correspond to current Shelley addresses.
+	 * For more details, see
+	 * [CIP-0019 — Cardano addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019)
+	 * .
+	 * 
 	 * - Format: {@code base58|bech32}.
 	 * 
 	 * - Example: 
@@ -30,6 +43,15 @@ public abstract class AbstractAddress {
 
 	/**
 	 * Defines the id.
+	 * 
+	 * A sequence of characters that encodes (in Base58 or Bech32) a sequence of bytes
+	 * which represents an address on the Cardano blockchain.
+	 * Sequences in Base58 encoding are expected to be legacy Byron addresses,
+	 * whereas sequences in Bech32 encoding correspond to current Shelley addresses.
+	 * For more details, see
+	 * [CIP-0019 — Cardano addresses](https://github.com/cardano-foundation/CIPs/tree/master/CIP-0019)
+	 * .
+	 * 
 	 * - Format: {@code base58|bech32}.
 	 * 
 	 * - Example: 
@@ -67,6 +89,48 @@ public abstract class AbstractAddress {
 		}
 
 		this.state = state;
+	}
+
+	/**
+	 * Returns the derivation path.
+	 * 
+	 * An individual segment within a derivation path.
+	 * The `H` suffix indicates a _Hardened_ child private key, which
+	 * means that children of this key cannot be derived from the public
+	 * key. Indices without a `H` suffix are called _Soft_.
+	 * 
+	 * - Minimum number of elements: {@code 1}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code 1852H}</pre>
+	 * 
+	 * @return the derivation path
+	 */
+	public ArrayList<String> getDerivationPath(){
+		return derivationPath;
+	}
+
+	/**
+	 * Defines the derivation path.
+	 * 
+	 * An individual segment within a derivation path.
+	 * The `H` suffix indicates a _Hardened_ child private key, which
+	 * means that children of this key cannot be derived from the public
+	 * key. Indices without a `H` suffix are called _Soft_.
+	 * 
+	 * - Minimum number of elements: {@code 1}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code 1852H}</pre>
+	 * 
+	 * @param derivationPath the derivation path
+	 */
+	public void setDerivationPath(ArrayList<String> derivationPath){
+		if (derivationPath == null) {
+			throw new IllegalArgumentException("Value of derivationPath cannot be null");
+		}
+
+		this.derivationPath = derivationPath;
 	}
 
 	@Override

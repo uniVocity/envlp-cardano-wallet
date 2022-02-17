@@ -70,20 +70,20 @@ public final class PostTransactionPaymentRequest {
 	}
 
 	/**
-	 * Returns the list of target outputs.
+	 * Returns the list of target outputs with amount specified.
 	 * - Minimum number of elements: {@code 0}.
 	 * 
-	 * @return the list of target outputs
+	 * @return the list of target outputs with amount specified
 	 */
 	public ArrayList<PaymentsPayment> getPayments(){
 		return payments;
 	}
 
 	/**
-	 * Defines a list of target outputs.
+	 * Defines a list of target outputs with amount specified.
 	 * - Minimum number of elements: {@code 0}.
 	 * 
-	 * @param payments a list of target outputs
+	 * @param payments a list of target outputs with amount specified
 	 */
 	public void setPayments(ArrayList<PaymentsPayment> payments){
 		if (payments == null) {

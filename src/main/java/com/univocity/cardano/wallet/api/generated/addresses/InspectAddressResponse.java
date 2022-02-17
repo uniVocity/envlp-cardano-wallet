@@ -28,11 +28,20 @@ public final class InspectAddressResponse {
 	@JsonProperty("spending_key_hash")
 	private String spendingKeyHash;
 
+	@JsonProperty("spending_key_bech32")
+	private String spendingKeyBech32;
+
 	@JsonProperty("stake_key_hash")
 	private String stakeKeyHash;
 
+	@JsonProperty("stake_key_bech32")
+	private String stakeKeyBech32;
+
 	@JsonProperty("script_hash")
 	private String scriptHash;
+
+	@JsonProperty("script_hash_bech32")
+	private String scriptHashBech32;
 
 	@JsonProperty("pointer")
 	private Pointer pointer;
@@ -42,6 +51,9 @@ public final class InspectAddressResponse {
 
 	@JsonProperty("derivation_path")
 	private String derivationPath;
+
+	@JsonProperty("address_type")
+	private Integer addressType;
 
 	/**
 	 * Returns the address style.
@@ -156,6 +168,31 @@ public final class InspectAddressResponse {
 	}
 
 	/**
+	 * Returns the spending key bech32 (optional).
+	 * - Format: {@code bech32}.
+	 * 
+	 * @return the spending key bech32
+	 */
+	public String getSpendingKeyBech32(){
+		return spendingKeyBech32;
+	}
+
+	/**
+	 * Defines the spending key bech32 (optional).
+	 * - Format: {@code bech32}.
+	 * 
+	 * @param spendingKeyBech32 the spending key bech32
+	 */
+	public void setSpendingKeyBech32(String spendingKeyBech32){
+		if (spendingKeyBech32 == null) {
+			this.spendingKeyBech32 = spendingKeyBech32;
+			return;
+		}
+
+		this.spendingKeyBech32 = spendingKeyBech32;
+	}
+
+	/**
 	 * Returns the stake key hash (optional).
 	 * - Format: {@code base16}.
 	 * - Length must be exactly {@code 56}.
@@ -191,6 +228,31 @@ public final class InspectAddressResponse {
 	}
 
 	/**
+	 * Returns the stake key bech32 (optional).
+	 * - Format: {@code bech32}.
+	 * 
+	 * @return the stake key bech32
+	 */
+	public String getStakeKeyBech32(){
+		return stakeKeyBech32;
+	}
+
+	/**
+	 * Defines the stake key bech32 (optional).
+	 * - Format: {@code bech32}.
+	 * 
+	 * @param stakeKeyBech32 the stake key bech32
+	 */
+	public void setStakeKeyBech32(String stakeKeyBech32){
+		if (stakeKeyBech32 == null) {
+			this.stakeKeyBech32 = stakeKeyBech32;
+			return;
+		}
+
+		this.stakeKeyBech32 = stakeKeyBech32;
+	}
+
+	/**
 	 * Returns the script hash (optional).
 	 * - Format: {@code base16}.
 	 * - Length must be exactly {@code 64}.
@@ -223,6 +285,31 @@ public final class InspectAddressResponse {
 		}
 
 		this.scriptHash = scriptHash;
+	}
+
+	/**
+	 * Returns the script hash bech32 (optional).
+	 * - Format: {@code bech32}.
+	 * 
+	 * @return the script hash bech32
+	 */
+	public String getScriptHashBech32(){
+		return scriptHashBech32;
+	}
+
+	/**
+	 * Defines the script hash bech32 (optional).
+	 * - Format: {@code bech32}.
+	 * 
+	 * @param scriptHashBech32 the script hash bech32
+	 */
+	public void setScriptHashBech32(String scriptHashBech32){
+		if (scriptHashBech32 == null) {
+			this.scriptHashBech32 = scriptHashBech32;
+			return;
+		}
+
+		this.scriptHashBech32 = scriptHashBech32;
 	}
 
 	/**
@@ -296,6 +383,73 @@ public final class InspectAddressResponse {
 		}
 
 		this.derivationPath = derivationPath;
+	}
+
+	/**
+	 * Returns the address type (optional).
+	 * 
+	 * The raw type field of the address.
+	 * Details about possible address types are following (refer also to [cddl](https://github.com/input-output-hk/cardano-ledger/blob/master/eras/alonzo/test-suite/cddl-files/alonzo.cddl)).
+	 * | address_type | binary prefix  |   Meaning                                                |
+	 * | ------------ |:--------------:|:--------------------------------------------------------:|
+	 * |      0       |  0000          |   base address: keyhash28,keyhash28                      |
+	 * |      1       |  0001          |   base address: scripthash28,keyhash28                   |
+	 * |      2       |  0010          |   base address: keyhash28,scripthash28                   |
+	 * |      3       |  0011          |   base address: scripthash28,scripthash28                |
+	 * |      4       |  0100          |   pointer address: keyhash28, 3 variable length uint     |
+	 * |      5       |  0101          |   pointer address: scripthash28, 3 variable length uint  |
+	 * |      6       |  0110          |   enterprise address: keyhash28                          |
+	 * |      7       |  0111          |   enterprise address: scripthash28                       |
+	 * |      8       |  1000          |   byron/icarus                                           |
+	 * |      14      |  1110          |   reward account: keyhash28                              |
+	 * |      15      |  1111          |   reward account: scripthash28                           |
+	 * 
+	 * - Value range from {@code 0} to {@code 15}.
+	 * 
+	 * @return the address type
+	 */
+	public Integer getAddressType(){
+		return addressType;
+	}
+
+	/**
+	 * Defines the address type (optional).
+	 * 
+	 * The raw type field of the address.
+	 * Details about possible address types are following (refer also to [cddl](https://github.com/input-output-hk/cardano-ledger/blob/master/eras/alonzo/test-suite/cddl-files/alonzo.cddl)).
+	 * | address_type | binary prefix  |   Meaning                                                |
+	 * | ------------ |:--------------:|:--------------------------------------------------------:|
+	 * |      0       |  0000          |   base address: keyhash28,keyhash28                      |
+	 * |      1       |  0001          |   base address: scripthash28,keyhash28                   |
+	 * |      2       |  0010          |   base address: keyhash28,scripthash28                   |
+	 * |      3       |  0011          |   base address: scripthash28,scripthash28                |
+	 * |      4       |  0100          |   pointer address: keyhash28, 3 variable length uint     |
+	 * |      5       |  0101          |   pointer address: scripthash28, 3 variable length uint  |
+	 * |      6       |  0110          |   enterprise address: keyhash28                          |
+	 * |      7       |  0111          |   enterprise address: scripthash28                       |
+	 * |      8       |  1000          |   byron/icarus                                           |
+	 * |      14      |  1110          |   reward account: keyhash28                              |
+	 * |      15      |  1111          |   reward account: scripthash28                           |
+	 * 
+	 * - Value range from {@code 0} to {@code 15}.
+	 * 
+	 * @param addressType the address type
+	 */
+	public void setAddressType(Integer addressType){
+		if (addressType == null) {
+			this.addressType = addressType;
+			return;
+		}
+
+		if (addressType < 0) {
+			throw new IllegalArgumentException("Value of addressType cannot be less than 0, got '" + addressType + "'");
+		}
+
+		if (addressType > 15L) {
+			throw new IllegalArgumentException("Value of addressType cannot be greater than 15, got '" + addressType + "'");
+		}
+
+		this.addressType = addressType;
 	}
 
 	@Override

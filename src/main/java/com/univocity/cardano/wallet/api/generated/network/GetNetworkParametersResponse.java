@@ -44,8 +44,20 @@ public final class GetNetworkParametersResponse {
 	@JsonProperty("minimum_utxo_value")
 	private MinimumUtxoValue minimumUtxoValue;
 
-	@JsonProperty("hardfork_at")
-	private HardforkAt hardforkAt;
+	@JsonProperty("eras")
+	private Eras eras;
+
+	@JsonProperty("maximum_collateral_input_count")
+	private BigInteger maximumCollateralInputCount;
+
+	@JsonProperty("minimum_collateral_percentage")
+	private BigInteger minimumCollateralPercentage;
+
+	@JsonProperty("maximum_token_bundle_size")
+	private MaximumTokenBundleSize maximumTokenBundleSize;
+
+	@JsonProperty("execution_unit_prices")
+	private ExecutionUnitPrices executionUnitPrices;
 
 	/**
 	 * Returns the hash of genesis block.
@@ -96,7 +108,7 @@ public final class GetNetworkParametersResponse {
 	 * - Format: {@code iso-8601-date-and-time}.
 	 * 
 	 * - Example: 
-	 *   <pre>{@code Thu Feb 28 01:16:45 ACDT 2019}</pre>
+	 *   <pre>{@code Wed Feb 27 11:46:45 BRT 2019}</pre>
 	 * 
 	 * @return the blockchain start time
 	 */
@@ -109,7 +121,7 @@ public final class GetNetworkParametersResponse {
 	 * - Format: {@code iso-8601-date-and-time}.
 	 * 
 	 * - Example: 
-	 *   <pre>{@code Thu Feb 28 01:16:45 ACDT 2019}</pre>
+	 *   <pre>{@code Wed Feb 27 11:46:45 BRT 2019}</pre>
 	 * 
 	 * @param blockchainStartTime the blockchain start time
 	 */
@@ -288,26 +300,149 @@ public final class GetNetworkParametersResponse {
 	}
 
 	/**
-	 * Returns the hardfork at (optional).
+	 * Returns the eras.
 	 * 
-	 * @return the hardfork at
+	 * @return the eras
 	 */
-	public HardforkAt getHardforkAt(){
-		return hardforkAt;
+	public Eras getEras(){
+		return eras;
 	}
 
 	/**
-	 * Defines the hardfork at (optional).
+	 * Defines the eras.
 	 * 
-	 * @param hardforkAt the hardfork at
+	 * @param eras the eras
 	 */
-	public void setHardforkAt(HardforkAt hardforkAt){
-		if (hardforkAt == null) {
-			this.hardforkAt = hardforkAt;
+	public void setEras(Eras eras){
+		if (eras == null) {
+			throw new IllegalArgumentException("Value of eras cannot be null");
+		}
+
+		this.eras = eras;
+	}
+
+	/**
+	 * Returns the maximum collateral input count.
+	 * 
+	 * The maximum number of collateral inputs that can be used in a single
+	 * transaction.
+	 * 
+	 * - Minimum value: {@code 0}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code 3}</pre>
+	 * 
+	 * @return the maximum collateral input count
+	 */
+	public BigInteger getMaximumCollateralInputCount(){
+		return maximumCollateralInputCount;
+	}
+
+	/**
+	 * Defines the maximum collateral input count.
+	 * 
+	 * The maximum number of collateral inputs that can be used in a single
+	 * transaction.
+	 * 
+	 * - Minimum value: {@code 0}.
+	 * 
+	 * - Example: 
+	 *   <pre>{@code 3}</pre>
+	 * 
+	 * @param maximumCollateralInputCount the maximum collateral input count
+	 */
+	public void setMaximumCollateralInputCount(BigInteger maximumCollateralInputCount){
+		if (maximumCollateralInputCount == null) {
+			throw new IllegalArgumentException("Value of maximumCollateralInputCount cannot be null");
+		}
+
+		if (maximumCollateralInputCount.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + maximumCollateralInputCount + "': value of maximumCollateralInputCount cannot be less than 0");
+		}
+
+		this.maximumCollateralInputCount = maximumCollateralInputCount;
+	}
+
+	/**
+	 * Returns the minimum collateral percentage (optional).
+	 * 
+	 * The minimum required amount of collateral as a percentage of the
+	 * total transaction fee.
+	 * 
+	 * - Minimum value: {@code 0}.
+	 * 
+	 * @return the minimum collateral percentage
+	 */
+	public BigInteger getMinimumCollateralPercentage(){
+		return minimumCollateralPercentage;
+	}
+
+	/**
+	 * Defines the minimum collateral percentage (optional).
+	 * 
+	 * The minimum required amount of collateral as a percentage of the
+	 * total transaction fee.
+	 * 
+	 * - Minimum value: {@code 0}.
+	 * 
+	 * @param minimumCollateralPercentage the minimum collateral percentage
+	 */
+	public void setMinimumCollateralPercentage(BigInteger minimumCollateralPercentage){
+		if (minimumCollateralPercentage == null) {
+			this.minimumCollateralPercentage = minimumCollateralPercentage;
 			return;
 		}
 
-		this.hardforkAt = hardforkAt;
+		if (minimumCollateralPercentage.compareTo(new BigInteger("0")) < 0){
+			throw new IllegalArgumentException("'" + minimumCollateralPercentage + "': value of minimumCollateralPercentage cannot be less than 0");
+		}
+
+		this.minimumCollateralPercentage = minimumCollateralPercentage;
+	}
+
+	/**
+	 * Returns the maximum token bundle size.
+	 * 
+	 * @return the maximum token bundle size
+	 */
+	public MaximumTokenBundleSize getMaximumTokenBundleSize(){
+		return maximumTokenBundleSize;
+	}
+
+	/**
+	 * Defines the maximum token bundle size.
+	 * 
+	 * @param maximumTokenBundleSize the maximum token bundle size
+	 */
+	public void setMaximumTokenBundleSize(MaximumTokenBundleSize maximumTokenBundleSize){
+		if (maximumTokenBundleSize == null) {
+			throw new IllegalArgumentException("Value of maximumTokenBundleSize cannot be null");
+		}
+
+		this.maximumTokenBundleSize = maximumTokenBundleSize;
+	}
+
+	/**
+	 * Returns the execution unit prices (optional).
+	 * 
+	 * @return the execution unit prices
+	 */
+	public ExecutionUnitPrices getExecutionUnitPrices(){
+		return executionUnitPrices;
+	}
+
+	/**
+	 * Defines the execution unit prices (optional).
+	 * 
+	 * @param executionUnitPrices the execution unit prices
+	 */
+	public void setExecutionUnitPrices(ExecutionUnitPrices executionUnitPrices){
+		if (executionUnitPrices == null) {
+			this.executionUnitPrices = executionUnitPrices;
+			return;
+		}
+
+		this.executionUnitPrices = executionUnitPrices;
 	}
 
 	@Override
